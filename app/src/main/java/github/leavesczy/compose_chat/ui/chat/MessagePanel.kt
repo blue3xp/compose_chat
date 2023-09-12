@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
@@ -48,64 +49,91 @@ import github.leavesczy.compose_chat.ui.widgets.CoilImage
  * @Github：https://github.com/leavesCZY
  */
 @Composable
-fun MessagePanel(chatPageViewState: ChatPageViewState, chatPageAction: ChatPageAction) {
+fun MessagePanel(pageViewState: ChatPageViewState, pageAction: ChatPageAction) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        state = chatPageViewState.listState,
+        state = pageViewState.listState,
         reverseLayout = true,
         contentPadding = PaddingValues(bottom = 80.dp),
         verticalArrangement = Arrangement.Top,
     ) {
-        for (message in chatPageViewState.messageList) {
-            item(key = message.messageDetail.msgId) {
-                MessageItems(
-                    message = message,
-                    showPartyName = chatPageViewState.chat is Chat.GroupChat,
-                    chatPageAction = chatPageAction
-                )
+        items(
+            items = pageViewState.messageList,
+            key = {
+                it.messageDetail.msgId
+            },
+            contentType = {
+                when (it) {
+                    is TimeMessage -> {
+                        "TimeMessage"
+                    }
+
+                    is SystemMessage -> {
+                        "SystemMessage"
+                    }
+
+                    is TextMessage -> {
+                        val isSelfMessage = it.messageDetail.isSelfMessage
+                        if (isSelfMessage) {
+                            "selfTextMessage"
+                        } else {
+                            "fiendTextMessage"
+                        }
+                    }
+
+                    is ImageMessage -> {
+                        val isSelfMessage = it.messageDetail.isSelfMessage
+                        if (isSelfMessage) {
+                            "selfImageMessage"
+                        } else {
+                            "fiendImageMessage"
+                        }
+                    }
+                }
+            }
+        ) { message ->
+            when (message) {
+                is TimeMessage -> {
+                    TimeMessage(message = message)
+                }
+
+                is SystemMessage -> {
+                    SystemMessage(message = message)
+                }
+
+                is TextMessage, is ImageMessage -> {
+                    val messageContent = @Composable {
+                        when (message) {
+                            is TextMessage -> {
+                                TextMessage(message = message)
+                            }
+
+                            is ImageMessage -> {
+                                ImageMessage(message = message)
+                            }
+
+                            else -> {
+                                throw IllegalArgumentException()
+                            }
+                        }
+                    }
+                    if (message.messageDetail.isSelfMessage) {
+                        SelfMessageContainer(
+                            message = message,
+                            chatPageAction = pageAction,
+                            messageContent = messageContent
+                        )
+                    } else {
+                        FriendMessageContainer(
+                            message = message,
+                            showPartyName = pageViewState.chat is Chat.GroupChat,
+                            chatPageAction = pageAction,
+                            messageContent = messageContent
+                        )
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun MessageItems(message: Message, showPartyName: Boolean, chatPageAction: ChatPageAction) {
-    if (message is TimeMessage) {
-        TimeMessage(message = message)
-        return
-    }
-    if (message is SystemMessage) {
-        SystemMessage(message = message)
-        return
-    }
-    val messageContent = @Composable {
-        when (message) {
-            is TextMessage -> {
-                TextMessage(message = message)
-            }
-
-            is ImageMessage -> {
-                ImageMessage(message = message)
-            }
-
-            else -> {
-                throw IllegalArgumentException()
-            }
-        }
-    }
-    if (message.messageDetail.isSelfMessage) {
-        SelfMessageContainer(
-            message = message,
-            chatPageAction = chatPageAction,
-            messageContent = messageContent
-        )
-    } else {
-        FriendMessageContainer(
-            message = message,
-            showPartyName = showPartyName,
-            chatPageAction = chatPageAction,
-            messageContent = messageContent
-        )
     }
 }
 
@@ -149,10 +177,7 @@ private fun SelfMessageContainer(
         Box(
             modifier = Modifier
                 .constrainAs(ref = messageRef) {
-                    top.linkTo(
-                        anchor = avatarRef.top,
-                        margin = 12.dp
-                    )
+                    top.linkTo(anchor = avatarRef.top, margin = 12.dp)
                     end.linkTo(anchor = avatarRef.start, margin = textMessageHorizontalPadding)
                     width = Dimension.preferredWrapContent.atMost(dp = textMessageWidthAtMost)
                 }
@@ -160,7 +185,8 @@ private fun SelfMessageContainer(
                 .combinedClickable(
                     onClick = {
                         chatPageAction.onClickMessage(message)
-                    }, onLongClick = {
+                    },
+                    onLongClick = {
                         chatPageAction.onLongClickMessage(message)
                     }
                 )
@@ -188,7 +214,10 @@ private fun FriendMessageContainer(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = itemHorizontalPadding, vertical = itemVerticalPadding)
+            .padding(
+                horizontal = itemHorizontalPadding,
+                vertical = itemVerticalPadding
+            )
     ) {
         val (avatarRef, showNameRef, messageRef, messageStateRef) = createRefs()
         CoilImage(
@@ -246,9 +275,7 @@ private fun FriendMessageContainer(
                 .constrainAs(ref = messageStateRef) {
                     top.linkTo(anchor = messageRef.top)
                     bottom.linkTo(anchor = messageRef.bottom)
-                    start.linkTo(
-                        anchor = messageRef.end, margin = textMessageHorizontalPadding
-                    )
+                    start.linkTo(anchor = messageRef.end, margin = textMessageHorizontalPadding)
                 },
             messageState = message.messageDetail.state
         )
@@ -322,8 +349,8 @@ private fun StateMessage(modifier: Modifier, messageState: MessageState) {
             Image(
                 modifier = modifier.size(size = 20.dp),
                 imageVector = Icons.Outlined.Warning,
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(color = Color.Red)
+                colorFilter = ColorFilter.tint(color = Color.Red),
+                contentDescription = null
             )
         }
 

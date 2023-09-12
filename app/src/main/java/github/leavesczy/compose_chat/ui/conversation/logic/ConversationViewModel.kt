@@ -69,9 +69,7 @@ class ConversationViewModel : BaseViewModel() {
                 }
 
                 is GroupConversation -> {
-                    ComposeChat.conversationProvider.deleteGroupConversation(
-                        groupId = conversation.id
-                    )
+                    ComposeChat.conversationProvider.deleteGroupConversation(groupId = conversation.id)
                 }
             }
             when (result) {

@@ -26,7 +26,6 @@ import github.leavesczy.compose_chat.ui.chat.logic.ChatPageAction
 import github.leavesczy.compose_chat.ui.chat.logic.ChatViewModel
 import github.leavesczy.compose_chat.ui.friend.FriendProfileActivity
 import github.leavesczy.compose_chat.ui.preview.PreviewImageActivity
-import github.leavesczy.compose_chat.ui.widgets.SystemBarTheme
 
 /**
  * @Author: leavesCZY
@@ -107,11 +106,7 @@ class ChatActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent(
-            systemBarTheme = {
-                SystemBarTheme(navigationBarColor = MaterialTheme.colorScheme.onSecondaryContainer)
-            }
-        ) {
+        setContent {
             ChatPage(
                 chatViewModel = chatViewModel,
                 chatPageAction = chatPageAction
@@ -160,7 +155,7 @@ private fun ChatPage(chatViewModel: ChatViewModel, chatPageAction: ChatPageActio
                     enabled = !loadMessageViewState.loadFinish
                 )
         ) {
-            MessagePanel(chatPageViewState = chatPageViewState, chatPageAction = chatPageAction)
+            MessagePanel(pageViewState = chatPageViewState, pageAction = chatPageAction)
             PullRefreshIndicator(
                 modifier = Modifier.align(alignment = Alignment.TopCenter),
                 refreshing = loadMessageViewState.refreshing,

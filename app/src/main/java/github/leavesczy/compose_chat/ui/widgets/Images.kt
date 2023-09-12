@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -64,21 +63,6 @@ fun CoilImage(
         contentScale = contentScale,
         filterQuality = filterQuality,
         contentDescription = null
-    )
-}
-
-@Composable
-fun CircleBorderImage(
-    modifier: Modifier,
-    data: Any,
-    borderWidth: Dp = 2.dp,
-    borderColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
-) {
-    CoilImage(
-        modifier = modifier
-            .clip(shape = CircleShape)
-            .border(width = borderWidth, color = borderColor, shape = CircleShape),
-        data = data
     )
 }
 
@@ -149,10 +133,8 @@ fun BouncyImage(modifier: Modifier, data: Any) {
             )
         }
     }
-
-    CircleBorderImage(
+    CoilImage(
         modifier = modifier
-            .zIndex(zIndex = Float.MAX_VALUE)
             .offset {
                 IntOffset(
                     x = offsetX.roundToInt(),
@@ -176,7 +158,14 @@ fun BouncyImage(modifier: Modifier, data: Any) {
                         offsetY += dragAmount.y
                     }
                 )
-            },
+            }
+            .clip(shape = CircleShape)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                shape = CircleShape
+            )
+            .zIndex(zIndex = Float.MAX_VALUE),
         data = data
     )
 }

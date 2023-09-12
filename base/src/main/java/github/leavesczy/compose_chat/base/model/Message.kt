@@ -1,5 +1,6 @@
 package github.leavesczy.compose_chat.base.model
 
+import androidx.compose.runtime.Stable
 import github.leavesczy.compose_chat.base.utils.TimeUtil
 
 /**
@@ -7,6 +8,7 @@ import github.leavesczy.compose_chat.base.utils.TimeUtil
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
+@Stable
 sealed class MessageState {
 
     data object Sending : MessageState()
@@ -17,6 +19,7 @@ sealed class MessageState {
 
 }
 
+@Stable
 data class MessageDetail(
     val msgId: String,
     val timestamp: Long,
@@ -35,6 +38,7 @@ data class MessageDetail(
 
 }
 
+@Stable
 sealed class Message(val messageDetail: MessageDetail) {
 
     abstract val formatMessage: String
@@ -43,6 +47,7 @@ sealed class Message(val messageDetail: MessageDetail) {
 
 }
 
+@Stable
 data class TextMessage(
     private val detail: MessageDetail,
     private val text: String
@@ -53,6 +58,7 @@ data class TextMessage(
 
 }
 
+@Stable
 data class SystemMessage(
     private val detail: MessageDetail,
     private val tips: String
@@ -63,6 +69,7 @@ data class SystemMessage(
 
 }
 
+@Stable
 data class ImageMessage(
     private val detail: MessageDetail,
     private val original: ImageElement,
@@ -91,12 +98,14 @@ data class ImageMessage(
 
 }
 
+@Stable
 class ImageElement(
     val width: Int,
     val height: Int,
     val url: String
 )
 
+@Stable
 class TimeMessage(targetMessage: Message) : Message(
     messageDetail = MessageDetail(
         msgId = (targetMessage.messageDetail.timestamp + targetMessage.messageDetail.msgId.hashCode()).toString(),
@@ -112,6 +121,7 @@ class TimeMessage(targetMessage: Message) : Message(
 
 }
 
+@Stable
 sealed class LoadMessageResult {
 
     data class Success(val messageList: List<Message>, val loadFinish: Boolean) :

@@ -1,10 +1,13 @@
 package github.leavesczy.compose_chat.base.model
 
+import androidx.compose.runtime.Stable
+
 /**
  * @Author: leavesCZY
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
+@Stable
 sealed class Conversation(
     val id: String,
     val name: String,
@@ -39,6 +42,7 @@ sealed class Conversation(
 
 }
 
+@Stable
 class C2CConversation(
     id: String,
     name: String,
@@ -55,6 +59,7 @@ class C2CConversation(
     isPinned = isPinned
 )
 
+@Stable
 class GroupConversation(
     id: String,
     name: String,

@@ -10,10 +10,10 @@ import java.util.TimeZone
 object BuildFunction {
 
     private fun getTime(pattern: String): String {
-        return SimpleDateFormat(pattern).let {
-            it.timeZone = TimeZone.getTimeZone("Asia/Shanghai")
-            it.format(Calendar.getInstance().time)
-        }
+        val simpleDateFormat = SimpleDateFormat(pattern)
+        simpleDateFormat.timeZone = TimeZone.getTimeZone("Asia/Shanghai")
+        val time = Calendar.getInstance().time
+        return simpleDateFormat.format(time)
     }
 
     fun getApkBuildTime(): String {

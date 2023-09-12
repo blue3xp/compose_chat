@@ -7,12 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import github.leavesczy.compose_chat.provider.AppThemeProvider
 import github.leavesczy.compose_chat.provider.ToastProvider
 import github.leavesczy.compose_chat.ui.theme.ComposeChatTheme
-import github.leavesczy.compose_chat.ui.widgets.SystemBarTheme
 
 /**
  * @Author: leavesCZY
@@ -33,25 +32,23 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setSystemBarUi()
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
-    protected fun setContent(
-        systemBarTheme: @Composable () -> Unit = {
-            SystemBarTheme()
-        },
-        content: @Composable () -> Unit
-    ) {
+    protected fun setContent(content: @Composable () -> Unit) {
         setContent(
             parent = null,
             content = {
                 ComposeChatTheme {
-                    systemBarTheme()
                     content()
                 }
             }
         )
+    }
+
+    protected open fun setSystemBarUi() {
+        setSystemBarUi(appTheme = AppThemeProvider.appTheme)
     }
 
     protected fun showToast(msg: String) {

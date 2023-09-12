@@ -33,11 +33,10 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import github.leavesczy.compose_chat.provider.ToastProvider
 import github.leavesczy.compose_chat.ui.base.BaseActivity
+import github.leavesczy.compose_chat.ui.base.setSystemBarUi
 import github.leavesczy.compose_chat.ui.logic.AppTheme
 import github.leavesczy.compose_chat.ui.theme.BackgroundColorDark
-import github.leavesczy.compose_chat.ui.theme.DarkColorScheme
 import github.leavesczy.compose_chat.ui.widgets.CoilImage
-import github.leavesczy.compose_chat.ui.widgets.SystemBarTheme
 import github.leavesczy.compose_chat.utils.AlbumUtils
 import kotlinx.coroutines.launch
 
@@ -82,20 +81,17 @@ class PreviewImageActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent(
-            systemBarTheme = {
-                SystemBarTheme(
-                    appTheme = AppTheme.Dark,
-                    navigationBarColor = DarkColorScheme.background
-                )
-            }
-        ) {
+        setContent {
             PreviewImagePage(
                 imageUrlList = imageUrlList,
                 initialPage = initialPage,
                 insertImageToAlbum = ::insertImageToAlbum
             )
         }
+    }
+
+    override fun setSystemBarUi() {
+        setSystemBarUi(appTheme = AppTheme.Dark)
     }
 
     private fun insertImageToAlbum(imageUrl: String) {

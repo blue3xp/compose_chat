@@ -1,6 +1,7 @@
 package github.leavesczy.compose_chat.base.model
 
 import android.os.Parcelable
+import androidx.compose.runtime.Stable
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -8,6 +9,7 @@ import kotlinx.parcelize.Parcelize
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
+@Stable
 sealed class Chat(open val id: String) : Parcelable {
 
     @Parcelize

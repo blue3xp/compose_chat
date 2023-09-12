@@ -2,7 +2,6 @@ package github.leavesczy.compose_chat.ui.conversation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,11 +27,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
@@ -100,13 +103,13 @@ private fun LazyItemScope.ConversationItem(
     conversation: Conversation,
     pageViewState: ConversationPageViewState
 ) {
+    var offset = Offset.Zero
     var menuExpanded by remember {
         mutableStateOf(value = false)
     }
     ConstraintLayout(
         modifier = Modifier
             .animateItemPlacement()
-            .background(color = MaterialTheme.colorScheme.background)
             .then(
                 other = if (conversation.isPinned) {
                     Modifier.scrim(color = Color(0x26CCCCCC))
@@ -115,6 +118,10 @@ private fun LazyItemScope.ConversationItem(
                 }
             )
             .fillMaxWidth()
+            .pointerInteropFilter {
+                offset = Offset(it.x / 2, -it.y)
+                false
+            }
             .combinedClickable(
                 onClick = {
                     pageViewState.onClickConversation(conversation)
@@ -142,11 +149,12 @@ private fun LazyItemScope.ConversationItem(
                 .clip(shape = RoundedCornerShape(size = 6.dp)),
             data = conversation.faceUrl
         )
-        if (conversation.unreadMessageCount > 0) {
-            val count = if (conversation.unreadMessageCount > 99) {
+        val unreadMessageCount = conversation.unreadMessageCount
+        if (unreadMessageCount > 0) {
+            val count = if (unreadMessageCount > 99) {
                 "99+"
             } else {
-                conversation.unreadMessageCount.toString()
+                unreadMessageCount.toString()
             }
             Text(
                 modifier = Modifier
@@ -202,14 +210,12 @@ private fun LazyItemScope.ConversationItem(
                     height = Dimension.wrapContent
                 },
             text = conversation.lastMessage.messageDetail.conversationTime,
-            fontSize = 12.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
+            fontSize = 12.sp
         )
         Divider(
             modifier = Modifier
                 .constrainAs(ref = dividerRef) {
-                    linkTo(start = avatarRef.end, end = parent.end)
+                    linkTo(start = nicknameRef.start, end = parent.end)
                     bottom.linkTo(anchor = parent.bottom)
                     width = Dimension.fillToConstraints
                 },
@@ -218,14 +224,15 @@ private fun LazyItemScope.ConversationItem(
         MoreActionDropdownMenu(
             modifier = Modifier
                 .constrainAs(ref = dropdownMenuRef) {
-                    linkTo(start = parent.start, end = parent.end, bias = 0.3f)
-                    linkTo(top = parent.top, bottom = parent.bottom)
+                    start.linkTo(anchor = parent.start)
+                    top.linkTo(anchor = parent.top)
                 },
             expanded = menuExpanded,
+            offset = offset,
+            conversation = conversation,
             onDismissRequest = {
                 menuExpanded = false
             },
-            conversation = conversation,
             deleteConversation = pageViewState.deleteConversation,
             pinConversation = pageViewState.pinConversation
         )
@@ -236,49 +243,50 @@ private fun LazyItemScope.ConversationItem(
 private fun MoreActionDropdownMenu(
     modifier: Modifier,
     expanded: Boolean,
+    offset: Offset,
     onDismissRequest: () -> Unit,
     conversation: Conversation,
     deleteConversation: (Conversation) -> Unit,
     pinConversation: (Conversation, Boolean) -> Unit
 ) {
-    Box(
-        modifier = modifier
+    val dpOffset = with(LocalDensity.current) {
+        DpOffset(x = offset.x.toDp(), y = offset.y.toDp())
+    }
+    DropdownMenu(
+        modifier = modifier.background(color = MaterialTheme.colorScheme.background),
+        expanded = expanded,
+        offset = dpOffset,
+        onDismissRequest = onDismissRequest
     ) {
-        DropdownMenu(
-            modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-            expanded = expanded,
-            onDismissRequest = onDismissRequest
-        ) {
-            DropdownMenuItem(
-                modifier = Modifier,
-                text = {
-                    Text(
-                        text = if (conversation.isPinned) {
-                            "取消置顶"
-                        } else {
-                            "置顶会话"
-                        },
-                        style = TextStyle(fontSize = 18.sp)
-                    )
-                },
-                onClick = {
-                    onDismissRequest()
-                    pinConversation(conversation, !conversation.isPinned)
-                }
-            )
-            DropdownMenuItem(
-                modifier = Modifier,
-                text = {
-                    Text(
-                        text = "删除会话",
-                        style = TextStyle(fontSize = 18.sp)
-                    )
-                },
-                onClick = {
-                    onDismissRequest()
-                    deleteConversation(conversation)
-                }
-            )
-        }
+        DropdownMenuItem(
+            modifier = Modifier,
+            text = {
+                Text(
+                    text = if (conversation.isPinned) {
+                        "取消置顶"
+                    } else {
+                        "置顶会话"
+                    },
+                    style = TextStyle(fontSize = 18.sp)
+                )
+            },
+            onClick = {
+                onDismissRequest()
+                pinConversation(conversation, !conversation.isPinned)
+            }
+        )
+        DropdownMenuItem(
+            modifier = Modifier,
+            text = {
+                Text(
+                    text = "删除会话",
+                    style = TextStyle(fontSize = 18.sp)
+                )
+            },
+            onClick = {
+                onDismissRequest()
+                deleteConversation(conversation)
+            }
+        )
     }
 }

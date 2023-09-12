@@ -4,5 +4,6 @@ android {
 
 dependencies {
     implementationTest()
+    implementationCompose()
     implementation(Dependencies.Components.coroutines)
 }

@@ -1,5 +1,6 @@
 package github.leavesczy.compose_chat.base.model
 
+import androidx.compose.runtime.Stable
 import github.leavesczy.compose_chat.base.utils.TimeUtil
 
 /**
@@ -7,6 +8,7 @@ import github.leavesczy.compose_chat.base.utils.TimeUtil
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
+@Stable
 data class PersonProfile(
     val id: String,
     val faceUrl: String,
@@ -40,6 +42,7 @@ data class PersonProfile(
 
 }
 
+@Stable
 class GroupMemberProfile(
     val detail: PersonProfile,
     val role: String,
@@ -52,6 +55,7 @@ class GroupMemberProfile(
 
 }
 
+@Stable
 class GroupProfile(
     val id: String,
     val faceUrl: String,

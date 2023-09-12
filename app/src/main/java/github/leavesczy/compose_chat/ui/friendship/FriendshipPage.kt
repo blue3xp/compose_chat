@@ -114,7 +114,7 @@ private fun FriendshipContentPage(
             modifier = Modifier
                 .align(alignment = Alignment.BottomEnd)
                 .padding(bottom = 30.dp, end = 30.dp)
-                .size(size = 48.dp),
+                .size(size = 50.dp),
             containerColor = MaterialTheme.colorScheme.primary,
             content = {
                 Icon(

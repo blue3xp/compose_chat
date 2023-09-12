@@ -1,10 +1,13 @@
 package github.leavesczy.compose_chat.base.model
 
+import androidx.compose.runtime.Stable
+
 /**
  * @Author: leavesCZY
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
+@Stable
 sealed class ActionResult {
 
     data object Success : ActionResult()
@@ -17,6 +20,7 @@ sealed class ActionResult {
 
 }
 
+@Stable
 enum class ServerState {
     Logout,
     Connecting,

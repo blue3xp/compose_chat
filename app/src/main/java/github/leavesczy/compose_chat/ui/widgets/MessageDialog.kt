@@ -53,13 +53,6 @@ fun MessageDialog(
     BackHandler(enabled = visible) {
 
     }
-    SystemBarTheme(
-        navigationBarColor = if (visible) {
-            Color.Transparent
-        } else {
-            MaterialTheme.colorScheme.background
-        }
-    )
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn(
