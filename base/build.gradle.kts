@@ -5,5 +5,5 @@ android {
 dependencies {
     implementationTest()
     implementationCompose()
-    implementation(Dependencies.Components.coroutines)
+    implementation(Dependencie.Components.coroutines)
 }

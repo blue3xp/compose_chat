@@ -5,6 +5,6 @@ android {
 dependencies {
     implementation(project(":base"))
     implementationTest()
-    implementation(Dependencies.Components.coroutines)
-    implementation(Dependencies.Components.imSdk)
+    implementation(Dependencie.Components.coroutines)
+    implementation(Dependencie.Components.imSdk)
 }

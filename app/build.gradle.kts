@@ -8,10 +8,10 @@ dependencies {
     implementationTest()
     implementationCompose()
     implementationCoil()
-    implementation(Dependencies.Components.appcompat)
-    implementation(Dependencies.Components.exifinterface)
-    implementation(Dependencies.Components.coroutines)
-    implementation(Dependencies.Components.matisse)
+    implementation(Dependencie.Components.appcompat)
+    implementation(Dependencie.Components.exifinterface)
+    implementation(Dependencie.Components.coroutines)
+    implementation(Dependencie.Components.matisse)
 }
 
 composeClickTrace {

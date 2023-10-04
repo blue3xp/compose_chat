@@ -22,29 +22,29 @@ private fun DependencyHandlerScope.testImplementationExtend(library: Any) {
 }
 
 fun DependencyHandlerScope.implementationTest() {
-    testImplementationExtend(Dependencies.Test.junit)
-    androidTestImplementationExtend(Dependencies.Test.testExt)
-    androidTestImplementationExtend(Dependencies.Test.espresso)
+    testImplementationExtend(Dependencie.Test.junit)
+    androidTestImplementationExtend(Dependencie.Test.testExt)
+    androidTestImplementationExtend(Dependencie.Test.espresso)
 }
 
 fun DependencyHandlerScope.implementationCompose() {
-    val platform = platform(Dependencies.Compose.bom)
+    val platform = platform(Dependencie.Compose.bom)
     implementationExtend(platform)
     androidTestImplementationExtend(platform)
-    implementationExtend(Dependencies.Compose.ui)
-    implementationExtend(Dependencies.Compose.uiToolingPreview)
-    debugImplementationExtend(Dependencies.Compose.uiTooling)
-    debugImplementationExtend(Dependencies.Compose.uiTestManifest)
-    androidTestImplementationExtend(Dependencies.Compose.uiTestJunit4)
-    implementationExtend(Dependencies.Compose.material)
-    implementationExtend(Dependencies.Compose.material3)
-    implementationExtend(Dependencies.Compose.materialIcons)
-    implementationExtend(Dependencies.Compose.constraintLayout)
-    implementationExtend(Dependencies.Compose.activity)
-    implementationExtend(Dependencies.Compose.viewModel)
+    implementationExtend(Dependencie.Compose.ui)
+    implementationExtend(Dependencie.Compose.uiToolingPreview)
+    debugImplementationExtend(Dependencie.Compose.uiTooling)
+    debugImplementationExtend(Dependencie.Compose.uiTestManifest)
+    androidTestImplementationExtend(Dependencie.Compose.uiTestJunit4)
+    implementationExtend(Dependencie.Compose.material)
+    implementationExtend(Dependencie.Compose.material3)
+    implementationExtend(Dependencie.Compose.materialIcons)
+    implementationExtend(Dependencie.Compose.constraintLayout)
+    implementationExtend(Dependencie.Compose.activity)
+    implementationExtend(Dependencie.Compose.viewModel)
 }
 
 fun DependencyHandlerScope.implementationCoil() {
-    implementationExtend(Dependencies.Coil.compose)
-    implementationExtend(Dependencies.Coil.gif)
+    implementationExtend(Dependencie.Coil.compose)
+    implementationExtend(Dependencie.Coil.gif)
 }

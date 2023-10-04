@@ -12,6 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -31,12 +33,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import coil.compose.AsyncImage
 import github.leavesczy.compose_chat.provider.ToastProvider
 import github.leavesczy.compose_chat.ui.base.BaseActivity
 import github.leavesczy.compose_chat.ui.base.setSystemBarUi
-import github.leavesczy.compose_chat.ui.logic.AppTheme
 import github.leavesczy.compose_chat.ui.theme.BackgroundColorDark
-import github.leavesczy.compose_chat.ui.widgets.CoilImage
+import github.leavesczy.compose_chat.ui.theme.WindowInsetsEmpty
 import github.leavesczy.compose_chat.utils.AlbumUtils
 import kotlinx.coroutines.launch
 
@@ -91,7 +93,12 @@ class PreviewImageActivity : BaseActivity() {
     }
 
     override fun setSystemBarUi() {
-        setSystemBarUi(appTheme = AppTheme.Dark)
+        setSystemBarUi(
+            statusBarColor = android.graphics.Color.TRANSPARENT,
+            navigationBarColor = android.graphics.Color.TRANSPARENT,
+            statusBarDarkIcons = false,
+            navigationBarDarkIcons = false
+        )
     }
 
     private fun insertImageToAlbum(imageUrl: String) {
@@ -134,7 +141,8 @@ private fun PreviewImagePage(
         modifier = Modifier
             .background(color = BackgroundColorDark)
             .fillMaxSize(),
-        containerColor = BackgroundColorDark
+        containerColor = BackgroundColorDark,
+        contentWindowInsets = WindowInsetsEmpty,
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -145,7 +153,7 @@ private fun PreviewImagePage(
                 modifier = Modifier
                     .fillMaxSize(),
                 state = pagerState,
-                pageSpacing = 2.dp,
+                pageSpacing = 0.dp,
                 verticalAlignment = Alignment.CenterVertically
             ) { pageIndex ->
                 PreviewPage(imageUrl = imageUrlList[pageIndex])
@@ -153,6 +161,7 @@ private fun PreviewImagePage(
             IconButton(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
+                    .navigationBarsPadding()
                     .padding(all = 20.dp),
                 content = {
                     Icon(
@@ -179,15 +188,16 @@ private fun PreviewImagePage(
 private fun PreviewPage(imageUrl: String) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state = rememberScrollState()),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CoilImage(
+        AsyncImage(
             modifier = Modifier
-                .fillMaxSize(),
-            data = imageUrl,
-            contentScale = ContentScale.FillWidth
+                .fillMaxWidth()
+                .verticalScroll(state = rememberScrollState()),
+            model = imageUrl,
+            contentScale = ContentScale.FillWidth,
+            contentDescription = null
         )
     }
 }

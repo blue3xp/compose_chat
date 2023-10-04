@@ -3,7 +3,7 @@
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
-object Dependencies {
+object Dependencie {
 
     object Test {
         const val junit = "junit:junit:4.13.2"
@@ -15,13 +15,13 @@ object Dependencies {
         const val appcompat = "androidx.appcompat:appcompat:1.6.1"
         const val exifinterface = "androidx.exifinterface:exifinterface:1.3.6"
         const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
-        const val matisse = "com.github.leavesCZY:Matisse:1.0.4"
-        const val imSdk = "com.tencent.imsdk:imsdk-plus:7.4.4661"
+        const val matisse = "com.github.leavesCZY:Matisse:e4f3c8a1c8"
+        const val imSdk = "com.tencent.imsdk:imsdk-plus:7.5.4852"
     }
 
     object Compose {
         const val compilerVersion = "1.5.3"
-        const val bom = "androidx.compose:compose-bom:2023.09.00"
+        const val bom = "androidx.compose:compose-bom:2023.09.02"
         const val ui = "androidx.compose.ui:ui"
         const val uiTooling = "androidx.compose.ui:ui-tooling"
         const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview"
@@ -32,7 +32,7 @@ object Dependencies {
         const val materialIcons = "androidx.compose.material:material-icons-extended"
         const val constraintLayout =
             "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10"
-        const val activity = "androidx.activity:activity-compose:1.8.0-beta01"
+        const val activity = "androidx.activity:activity-compose:1.8.0-rc01"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
     }
 
