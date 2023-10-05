@@ -73,7 +73,7 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = MatisseContract()
     ) { result ->
-        if (result.isNotEmpty()) {
+        if (!result.isNullOrEmpty()) {
             chatViewModel.sendImageMessage(mediaResource = result[0])
         }
     }

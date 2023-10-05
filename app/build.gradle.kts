@@ -9,7 +9,7 @@ dependencies {
     implementationCompose()
     implementationCoil()
     implementation(Dependencie.Components.appcompat)
-    implementation(Dependencie.Components.exifinterface)
+    implementation(Dependencie.Components.exifInterface)
     implementation(Dependencie.Components.coroutines)
     implementation(Dependencie.Components.matisse)
 }

@@ -55,7 +55,7 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
         val selectPictureLauncher = rememberLauncherForActivityResult(
             contract = MatisseContract()
         ) { result ->
-            if (result.isNotEmpty()) {
+            if (!result.isNullOrEmpty()) {
                 profileUpdateViewModel.onAvatarUrlChanged(mediaResource = result[0])
             }
         }

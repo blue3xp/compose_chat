@@ -57,11 +57,11 @@ import github.leavesczy.compose_chat.ui.widgets.CoilImage
 @Composable
 fun ConversationPage() {
     val conversationViewModel = viewModel<ConversationViewModel>()
-    ConversationContentPage(pageViewState = conversationViewModel.pageViewState)
+    ConversationPage(pageViewState = conversationViewModel.pageViewState)
 }
 
 @Composable
-private fun ConversationContentPage(pageViewState: ConversationPageViewState) {
+private fun ConversationPage(pageViewState: ConversationPageViewState) {
     val conversationList = pageViewState.conversationList
     if (conversationList.isEmpty()) {
         Text(
