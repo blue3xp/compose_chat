@@ -74,7 +74,7 @@ private fun PersonProfileContentPage(pageViewState: PersonProfilePageViewState) 
                     }
                     .aspectRatio(ratio = 1f)
                     .scrim(color = Color(0x33000000)),
-                data = faceUrl
+                model = faceUrl
             )
             AnimateBouncyImage(
                 modifier = Modifier

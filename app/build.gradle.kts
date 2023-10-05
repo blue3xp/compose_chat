@@ -9,9 +9,10 @@ dependencies {
     implementationCompose()
     implementationCoil()
     implementation(Dependencie.Components.appcompat)
-    implementation(Dependencie.Components.exifInterface)
     implementation(Dependencie.Components.coroutines)
     implementation(Dependencie.Components.matisse)
+    implementation(Dependencie.Components.exifInterface)
+    implementation(Dependencie.Components.telephoto)
 }
 
 composeClickTrace {

@@ -41,7 +41,7 @@ import github.leavesczy.compose_chat.base.model.TextMessage
 import github.leavesczy.compose_chat.base.model.TimeMessage
 import github.leavesczy.compose_chat.ui.chat.logic.ChatPageAction
 import github.leavesczy.compose_chat.ui.chat.logic.ChatPageViewState
-import github.leavesczy.compose_chat.ui.widgets.CoilImage
+import github.leavesczy.compose_chat.ui.widgets.ComponentImage
 
 /**
  * @Author: leavesCZY
@@ -161,7 +161,7 @@ private fun SelfMessageContainer(
             )
     ) {
         val (avatarRef, messageRef, messageStateRef) = createRefs()
-        CoilImage(
+        ComponentImage(
             modifier = Modifier
                 .constrainAs(ref = avatarRef) {
                     top.linkTo(anchor = parent.top)
@@ -172,7 +172,7 @@ private fun SelfMessageContainer(
                 .clickable(onClick = {
                     chatPageAction.onClickAvatar(message)
                 }),
-            data = message.messageDetail.sender.faceUrl
+            model = message.messageDetail.sender.faceUrl
         )
         Box(
             modifier = Modifier
@@ -220,7 +220,7 @@ private fun FriendMessageContainer(
             )
     ) {
         val (avatarRef, showNameRef, messageRef, messageStateRef) = createRefs()
-        CoilImage(
+        ComponentImage(
             modifier = Modifier
                 .constrainAs(ref = avatarRef) {
                     top.linkTo(anchor = parent.top)
@@ -233,7 +233,7 @@ private fun FriendMessageContainer(
                         chatPageAction.onClickAvatar(message)
                     }
                 ),
-            data = message.messageDetail.sender.faceUrl
+            model = message.messageDetail.sender.faceUrl
         )
         Text(
             modifier = Modifier.constrainAs(ref = showNameRef) {
@@ -325,12 +325,12 @@ private fun SystemMessage(message: SystemMessage) {
 
 @Composable
 private fun ImageMessage(message: ImageMessage) {
-    CoilImage(
+    ComponentImage(
         modifier = Modifier.size(
             width = message.widgetWidthDp.dp,
             height = message.widgetHeightDp.dp
         ),
-        data = message.previewImage.url
+        model = message.previewImage.url
     )
 }
 

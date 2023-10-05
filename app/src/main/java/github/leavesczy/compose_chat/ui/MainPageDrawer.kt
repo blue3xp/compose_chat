@@ -1,9 +1,6 @@
 package github.leavesczy.compose_chat.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntOffsetAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,10 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cabin
 import androidx.compose.material.icons.filled.ColorLens
@@ -28,28 +25,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import github.leavesczy.compose_chat.BuildConfig
 import github.leavesczy.compose_chat.extend.clickableNoRipple
 import github.leavesczy.compose_chat.ui.logic.MainPageDrawerViewState
-import github.leavesczy.compose_chat.ui.widgets.BouncyImage
-import kotlinx.coroutines.delay
+import github.leavesczy.compose_chat.ui.widgets.ComponentImage
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 /**
  * @Author: leavesCZY
@@ -79,26 +68,15 @@ fun MainPageDrawer(viewState: MainPageDrawerViewState) {
         ) {
             val personProfile = viewState.personProfile
             val padding = 20.dp
-            var animated by remember {
-                mutableStateOf(value = false)
-            }
-            LaunchedEffect(key1 = viewState.drawerState.isOpen) {
-                val isOpen = viewState.drawerState.isOpen
-                if (isOpen) {
-                    animated = true
-                    delay(timeMillis = 1000)
-                }
-                animated = false
-            }
-            AnimateBouncyImage(
+            ComponentImage(
                 modifier = Modifier
                     .padding(start = padding)
                     .size(size = 90.dp)
+                    .clip(shape = CircleShape)
                     .clickableNoRipple {
                         viewState.previewImage(personProfile.faceUrl)
                     },
-                faceUrl = personProfile.faceUrl,
-                animated = animated
+                model = personProfile.faceUrl
             )
             Text(
                 modifier = Modifier.padding(
@@ -165,42 +143,6 @@ fun MainPageDrawer(viewState: MainPageDrawerViewState) {
             )
         }
     }
-}
-
-@Composable
-private fun AnimateBouncyImage(
-    modifier: Modifier,
-    faceUrl: String,
-    animated: Boolean
-) {
-    val scale by animateFloatAsState(
-        label = "",
-        targetValue = if (animated) {
-            1.8f
-        } else {
-            1f
-        },
-        animationSpec = tween(durationMillis = 1000)
-    )
-    val offset by animateIntOffsetAsState(
-        label = "",
-        targetValue = if (animated) {
-            IntOffset(
-                x = Random.nextInt(320, 480),
-                y = Random.nextInt(540, 1200)
-            )
-        } else {
-            IntOffset(x = 0, y = 0)
-        }
-    )
-    BouncyImage(
-        modifier = modifier
-            .offset {
-                offset
-            }
-            .scale(scale = scale),
-        data = faceUrl
-    )
 }
 
 @Composable

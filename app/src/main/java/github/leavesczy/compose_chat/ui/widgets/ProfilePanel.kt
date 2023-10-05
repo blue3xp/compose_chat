@@ -44,7 +44,7 @@ fun ProfilePanel(
                 .aspectRatio(ratio = 5f / 4.2f)
                 .zIndex(zIndex = -100f)
                 .scrim(color = Color(0x33000000)),
-            data = avatarUrl
+            model = avatarUrl
         )
         BouncyImage(
             modifier = Modifier

@@ -47,7 +47,7 @@ import github.leavesczy.compose_chat.base.model.Conversation
 import github.leavesczy.compose_chat.extend.scrim
 import github.leavesczy.compose_chat.ui.conversation.logic.ConversationPageViewState
 import github.leavesczy.compose_chat.ui.conversation.logic.ConversationViewModel
-import github.leavesczy.compose_chat.ui.widgets.CoilImage
+import github.leavesczy.compose_chat.ui.widgets.ComponentImage
 
 /**
  * @Author: leavesCZY
@@ -138,7 +138,7 @@ private fun LazyItemScope.ConversationItem(
             top.linkTo(anchor = parent.top)
             bottom.linkTo(anchor = parent.bottom)
         }
-        CoilImage(
+        ComponentImage(
             modifier = Modifier
                 .constrainAs(ref = avatarRef) {
                     start.linkTo(anchor = parent.start)
@@ -147,7 +147,7 @@ private fun LazyItemScope.ConversationItem(
                 .padding(start = 14.dp, top = 8.dp, bottom = 8.dp)
                 .size(size = 50.dp)
                 .clip(shape = RoundedCornerShape(size = 6.dp)),
-            data = conversation.faceUrl
+            model = conversation.faceUrl
         )
         val unreadMessageCount = conversation.unreadMessageCount
         if (unreadMessageCount > 0) {

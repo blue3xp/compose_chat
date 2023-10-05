@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import github.leavesczy.compose_chat.ui.base.BaseActivity
 import github.leavesczy.compose_chat.ui.profile.logic.ProfileUpdateViewModel
-import github.leavesczy.compose_chat.ui.widgets.CoilImageEngine
 import github.leavesczy.compose_chat.ui.widgets.CommonButton
 import github.leavesczy.compose_chat.ui.widgets.CommonOutlinedTextField
+import github.leavesczy.compose_chat.ui.widgets.MatisseImageEngine
 import github.leavesczy.compose_chat.ui.widgets.ProfilePanel
 import github.leavesczy.compose_chat.utils.randomFaceUrl
 import github.leavesczy.matisse.DefaultMediaFilter
@@ -114,7 +114,7 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
                                 mediaFilter = DefaultMediaFilter(
                                     supportedMimeTypes = MimeType.ofImage(hasGif = true)
                                 ),
-                                imageEngine = CoilImageEngine(),
+                                imageEngine = MatisseImageEngine(),
                                 captureStrategy = MediaStoreCaptureStrategy()
                             )
                             selectPictureLauncher.launch(matisse)

@@ -35,7 +35,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import github.leavesczy.compose_chat.ui.chat.logic.ChatViewModel
-import github.leavesczy.compose_chat.ui.widgets.CoilImageEngine
+import github.leavesczy.compose_chat.ui.widgets.MatisseImageEngine
 import github.leavesczy.matisse.DefaultMediaFilter
 import github.leavesczy.matisse.Matisse
 import github.leavesczy.matisse.MatisseCapture
@@ -196,7 +196,7 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
                                             mediaFilter = DefaultMediaFilter(
                                                 supportedMimeTypes = MimeType.ofImage(hasGif = true)
                                             ),
-                                            imageEngine = CoilImageEngine(),
+                                            imageEngine = MatisseImageEngine(),
                                             captureStrategy = MediaStoreCaptureStrategy()
                                         )
                                         imagePickerLauncher.launch(matisse)

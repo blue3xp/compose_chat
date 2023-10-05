@@ -66,7 +66,7 @@ import github.leavesczy.compose_chat.ui.chat.logic.GroupProfileViewModel
 import github.leavesczy.compose_chat.ui.friend.FriendProfileActivity
 import github.leavesczy.compose_chat.ui.preview.PreviewImageActivity
 import github.leavesczy.compose_chat.ui.widgets.BouncyImage
-import github.leavesczy.compose_chat.ui.widgets.CoilImage
+import github.leavesczy.compose_chat.ui.widgets.ComponentImage
 import github.leavesczy.compose_chat.ui.widgets.LoadingDialog
 import github.leavesczy.compose_chat.utils.randomFaceUrl
 import kotlinx.coroutines.launch
@@ -223,11 +223,11 @@ private fun GroupHeader(groupProfile: GroupProfile) {
         val avatarUrl = groupProfile.faceUrl
         val introduction =
             "GroupID: ${groupProfile.id}\nCreateTime: ${groupProfile.createTimeFormat}\nMemberCount: ${groupProfile.memberCount}"
-        CoilImage(
+        ComponentImage(
             modifier = Modifier
                 .fillMaxSize()
                 .scrim(color = Color(0x33000000)),
-            data = avatarUrl
+            model = avatarUrl
         )
         Column(
             modifier = Modifier
@@ -357,7 +357,7 @@ private fun GroupMemberItem(
             top.linkTo(anchor = parent.top)
             bottom.linkTo(anchor = parent.bottom)
         }
-        CoilImage(
+        ComponentImage(
             modifier = Modifier
                 .constrainAs(ref = avatarRef) {
                     start.linkTo(anchor = parent.start)
@@ -366,7 +366,7 @@ private fun GroupMemberItem(
                 .padding(start = 14.dp, top = 8.dp, bottom = 8.dp)
                 .size(size = 50.dp)
                 .clip(shape = RoundedCornerShape(size = 6.dp)),
-            data = groupMemberProfile.detail.faceUrl)
+            model = groupMemberProfile.detail.faceUrl)
         Text(
             modifier = Modifier
                 .constrainAs(ref = showNameRef) {

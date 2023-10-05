@@ -49,25 +49,26 @@ import kotlin.math.roundToInt
  * @Github：https://github.com/leavesCZY
  */
 @Composable
-fun CoilImage(
+fun ComponentImage(
     modifier: Modifier,
-    data: Any,
+    model: Any,
     contentScale: ContentScale = ContentScale.Crop,
     filterQuality: FilterQuality = FilterQuality.None,
+    contentDescription: String? = null,
     backgroundColor: Color = Color(0x66888888)
 ) {
     AsyncImage(
         modifier = modifier
             .background(color = backgroundColor),
-        model = data,
+        model = model,
         contentScale = contentScale,
         filterQuality = filterQuality,
-        contentDescription = null
+        contentDescription = contentDescription
     )
 }
 
 @Composable
-fun BezierImage(modifier: Modifier, data: Any) {
+fun BezierImage(modifier: Modifier, model: Any) {
     val animateFloat by rememberInfiniteTransition(label = "").animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -77,12 +78,12 @@ fun BezierImage(modifier: Modifier, data: Any) {
         ),
         label = ""
     )
-    CoilImage(
+    ComponentImage(
         modifier = Modifier
             .scale(scale = 1.0f + animateFloat * 0.1f)
             .clip(shape = BezierShape(animateValue = animateFloat))
             .then(other = modifier),
-        data = data
+        model = model
     )
 }
 
@@ -133,7 +134,7 @@ fun BouncyImage(modifier: Modifier, data: Any) {
             )
         }
     }
-    CoilImage(
+    ComponentImage(
         modifier = modifier
             .offset {
                 IntOffset(
@@ -166,6 +167,6 @@ fun BouncyImage(modifier: Modifier, data: Any) {
                 shape = CircleShape
             )
             .zIndex(zIndex = Float.MAX_VALUE),
-        data = data
+        model = data
     )
 }

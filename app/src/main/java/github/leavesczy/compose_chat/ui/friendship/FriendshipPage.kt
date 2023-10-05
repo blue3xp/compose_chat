@@ -37,7 +37,7 @@ import github.leavesczy.compose_chat.base.model.GroupProfile
 import github.leavesczy.compose_chat.base.model.PersonProfile
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipPageViewState
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipViewModel
-import github.leavesczy.compose_chat.ui.widgets.CoilImage
+import github.leavesczy.compose_chat.ui.widgets.ComponentImage
 
 /**
  * @Author: leavesCZY
@@ -149,11 +149,11 @@ private fun LazyItemScope.GroupItem(
                 .padding(top = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CoilImage(
+            ComponentImage(
                 modifier = Modifier
                     .size(size = 50.dp)
                     .clip(shape = RoundedCornerShape(size = 6.dp)),
-                data = groupProfile.faceUrl
+                model = groupProfile.faceUrl
             )
             Text(
                 modifier = Modifier
@@ -193,11 +193,11 @@ private fun LazyItemScope.FriendItem(
                 .padding(top = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CoilImage(
+            ComponentImage(
                 modifier = Modifier
                     .size(size = 50.dp)
                     .clip(shape = RoundedCornerShape(size = 6.dp)),
-                data = personProfile.faceUrl
+                model = personProfile.faceUrl
             )
             Column(
                 modifier = Modifier
