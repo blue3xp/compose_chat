@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalGlideComposeApi::class)
+
 package github.leavesczy.compose_chat.ui.widgets
 
 import androidx.compose.animation.core.Animatable
@@ -22,13 +24,15 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
@@ -39,8 +43,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import kotlinx.coroutines.launch
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.zoomable
 import kotlin.math.roundToInt
 
 /**
@@ -50,20 +57,46 @@ import kotlin.math.roundToInt
  */
 @Composable
 fun ComponentImage(
-    modifier: Modifier,
-    model: Any,
-    contentScale: ContentScale = ContentScale.Crop,
-    filterQuality: FilterQuality = FilterQuality.None,
+    modifier: Modifier = Modifier,
+    model: Any?,
     contentDescription: String? = null,
+    alignment: Alignment = Alignment.Center,
+    contentScale: ContentScale = ContentScale.Crop,
+    alpha: Float = DefaultAlpha,
+    colorFilter: ColorFilter? = null,
     backgroundColor: Color = Color(0x66888888)
 ) {
-    AsyncImage(
+    GlideImage(
         modifier = modifier
             .background(color = backgroundColor),
         model = model,
+        contentDescription = contentDescription,
+        alignment = alignment,
         contentScale = contentScale,
-        filterQuality = filterQuality,
-        contentDescription = contentDescription
+        alpha = alpha,
+        colorFilter = colorFilter
+    )
+}
+
+@Composable
+fun ZoomableComponentImage(
+    modifier: Modifier = Modifier,
+    model: Any?,
+    contentDescription: String? = null,
+    alignment: Alignment = Alignment.Center,
+    contentScale: ContentScale = ContentScale.Fit,
+    alpha: Float = DefaultAlpha,
+    colorFilter: ColorFilter? = null
+) {
+    val zoomState = rememberZoomState(maxScale = 3f)
+    GlideImage(
+        modifier = modifier.zoomable(zoomState = zoomState),
+        model = model,
+        contentDescription = contentDescription,
+        alignment = alignment,
+        contentScale = contentScale,
+        alpha = alpha,
+        colorFilter = colorFilter
     )
 }
 

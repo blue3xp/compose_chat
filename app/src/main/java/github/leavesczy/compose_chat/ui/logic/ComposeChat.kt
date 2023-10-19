@@ -30,7 +30,7 @@ object ComposeChat {
 
     const val MeetingGroupId06 = "@TGS#33PPIK6MK"
 
-    const val AVChatRoomIdToUploadAvatar = "@TGS#aZRGY4WHQ"
+    const val UploadAvatarGroupId = "@TGS#aZRGY4WHQ"
 
     val accountProvider: IAccountProvider = AccountProvider()
 

@@ -80,8 +80,10 @@ class ProfileUpdateViewModel : BaseViewModel() {
             val result = if (imagePath.isNullOrBlank()) {
                 null
             } else {
+                val groupId = ComposeChat.UploadAvatarGroupId
+                ComposeChat.groupProvider.joinGroup(groupId = groupId)
                 ComposeChat.messageProvider.uploadImage(
-                    chat = Chat.GroupChat(id = ComposeChat.AVChatRoomIdToUploadAvatar),
+                    chat = Chat.GroupChat(id = groupId),
                     imagePath = imagePath
                 )
             }

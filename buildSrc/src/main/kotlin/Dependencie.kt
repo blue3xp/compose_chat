@@ -15,14 +15,15 @@ object Dependencie {
         const val appcompat = "androidx.appcompat:appcompat:1.6.1"
         const val exifInterface = "androidx.exifinterface:exifinterface:1.3.6"
         const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
-        const val matisse = "com.github.leavesCZY:Matisse:3efc20c1b1"
-        const val imSdk = "com.tencent.imsdk:imsdk-plus:7.5.4852"
-        const val telephoto = "me.saket.telephoto:zoomable-image-coil:0.6.2"
+        const val matisse = "com.github.leavesCZY:Matisse:1.1.0"
+        const val imSdk = "com.tencent.imsdk:imsdk-plus:7.5.4864"
+        const val glide = "com.github.bumptech.glide:compose:1.0.0-beta01"
+        const val zoomable = "net.engawapg.lib:zoomable:1.5.1"
     }
 
     object Compose {
         const val compilerVersion = "1.5.3"
-        const val bom = "androidx.compose:compose-bom:2023.10.00"
+        const val bom = "androidx.compose:compose-bom:2023.10.01"
         const val ui = "androidx.compose.ui:ui"
         const val uiTooling = "androidx.compose.ui:ui-tooling"
         const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview"
@@ -34,12 +35,6 @@ object Dependencie {
         const val constraint = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10"
         const val activity = "androidx.activity:activity-compose:1.8.0"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
-    }
-
-    object Coil {
-        private const val coilVersion = "2.4.0"
-        const val compose = "io.coil-kt:coil-compose:$coilVersion"
-        const val gif = "io.coil-kt:coil-gif:$coilVersion"
     }
 
 }

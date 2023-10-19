@@ -43,8 +43,3 @@ fun DependencyHandlerScope.implementationCompose() {
     implementationExtend(Dependencie.Compose.activity)
     implementationExtend(Dependencie.Compose.viewModel)
 }
-
-fun DependencyHandlerScope.implementationCoil() {
-    implementationExtend(Dependencie.Coil.compose)
-    implementationExtend(Dependencie.Coil.gif)
-}

@@ -8,7 +8,6 @@ import androidx.compose.ui.layout.ContentScale
 import github.leavesczy.matisse.ImageEngine
 import github.leavesczy.matisse.MediaResource
 import kotlinx.parcelize.Parcelize
-import me.saket.telephoto.zoomable.coil.ZoomableAsyncImage
 
 /**
  * @Author: leavesCZY
@@ -33,14 +32,13 @@ class MatisseImageEngine : ImageEngine {
             ComponentImage(
                 modifier = Modifier.fillMaxWidth(),
                 model = mediaResource.uri,
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Fit,
                 contentDescription = mediaResource.name
             )
         } else {
-            ZoomableAsyncImage(
+            ZoomableComponentImage(
                 modifier = Modifier.fillMaxSize(),
                 model = mediaResource.uri,
-                contentScale = ContentScale.FillWidth,
                 contentDescription = mediaResource.name
             )
         }

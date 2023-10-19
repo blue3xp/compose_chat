@@ -7,8 +7,6 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import github.leavesczy.compose_chat.provider.AppThemeProvider
-import github.leavesczy.compose_chat.ui.base.SetSystemBarUi
 import github.leavesczy.compose_chat.ui.conversation.ConversationPage
 import github.leavesczy.compose_chat.ui.friendship.FriendshipDialog
 import github.leavesczy.compose_chat.ui.friendship.FriendshipPage
@@ -25,7 +23,6 @@ import github.leavesczy.compose_chat.ui.widgets.LoadingDialog
  */
 @Composable
 fun MainPage(mainViewModel: MainViewModel) {
-    SetSystemBarUi(appTheme = AppThemeProvider.appTheme)
     ModalNavigationDrawer(
         modifier = Modifier.fillMaxSize(),
         drawerState = mainViewModel.drawerViewState.drawerState,

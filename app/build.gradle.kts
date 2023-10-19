@@ -7,12 +7,12 @@ dependencies {
     implementation(project(":proxy"))
     implementationTest()
     implementationCompose()
-    implementationCoil()
     implementation(Dependencie.Components.appcompat)
+    implementation(Dependencie.Components.exifInterface)
     implementation(Dependencie.Components.coroutines)
     implementation(Dependencie.Components.matisse)
-    implementation(Dependencie.Components.exifInterface)
-    implementation(Dependencie.Components.telephoto)
+    implementation(Dependencie.Components.glide)
+    implementation(Dependencie.Components.zoomable)
 }
 
 composeClickTrace {

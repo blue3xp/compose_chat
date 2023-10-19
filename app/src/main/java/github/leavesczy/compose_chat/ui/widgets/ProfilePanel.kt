@@ -55,7 +55,7 @@ fun ProfilePanel(
                 .size(size = 100.dp)
                 .clickableNoRipple {
                     if (avatarUrl.isNotBlank()) {
-                        PreviewImageActivity.navTo(context = context, imageUrl = avatarUrl)
+                        PreviewImageActivity.navTo(context = context, imageUri = avatarUrl)
                     }
                 },
             data = avatarUrl

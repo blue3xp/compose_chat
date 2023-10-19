@@ -139,10 +139,6 @@ private fun FriendProfilePage(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if (pageViewState.isFriend) {
                             CommonButton(
-                                text = "去聊天吧",
-                                onClick = navToChatPage
-                            )
-                            CommonButton(
                                 text = "设置备注",
                                 onClick = pageViewState.showSetFriendRemarkPanel
                             )
@@ -153,6 +149,12 @@ private fun FriendProfilePage(
                             CommonButton(
                                 text = "加为好友",
                                 onClick = pageViewState.addFriend
+                            )
+                        }
+                        if (!pageViewState.itIsMe) {
+                            CommonButton(
+                                text = "去聊天吧",
+                                onClick = navToChatPage
                             )
                         }
                     }

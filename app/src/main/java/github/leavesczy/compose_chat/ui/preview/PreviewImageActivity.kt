@@ -22,22 +22,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import github.leavesczy.compose_chat.provider.ToastProvider
 import github.leavesczy.compose_chat.ui.base.BaseActivity
-import github.leavesczy.compose_chat.ui.base.setSystemBarUi
 import github.leavesczy.compose_chat.ui.theme.BackgroundColorDark
 import github.leavesczy.compose_chat.ui.theme.WindowInsetsEmpty
+import github.leavesczy.compose_chat.ui.widgets.ZoomableComponentImage
 import github.leavesczy.compose_chat.utils.AlbumUtils
 import kotlinx.coroutines.launch
-import me.saket.telephoto.zoomable.coil.ZoomableAsyncImage
 
 /**
  * @Author: leavesCZY
@@ -48,18 +49,18 @@ class PreviewImageActivity : BaseActivity() {
 
     companion object {
 
-        private const val keyImageUrlList = "keyImageUrlList"
+        private const val keyImageUriList = "keyImageUriList"
 
         private const val keyInitialPage = "keyInitialPage"
 
-        fun navTo(context: Context, imageUrl: String) {
-            navTo(context = context, imageUrlList = listOf(element = imageUrl), initialPage = 0)
+        fun navTo(context: Context, imageUri: String) {
+            navTo(context = context, imageUriList = listOf(element = imageUri), initialPage = 0)
         }
 
-        fun navTo(context: Context, imageUrlList: List<String>, initialPage: Int) {
+        fun navTo(context: Context, imageUriList: List<String>, initialPage: Int) {
             val intent = Intent(context, PreviewImageActivity::class.java)
-            intent.putStringArrayListExtra(keyImageUrlList, arrayListOf<String>().apply {
-                addAll(imageUrlList)
+            intent.putStringArrayListExtra(keyImageUriList, arrayListOf<String>().apply {
+                addAll(imageUriList)
             })
             intent.putExtra(keyInitialPage, initialPage)
             if (context !is Activity) {
@@ -70,8 +71,8 @@ class PreviewImageActivity : BaseActivity() {
 
     }
 
-    private val imageUrlList by lazy(mode = LazyThreadSafetyMode.NONE) {
-        intent.getStringArrayListExtra(keyImageUrlList)?.filter { it.isNotBlank() } ?: emptyList()
+    private val imageUriList by lazy(mode = LazyThreadSafetyMode.NONE) {
+        intent.getStringArrayListExtra(keyImageUriList)?.filter { it.isNotBlank() } ?: emptyList()
     }
 
     private val initialPage by lazy(mode = LazyThreadSafetyMode.NONE) {
@@ -82,26 +83,35 @@ class PreviewImageActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PreviewImagePage(
-                imageUrlList = imageUrlList,
+                imageUriList = imageUriList,
                 initialPage = initialPage,
                 insertImageToAlbum = ::insertImageToAlbum
             )
         }
     }
 
-    override fun setSystemBarUi() {
-        setSystemBarUi(
-            statusBarColor = android.graphics.Color.TRANSPARENT,
-            navigationBarColor = android.graphics.Color.TRANSPARENT,
-            statusBarDarkIcons = false,
-            navigationBarDarkIcons = false
-        )
+    @Composable
+    override fun SetSystemBarUi() {
+        val context = LocalContext.current
+        LaunchedEffect(key1 = null) {
+            if (context is Activity) {
+                val window = context.window
+                window.statusBarColor = android.graphics.Color.TRANSPARENT
+                window.navigationBarColor = android.graphics.Color.TRANSPARENT
+                WindowInsetsControllerCompat(window, window.decorView).apply {
+                    hide(WindowInsetsCompat.Type.statusBars())
+                    systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+                    isAppearanceLightStatusBars = false
+                    isAppearanceLightNavigationBars = false
+                }
+            }
+        }
     }
 
-    private fun insertImageToAlbum(imageUrl: String) {
+    private fun insertImageToAlbum(imageUri: String) {
         lifecycleScope.launch {
             val result =
-                AlbumUtils.insertImageToAlbum(context = applicationContext, imageUrl = imageUrl)
+                AlbumUtils.insertImageToAlbum(context = applicationContext, imageUri = imageUri)
             if (result) {
                 showToast(msg = "图片已保存到相册")
             } else {
@@ -114,7 +124,7 @@ class PreviewImageActivity : BaseActivity() {
 
 @Composable
 private fun PreviewImagePage(
-    imageUrlList: List<String>,
+    imageUriList: List<String>,
     initialPage: Int,
     insertImageToAlbum: (String) -> Unit
 ) {
@@ -123,13 +133,13 @@ private fun PreviewImagePage(
         initialPage = initialPage,
         initialPageOffsetFraction = 0f
     ) {
-        imageUrlList.size
+        imageUriList.size
     }
     val requestPermissionLaunch = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) {
         if (it) {
-            insertImageToAlbum(imageUrlList[pagerState.currentPage])
+            insertImageToAlbum(imageUriList[pagerState.currentPage])
         } else {
             ToastProvider.showToast(msg = "请先授予存储权限再保存图片")
         }
@@ -153,7 +163,7 @@ private fun PreviewImagePage(
                 pageSpacing = 0.dp,
                 verticalAlignment = Alignment.CenterVertically
             ) { pageIndex ->
-                PreviewPage(imageUrl = imageUrlList[pageIndex])
+                PreviewPage(imageUrl = imageUriList[pageIndex])
             }
             IconButton(
                 modifier = Modifier
@@ -169,7 +179,7 @@ private fun PreviewImagePage(
                     )
                 },
                 onClick = {
-                    val imageUrl = imageUrlList[pagerState.currentPage]
+                    val imageUrl = imageUriList[pagerState.currentPage]
                     if (mustRequestWriteExternalStoragePermission(context = context)) {
                         requestPermissionLaunch.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     } else {
@@ -183,11 +193,9 @@ private fun PreviewImagePage(
 
 @Composable
 private fun PreviewPage(imageUrl: String) {
-    ZoomableAsyncImage(
+    ZoomableComponentImage(
         modifier = Modifier.fillMaxSize(),
-        model = imageUrl,
-        contentScale = ContentScale.FillWidth,
-        contentDescription = null
+        model = imageUrl
     )
 }
 

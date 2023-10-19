@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import github.leavesczy.compose_chat.provider.ImageLoaderProvider
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -25,17 +25,14 @@ object AlbumUtils {
 
     private const val jpegMime = "image/jpeg"
 
-    suspend fun insertImageToAlbum(context: Context, imageUrl: String): Boolean {
+    suspend fun insertImageToAlbum(context: Context, imageUri: String): Boolean {
         return withContext(context = Dispatchers.IO) {
             try {
-                val isHttpUrl = imageUrl.startsWith(prefix = "http")
+                val isHttpUrl = imageUri.startsWith(prefix = "http")
                 val imageFile = if (isHttpUrl) {
-                    ImageLoaderProvider.getCachedFileOrDownload(
-                        context = context,
-                        imageUrl = imageUrl
-                    )
+                    Glide.with(context).download(imageUri).submit().get()
                 } else {
-                    File(imageUrl)
+                    File(imageUri)
                 }
                 if (imageFile != null) {
                     return@withContext insertImageToAlbum(context = context, imageFile = imageFile)

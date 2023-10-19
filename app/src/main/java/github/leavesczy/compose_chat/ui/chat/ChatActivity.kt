@@ -76,7 +76,7 @@ class ChatActivity : BaseActivity() {
                             .coerceAtLeast(minimumValue = 0)
                         PreviewImageActivity.navTo(
                             context = this,
-                            imageUrlList = allImageUrl,
+                            imageUriList = allImageUrl,
                             initialPage = initialPage
                         )
                     }

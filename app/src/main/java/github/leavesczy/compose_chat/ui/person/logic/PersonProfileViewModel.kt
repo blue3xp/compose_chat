@@ -35,7 +35,7 @@ class PersonProfileViewModel : BaseViewModel() {
 
     private fun previewImage(imageUrl: String) {
         if (imageUrl.isNotBlank()) {
-            PreviewImageActivity.navTo(context = context, imageUrl = imageUrl)
+            PreviewImageActivity.navTo(context = context, imageUri = imageUrl)
         }
     }
 
