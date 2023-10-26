@@ -9,7 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +30,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -49,9 +52,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ChainStyle
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.lifecycleScope
 import github.leavesczy.compose_chat.base.model.ActionResult
 import github.leavesczy.compose_chat.base.model.GroupMemberProfile
@@ -185,15 +185,23 @@ private fun GroupProfilePage(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = listState,
-                contentPadding = PaddingValues(bottom = 80.dp),
+                contentPadding = PaddingValues(bottom = 40.dp),
             ) {
-                item(key = "header") {
+                item(
+                    key = "header",
+                    contentType = {
+                        "header"
+                    }
+                ) {
                     GroupHeader(groupProfile = viewState.groupProfile)
                 }
                 items(
                     items = viewState.memberList,
                     key = {
                         it.detail.id
+                    },
+                    contentType = {
+                        "GroupMemberItem"
                     },
                     itemContent = {
                         GroupMemberItem(
@@ -222,18 +230,18 @@ private fun GroupHeader(groupProfile: GroupProfile) {
         val context = LocalContext.current
         val avatarUrl = groupProfile.faceUrl
         val introduction =
-            "GroupID: ${groupProfile.id}\nCreateTime: ${groupProfile.createTimeFormat}\nMemberCount: ${groupProfile.memberCount}"
+            "groupID: ${groupProfile.id}\ncreateTime: ${groupProfile.createTimeFormat}\n${groupProfile.introduction}"
         ComponentImage(
             modifier = Modifier
                 .fillMaxSize()
-                .scrim(color = Color(0x33000000)),
+                .scrim(color = Color(0x4D000000)),
             model = avatarUrl
         )
         Column(
             modifier = Modifier
                 .align(alignment = Alignment.TopCenter)
                 .statusBarsPadding()
-                .padding(top = 20.dp)
+                .padding(top = 40.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -271,30 +279,39 @@ private fun PageTopBar(
     }
     Box(
         modifier = Modifier
-            .alpha(alpha = alpha)
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
-            .height(height = groupTopBarHeight)
     ) {
-        Text(
+        Box(
             modifier = Modifier
-                .align(alignment = Alignment.Center),
-            text = title,
-            color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 19.sp,
-        )
-        Icon(
+                .alpha(alpha = alpha)
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.background)
+                .statusBarsPadding()
+                .height(height = groupTopBarHeight)
+        ) {
+            Text(
+                modifier = Modifier
+                    .align(alignment = Alignment.Center),
+                text = title,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontSize = 19.sp,
+            )
+        }
+        IconButton(
             modifier = Modifier
                 .align(alignment = Alignment.CenterEnd)
-                .padding(end = 12.dp)
-                .size(size = 28.dp)
-                .clickable {
-                    menuExpanded = true
-                },
-            imageVector = Icons.Default.MoreVert,
-            contentDescription = null
-        )
+                .statusBarsPadding()
+                .padding(end = 12.dp),
+            onClick = {
+                menuExpanded = true
+            }
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(size = 28.dp),
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = null
+            )
+        }
     }
     Box(
         modifier = Modifier
@@ -343,74 +360,62 @@ private fun GroupMemberItem(
     groupMemberProfile: GroupMemberProfile,
     groupProfilePageAction: GroupProfilePageAction
 ) {
-    ConstraintLayout(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(height = 70.dp)
             .clickable {
                 groupProfilePageAction.onClickMember(groupMemberProfile)
-            },
+            }
+            .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        val (avatarRef, showNameRef, roleRef, dividerRef) = createRefs()
-        val verticalChain =
-            createVerticalChain(showNameRef, roleRef, chainStyle = ChainStyle.Packed)
-        constrain(ref = verticalChain) {
-            top.linkTo(anchor = parent.top)
-            bottom.linkTo(anchor = parent.bottom)
-        }
         ComponentImage(
             modifier = Modifier
-                .constrainAs(ref = avatarRef) {
-                    start.linkTo(anchor = parent.start)
-                    linkTo(top = parent.top, bottom = parent.bottom)
-                }
-                .padding(start = 14.dp, top = 8.dp, bottom = 8.dp)
-                .size(size = 50.dp)
+                .size(size = 52.dp)
                 .clip(shape = RoundedCornerShape(size = 6.dp)),
-            model = groupMemberProfile.detail.faceUrl)
-        Text(
+            model = groupMemberProfile.detail.faceUrl
+        )
+        Column(
             modifier = Modifier
-                .constrainAs(ref = showNameRef) {
-                    linkTo(
-                        start = avatarRef.end,
-                        end = parent.end,
-                        startMargin = 12.dp,
-                        endMargin = 12.dp
-                    )
-                    width = Dimension.fillToConstraints
-                }
-                .padding(bottom = 1.dp),
-            text = groupMemberProfile.detail.showName + "（${
-                groupMemberProfile.detail.id + if (groupMemberProfile.isOwner) {
-                    " - 群主"
-                } else {
-                    ""
-                }
-            }）",
-            fontSize = 17.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(ref = roleRef) {
-                    linkTo(start = showNameRef.start, end = parent.end, endMargin = 12.dp)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(top = 1.dp),
-            text = "joinTime: ${groupMemberProfile.joinTimeFormat}",
-            fontSize = 14.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-        Divider(
-            modifier = Modifier.constrainAs(ref = dividerRef) {
-                linkTo(
-                    start = avatarRef.end, end = parent.end
-                )
-                bottom.linkTo(anchor = parent.bottom)
-                width = Dimension.fillToConstraints
-            },
-            thickness = 0.2.dp
-        )
+                .weight(weight = 1f)
+                .padding(start = 12.dp)
+                .fillMaxHeight()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 1f)
+            )
+            Text(
+                modifier = Modifier.padding(bottom = 1.dp),
+                text = groupMemberProfile.detail.showName + "（${
+                    groupMemberProfile.detail.id + if (groupMemberProfile.isOwner) {
+                        " - 群主"
+                    } else {
+                        ""
+                    }
+                }）",
+                fontSize = 18.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Text(
+                modifier = Modifier.padding(top = 1.dp),
+                text = "joinTime: ${groupMemberProfile.joinTimeFormat}",
+                fontSize = 14.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 1f)
+            )
+            Divider(
+                modifier = Modifier,
+                thickness = 0.2.dp
+            )
+        }
     }
 }

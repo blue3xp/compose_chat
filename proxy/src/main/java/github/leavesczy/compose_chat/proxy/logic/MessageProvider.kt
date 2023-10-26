@@ -254,7 +254,7 @@ class MessageProvider : IMessageProvider {
             timestamp = generateMessageTimestamp(),
             state = MessageState.Sending,
             sender = Converters.getSelfProfile() ?: PersonProfile.Empty,
-            isSelfMessage = true
+            isOwnMessage = true
         )
     }
 

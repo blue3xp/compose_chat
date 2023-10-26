@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
+@file:OptIn(
+    com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi::class
+)
 
 package github.leavesczy.compose_chat.ui.widgets
 
@@ -43,11 +45,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.DecodeFormat
 import kotlinx.coroutines.launch
-import net.engawapg.lib.zoomable.rememberZoomState
-import net.engawapg.lib.zoomable.zoomable
 import kotlin.math.roundToInt
 
 /**
@@ -88,16 +88,17 @@ fun ZoomableComponentImage(
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null
 ) {
-    val zoomState = rememberZoomState(maxScale = 3f)
     GlideImage(
-        modifier = modifier.zoomable(zoomState = zoomState),
+        modifier = modifier,
         model = model,
         contentDescription = contentDescription,
         alignment = alignment,
         contentScale = contentScale,
         alpha = alpha,
         colorFilter = colorFilter
-    )
+    ) {
+        it.format(DecodeFormat.PREFER_RGB_565)
+    }
 }
 
 @Composable

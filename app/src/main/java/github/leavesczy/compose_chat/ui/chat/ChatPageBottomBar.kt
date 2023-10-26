@@ -70,11 +70,11 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
         focusRequester.requestFocus()
     }
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
+    val matisseImagePickerLauncher = rememberLauncherForActivityResult(
         contract = MatisseContract()
     ) { result ->
         if (!result.isNullOrEmpty()) {
-            chatViewModel.sendImageMessage(mediaResource = result[0])
+            chatViewModel.sendImageMessage(imageUri = result[0].uri)
         }
     }
 
@@ -82,7 +82,7 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
         contract = MatisseCaptureContract()
     ) { result ->
         if (result != null) {
-            chatViewModel.sendImageMessage(mediaResource = result)
+            chatViewModel.sendImageMessage(imageUri = result.uri)
         }
     }
 
@@ -194,12 +194,12 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
                                         val matisse = Matisse(
                                             maxSelectable = 1,
                                             mediaFilter = DefaultMediaFilter(
-                                                supportedMimeTypes = MimeType.ofImage(hasGif = true)
+                                                supportedMimeTypes = MimeType.ofImage()
                                             ),
                                             imageEngine = MatisseImageEngine(),
                                             captureStrategy = MediaStoreCaptureStrategy()
                                         )
-                                        imagePickerLauncher.launch(matisse)
+                                        matisseImagePickerLauncher.launch(matisse)
                                     },
                                     launchTakePicture = {
                                         chatViewModel.onInputSelectorChanged(

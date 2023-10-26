@@ -52,13 +52,12 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
     val profileUpdatePageViewStata = profileUpdateViewModel.profileUpdatePageViewStata
     if (profileUpdatePageViewStata != null) {
         val personProfile = profileUpdatePageViewStata.personProfile
-        val selectPictureLauncher = rememberLauncherForActivityResult(
-            contract = MatisseContract()
-        ) { result ->
-            if (!result.isNullOrEmpty()) {
-                profileUpdateViewModel.onAvatarUrlChanged(mediaResource = result[0])
+        val matisseImagePickerLauncher =
+            rememberLauncherForActivityResult(contract = MatisseContract()) { result ->
+                if (!result.isNullOrEmpty()) {
+                    profileUpdateViewModel.onAvatarUrlChanged(imageUri = result[0].uri)
+                }
             }
-        }
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             contentWindowInsets = WindowInsets.navigationBars
@@ -112,12 +111,12 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
                             val matisse = Matisse(
                                 maxSelectable = 1,
                                 mediaFilter = DefaultMediaFilter(
-                                    supportedMimeTypes = MimeType.ofImage(hasGif = true)
+                                    supportedMimeTypes = MimeType.ofImage()
                                 ),
                                 imageEngine = MatisseImageEngine(),
                                 captureStrategy = MediaStoreCaptureStrategy()
                             )
-                            selectPictureLauncher.launch(matisse)
+                            matisseImagePickerLauncher.launch(matisse)
                         }
                         CommonButton(text = "确认修改") {
                             profileUpdateViewModel.confirmUpdate()

@@ -5,7 +5,7 @@
  */
 object BuildConfig {
     const val applicationId = "github.leavesczy.compose_chat"
-    const val minSdk = 23
+    const val minSdk = 21
     const val targetSdk = 34
     const val compileSdk = 34
     const val buildToolsVersion = "34.0.0"

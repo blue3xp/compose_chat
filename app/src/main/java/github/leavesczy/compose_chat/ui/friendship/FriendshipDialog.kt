@@ -38,7 +38,7 @@ fun FriendshipDialog(viewState: FriendshipDialogViewState) {
         }
         Column(
             modifier = Modifier
-                .fillMaxHeight(fraction = 0.8f)
+                .fillMaxHeight(fraction = 0.90f)
                 .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 .background(color = MaterialTheme.colorScheme.background)
                 .padding(top = 20.dp)

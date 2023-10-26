@@ -25,7 +25,7 @@ data class MessageDetail(
     val timestamp: Long,
     val state: MessageState,
     val sender: PersonProfile,
-    val isSelfMessage: Boolean
+    val isOwnMessage: Boolean
 ) {
 
     val conversationTime by lazy(mode = LazyThreadSafetyMode.NONE) {
@@ -86,14 +86,12 @@ data class ImageMessage(
     val previewImageUrl: String
         get() = previewImage.url
 
-    val widgetWidthDp = 190f
+    val widgetWidthDp = 180f
 
     val widgetHeightDp = if (previewImage.width <= 0f || previewImage.height <= 0f) {
         widgetWidthDp
     } else {
-        widgetWidthDp * (minOf(
-            1.9f, 1.0f * previewImage.height / previewImage.width
-        ))
+        widgetWidthDp * (minOf(1.9f, 1.0f * previewImage.height / previewImage.width))
     }
 
 }
@@ -112,7 +110,7 @@ class TimeMessage(targetMessage: Message) : Message(
         timestamp = targetMessage.messageDetail.timestamp,
         state = MessageState.Completed,
         sender = PersonProfile.Empty,
-        isSelfMessage = false
+        isOwnMessage = false
     )
 ) {
 

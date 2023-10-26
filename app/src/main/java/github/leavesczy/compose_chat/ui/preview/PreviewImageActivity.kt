@@ -12,10 +12,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material3.Icon
@@ -26,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -34,8 +38,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import github.leavesczy.compose_chat.provider.ToastProvider
 import github.leavesczy.compose_chat.ui.base.BaseActivity
-import github.leavesczy.compose_chat.ui.theme.BackgroundColorDark
 import github.leavesczy.compose_chat.ui.theme.WindowInsetsEmpty
+import github.leavesczy.compose_chat.ui.theme.backgroundColorDark
 import github.leavesczy.compose_chat.ui.widgets.ZoomableComponentImage
 import github.leavesczy.compose_chat.utils.AlbumUtils
 import kotlinx.coroutines.launch
@@ -110,12 +114,14 @@ class PreviewImageActivity : BaseActivity() {
 
     private fun insertImageToAlbum(imageUri: String) {
         lifecycleScope.launch {
-            val result =
-                AlbumUtils.insertImageToAlbum(context = applicationContext, imageUri = imageUri)
+            val result = AlbumUtils.insertImageToAlbum(
+                context = applicationContext,
+                imageUri = imageUri
+            )
             if (result) {
-                showToast(msg = "图片已保存到相册")
+                showToast(msg = "已保存到相册")
             } else {
-                showToast(msg = "图片保存失败")
+                showToast(msg = "保存失败")
             }
         }
     }
@@ -146,9 +152,9 @@ private fun PreviewImagePage(
     }
     Scaffold(
         modifier = Modifier
-            .background(color = BackgroundColorDark)
+            .background(color = backgroundColorDark)
             .fillMaxSize(),
-        containerColor = BackgroundColorDark,
+        containerColor = backgroundColorDark,
         contentWindowInsets = WindowInsetsEmpty,
     ) { innerPadding ->
         Box(
@@ -193,10 +199,18 @@ private fun PreviewImagePage(
 
 @Composable
 private fun PreviewPage(imageUrl: String) {
-    ZoomableComponentImage(
+    Box(
         modifier = Modifier.fillMaxSize(),
-        model = imageUrl
-    )
+        contentAlignment = Alignment.Center
+    ) {
+        ZoomableComponentImage(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(state = rememberScrollState()),
+            model = imageUrl,
+            contentScale = ContentScale.FillWidth
+        )
+    }
 }
 
 private fun mustRequestWriteExternalStoragePermission(context: Context): Boolean {

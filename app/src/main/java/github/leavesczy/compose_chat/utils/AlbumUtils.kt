@@ -46,25 +46,13 @@ object AlbumUtils {
 
     private suspend fun insertImageToAlbum(context: Context, imageFile: File): Boolean {
         return withContext(context = Dispatchers.IO) {
-            val mimeType = FileUtils.getMimeType(filePath = imageFile.absolutePath).let {
-                if (it.isNullOrBlank()) {
-                    jpegMime
-                } else {
-                    it
-                }
-            }
-            val extension = FileUtils.getExtensionFromMimeType(mimeType = mimeType).let {
-                if (it.isNullOrBlank()) {
-                    jpeg
-                } else {
-                    it
-                }
-            }
-            val displayName = FileUtils.createFileName(extension = extension)
+            val mimeType = FileUtils.getMimeType(filePath = imageFile.absolutePath) ?: jpegMime
+            val extension = FileUtils.getExtensionFromMimeType(mimeType = mimeType) ?: jpeg
             val albumImageOutputStream = generateAlbumImageOutputStream(
                 context = context,
                 mimeType = mimeType,
-                displayName = displayName
+                displayName = FileUtils.createFileName(),
+                extension = extension
             )
             if (albumImageOutputStream != null) {
                 val fileInputStream = FileInputStream(imageFile)
@@ -79,12 +67,13 @@ object AlbumUtils {
 
     private suspend fun generateAlbumImageOutputStream(
         context: Context,
+        mimeType: String,
         displayName: String,
-        mimeType: String
+        extension: String
     ): OutputStream? {
         return withContext(context = Dispatchers.IO) {
             val contentValues = ContentValues()
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "${displayName}.${extension}")
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 contentValues.put(
@@ -100,12 +89,14 @@ object AlbumUtils {
                             ALBUM_DIRECTORY_NAME
                 )
                 directory.mkdirs()
-                val imageFile = File.createTempFile(displayName, ".$jpeg", directory)
+                val imageFile = File.createTempFile(displayName, ".${extension}", directory)
                 contentValues.put(MediaStore.MediaColumns.DATA, imageFile.absolutePath)
             }
             val contentResolver = context.contentResolver
-            val uri =
-                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            val uri = contentResolver.insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues
+            )
             if (uri != null) {
                 return@withContext contentResolver.openOutputStream(uri)
             }

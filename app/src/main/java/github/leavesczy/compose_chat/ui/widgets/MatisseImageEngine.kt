@@ -28,20 +28,13 @@ class MatisseImageEngine : ImageEngine {
 
     @Composable
     override fun Image(mediaResource: MediaResource) {
-        if (mediaResource.isVideo) {
-            ComponentImage(
-                modifier = Modifier.fillMaxWidth(),
-                model = mediaResource.uri,
-                contentScale = ContentScale.Fit,
-                contentDescription = mediaResource.name
-            )
-        } else {
-            ZoomableComponentImage(
-                modifier = Modifier.fillMaxSize(),
-                model = mediaResource.uri,
-                contentDescription = mediaResource.name
-            )
-        }
+        ZoomableComponentImage(
+            modifier = Modifier
+                .fillMaxWidth(),
+            model = mediaResource.uri,
+            contentScale = ContentScale.FillWidth,
+            contentDescription = mediaResource.name
+        )
     }
 
 }

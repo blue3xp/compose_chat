@@ -12,7 +12,6 @@ import github.leavesczy.compose_chat.base.model.Chat
 import github.leavesczy.compose_chat.base.model.ServerState
 import github.leavesczy.compose_chat.provider.AccountProvider
 import github.leavesczy.compose_chat.provider.AppThemeProvider
-import github.leavesczy.compose_chat.provider.ContextProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.ChatActivity
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipDialogViewState
@@ -124,7 +123,7 @@ class MainViewModel : BaseViewModel() {
                     delay(timeMillis = 400)
                     showToast(msg = "添加成功")
                     ChatActivity.navTo(
-                        context = ContextProvider.context,
+                        context = context,
                         chat = Chat.PrivateChat(id = formatUserId)
                     )
                     onFriendshipDialogDismissRequest()

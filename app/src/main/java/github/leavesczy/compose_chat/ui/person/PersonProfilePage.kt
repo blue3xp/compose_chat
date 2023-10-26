@@ -3,6 +3,8 @@ package github.leavesczy.compose_chat.ui.person
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -17,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -24,8 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import github.leavesczy.compose_chat.extend.clickableNoRipple
 import github.leavesczy.compose_chat.extend.scrim
@@ -63,69 +64,54 @@ private fun PersonProfileContentPage(pageViewState: PersonProfilePageViewState) 
         animated = false
     }
     Surface(modifier = Modifier.fillMaxSize()) {
-        ConstraintLayout(modifier = Modifier) {
-            val (backgroundRef, avatarRef, titleRef, subtitleRef, introductionRef) = createRefs()
+        Box(modifier = Modifier) {
             BezierImage(
                 modifier = Modifier
-                    .constrainAs(ref = backgroundRef) {
-                        linkTo(start = parent.start, end = parent.end)
-                        top.linkTo(anchor = parent.top)
-                        width = Dimension.fillToConstraints
-                    }
                     .aspectRatio(ratio = 1f)
-                    .scrim(color = Color(0x33000000)),
+                    .scrim(color = Color(0x4D000000)),
                 model = faceUrl
             )
-            AnimateBouncyImage(
+            Column(
                 modifier = Modifier
-                    .constrainAs(ref = avatarRef) {
-                        linkTo(top = backgroundRef.top, bottom = backgroundRef.bottom, bias = 0.1f)
-                        linkTo(start = backgroundRef.start, end = backgroundRef.end)
-                    }
+                    .align(alignment = Alignment.TopCenter)
                     .statusBarsPadding()
-                    .size(size = 100.dp)
-                    .clickableNoRipple {
-                        pageViewState.previewImage(faceUrl)
-                    },
-                faceUrl = faceUrl,
-                animated = animated
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(ref = titleRef) {
-                        linkTo(start = backgroundRef.start, end = backgroundRef.end)
-                        top.linkTo(anchor = avatarRef.bottom, margin = 10.dp)
-                    }
-                    .padding(horizontal = 10.dp),
-                text = title,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(ref = subtitleRef) {
-                        linkTo(start = backgroundRef.start, end = backgroundRef.end)
-                        top.linkTo(anchor = titleRef.bottom, margin = 10.dp)
-                    }
-                    .padding(horizontal = 10.dp),
-                text = subtitle,
-                fontSize = 15.sp,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(ref = introductionRef) {
-                        linkTo(start = backgroundRef.start, end = backgroundRef.end)
-                        top.linkTo(anchor = subtitleRef.bottom, margin = 10.dp)
-                    }
-                    .padding(horizontal = 10.dp),
-                text = introduction,
-                fontSize = 15.sp,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
+                    .padding(top = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AnimateBouncyImage(
+                    modifier = Modifier
+                        .size(size = 100.dp)
+                        .clickableNoRipple {
+                            pageViewState.previewImage(faceUrl)
+                        },
+                    faceUrl = faceUrl,
+                    animated = animated
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                    text = title,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                    text = subtitle,
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                    text = introduction,
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+            }
         }
     }
 }

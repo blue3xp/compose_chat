@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -42,7 +43,7 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
     }
     val coroutineScope = rememberCoroutineScope()
     CenterAlignedTopAppBar(
-        modifier = Modifier,
+        modifier = Modifier.shadow(elevation = 0.4.dp),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
         title = {
 

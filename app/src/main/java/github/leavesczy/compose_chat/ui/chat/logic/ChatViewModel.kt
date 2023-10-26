@@ -1,5 +1,6 @@
 package github.leavesczy.compose_chat.ui.chat.logic
 
+import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,12 +17,10 @@ import github.leavesczy.compose_chat.base.model.SystemMessage
 import github.leavesczy.compose_chat.base.model.TextMessage
 import github.leavesczy.compose_chat.base.model.TimeMessage
 import github.leavesczy.compose_chat.base.provider.IMessageProvider
-import github.leavesczy.compose_chat.provider.ContextProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.InputSelector
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import github.leavesczy.compose_chat.utils.CompressImageUtils
-import github.leavesczy.matisse.MediaResource
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -179,11 +178,11 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
         }
     }
 
-    fun sendImageMessage(mediaResource: MediaResource) {
+    fun sendImageMessage(imageUri: Uri) {
         viewModelScope.launch {
             val imageFile = CompressImageUtils.compressImage(
-                context = ContextProvider.context,
-                mediaResource = mediaResource
+                context = context,
+                imageUri = imageUri
             )
             val imagePath = imageFile?.absolutePath
             if (imagePath.isNullOrBlank()) {

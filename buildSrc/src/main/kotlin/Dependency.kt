@@ -39,7 +39,6 @@ fun DependencyHandlerScope.implementationCompose() {
     implementationExtend(Dependencie.Compose.material)
     implementationExtend(Dependencie.Compose.material3)
     implementationExtend(Dependencie.Compose.materialIcons)
-    implementationExtend(Dependencie.Compose.constraint)
     implementationExtend(Dependencie.Compose.activity)
     implementationExtend(Dependencie.Compose.viewModel)
 }

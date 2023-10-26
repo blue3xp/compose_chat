@@ -1,16 +1,15 @@
 package github.leavesczy.compose_chat.ui.profile.logic
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.model.ActionResult
 import github.leavesczy.compose_chat.base.model.Chat
-import github.leavesczy.compose_chat.provider.ContextProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import github.leavesczy.compose_chat.utils.CompressImageUtils
-import github.leavesczy.matisse.MediaResource
 import kotlinx.coroutines.launch
 
 /**
@@ -69,12 +68,12 @@ class ProfileUpdateViewModel : BaseViewModel() {
         }
     }
 
-    fun onAvatarUrlChanged(mediaResource: MediaResource) {
+    fun onAvatarUrlChanged(imageUri: Uri) {
         viewModelScope.launch {
             showToast(msg = "正在上传图片")
             val imageFile = CompressImageUtils.compressImage(
-                context = ContextProvider.context,
-                mediaResource = mediaResource
+                context = context,
+                imageUri = imageUri
             )
             val imagePath = imageFile?.absolutePath
             val result = if (imagePath.isNullOrBlank()) {

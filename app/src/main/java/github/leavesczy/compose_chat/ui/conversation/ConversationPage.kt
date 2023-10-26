@@ -2,10 +2,15 @@ package github.leavesczy.compose_chat.ui.conversation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -38,10 +43,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ChainStyle
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import androidx.constraintlayout.compose.atLeast
 import androidx.lifecycle.viewmodel.compose.viewModel
 import github.leavesczy.compose_chat.base.model.Conversation
 import github.leavesczy.compose_chat.extend.scrim
@@ -107,7 +108,7 @@ private fun LazyItemScope.ConversationItem(
     var menuExpanded by remember {
         mutableStateOf(value = false)
     }
-    ConstraintLayout(
+    Row(
         modifier = Modifier
             .animateItemPlacement()
             .then(
@@ -118,6 +119,7 @@ private fun LazyItemScope.ConversationItem(
                 }
             )
             .fillMaxWidth()
+            .height(height = 70.dp)
             .pointerInteropFilter {
                 offset = Offset(it.x / 2, -it.y)
                 false
@@ -129,104 +131,93 @@ private fun LazyItemScope.ConversationItem(
                 onLongClick = {
                     menuExpanded = true
                 }
-            )
+            ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        val (avatarRef, unreadMessageCountRef, nicknameRef, lastMsgRef, timeRef, dividerRef, dropdownMenuRef) = createRefs()
-        val verticalChain =
-            createVerticalChain(nicknameRef, lastMsgRef, chainStyle = ChainStyle.Packed)
-        constrain(ref = verticalChain) {
-            top.linkTo(anchor = parent.top)
-            bottom.linkTo(anchor = parent.bottom)
-        }
-        ComponentImage(
-            modifier = Modifier
-                .constrainAs(ref = avatarRef) {
-                    start.linkTo(anchor = parent.start)
-                    linkTo(top = parent.top, bottom = parent.bottom)
+        Box(
+            modifier = Modifier.fillMaxHeight()
+        ) {
+            ComponentImage(
+                modifier = Modifier
+                    .align(alignment = Alignment.Center)
+                    .padding(horizontal = 12.dp)
+                    .size(size = 50.dp)
+                    .clip(shape = RoundedCornerShape(size = 6.dp)),
+                model = conversation.faceUrl
+            )
+            val unreadMessageCount = conversation.unreadMessageCount
+            if (unreadMessageCount > 0) {
+                val count = if (unreadMessageCount > 99) {
+                    "99+"
+                } else {
+                    unreadMessageCount.toString()
                 }
-                .padding(start = 14.dp, top = 8.dp, bottom = 8.dp)
-                .size(size = 50.dp)
-                .clip(shape = RoundedCornerShape(size = 6.dp)),
-            model = conversation.faceUrl
-        )
-        val unreadMessageCount = conversation.unreadMessageCount
-        if (unreadMessageCount > 0) {
-            val count = if (unreadMessageCount > 99) {
-                "99+"
-            } else {
-                unreadMessageCount.toString()
+                Text(
+                    modifier = Modifier
+                        .align(alignment = Alignment.TopEnd)
+                        .padding(top = 2.dp)
+                        .size(size = 20.dp)
+                        .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
+                        .wrapContentSize(align = Alignment.Center),
+                    text = count,
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        Column(
+            modifier = Modifier
+                .weight(weight = 1f)
+                .fillMaxHeight()
+                .padding(end = 12.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 1f)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 1.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(weight = 1f),
+                    text = conversation.name,
+                    fontSize = 17.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+                Text(
+                    modifier = Modifier,
+                    text = conversation.lastMessage.messageDetail.conversationTime,
+                    fontSize = 12.sp
+                )
             }
             Text(
                 modifier = Modifier
-                    .constrainAs(ref = unreadMessageCountRef) {
-                        start.linkTo(anchor = avatarRef.end)
-                        top.linkTo(anchor = avatarRef.top, margin = 2.dp)
-                        end.linkTo(anchor = avatarRef.end)
-                        width = Dimension.preferredWrapContent.atLeast(dp = 20.dp)
-                        height = Dimension.preferredWrapContent.atLeast(dp = 20.dp)
-                    }
-                    .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
-                    .wrapContentSize(align = Alignment.Center),
-                text = count,
-                color = Color.White,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center
+                    .padding(top = 1.dp),
+                text = conversation.formatMsg,
+                fontSize = 14.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 1f)
+            )
+            Divider(
+                modifier = Modifier,
+                thickness = 0.2.dp
             )
         }
-        Text(
-            modifier = Modifier
-                .constrainAs(ref = nicknameRef) {
-                    linkTo(
-                        start = avatarRef.end,
-                        end = timeRef.start,
-                        startMargin = 12.dp,
-                        endMargin = 12.dp
-                    )
-                    width = Dimension.fillToConstraints
-                }
-                .padding(bottom = 1.dp),
-            text = conversation.name,
-            fontSize = 17.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(ref = lastMsgRef) {
-                    linkTo(start = nicknameRef.start, end = parent.end, endMargin = 12.dp)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(top = 1.dp),
-            text = conversation.formatMsg,
-            fontSize = 14.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(ref = timeRef) {
-                    centerVerticallyTo(other = nicknameRef)
-                    end.linkTo(anchor = parent.end, margin = 12.dp)
-                    height = Dimension.wrapContent
-                },
-            text = conversation.lastMessage.messageDetail.conversationTime,
-            fontSize = 12.sp
-        )
-        Divider(
-            modifier = Modifier
-                .constrainAs(ref = dividerRef) {
-                    linkTo(start = nicknameRef.start, end = parent.end)
-                    bottom.linkTo(anchor = parent.bottom)
-                    width = Dimension.fillToConstraints
-                },
-            thickness = 0.2.dp
-        )
         MoreActionDropdownMenu(
-            modifier = Modifier
-                .constrainAs(ref = dropdownMenuRef) {
-                    start.linkTo(anchor = parent.start)
-                    top.linkTo(anchor = parent.top)
-                },
+            modifier = Modifier,
             expanded = menuExpanded,
             offset = offset,
             conversation = conversation,

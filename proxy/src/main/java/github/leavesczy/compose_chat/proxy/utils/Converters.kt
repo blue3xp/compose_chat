@@ -143,7 +143,7 @@ internal object Converters {
             state = convertMessageState(timMessage.status),
             timestamp = timMessage.timestamp,
             sender = senderProfile,
-            isSelfMessage = timMessage.isSelf
+            isOwnMessage = timMessage.isSelf
         )
         val message = when (timMessage.elemType) {
             V2TIMMessage.V2TIM_ELEM_TYPE_TEXT -> {
@@ -214,7 +214,7 @@ internal object Converters {
                     remark = "",
                     signature = ""
                 ),
-                isSelfMessage = false
+                isOwnMessage = false
             )
             val memberList = groupTipsElem.memberList
             val opMember = groupTipsElem.opMember

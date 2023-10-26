@@ -15,10 +15,9 @@ object Dependencie {
         const val appcompat = "androidx.appcompat:appcompat:1.6.1"
         const val exifInterface = "androidx.exifinterface:exifinterface:1.3.6"
         const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
-        const val matisse = "com.github.leavesCZY:Matisse:1.1.0"
-        const val imSdk = "com.tencent.imsdk:imsdk-plus:7.5.4864"
+        const val matisse = "io.github.leavesczy:matisse:1.1.1"
         const val glide = "com.github.bumptech.glide:compose:1.0.0-beta01"
-        const val zoomable = "net.engawapg.lib:zoomable:1.5.1"
+        const val imSdk = "com.tencent.imsdk:imsdk-plus:7.5.4864"
     }
 
     object Compose {
@@ -32,7 +31,6 @@ object Dependencie {
         const val material = "androidx.compose.material:material"
         const val material3 = "androidx.compose.material3:material3"
         const val materialIcons = "androidx.compose.material:material-icons-extended"
-        const val constraint = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10"
         const val activity = "androidx.activity:activity-compose:1.8.0"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
     }

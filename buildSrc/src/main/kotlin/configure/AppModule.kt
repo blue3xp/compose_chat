@@ -63,6 +63,12 @@ internal fun BaseAppModuleExtension.appModule(project: Project) {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            ndk {
+                abiFilters.apply {
+                    add("arm64-v8a")
+                    add("x86")
+                }
+            }
         }
         release {
             signingConfig = signingConfigs.getByName("release")
@@ -84,6 +90,7 @@ internal fun BaseAppModuleExtension.appModule(project: Project) {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Dependencie.Compose.compilerVersion

@@ -12,7 +12,6 @@ dependencies {
     implementation(Dependencie.Components.coroutines)
     implementation(Dependencie.Components.matisse)
     implementation(Dependencie.Components.glide)
-    implementation(Dependencie.Components.zoomable)
 }
 
 composeClickTrace {
