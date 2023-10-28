@@ -4,6 +4,6 @@
  */
 object WorkflowsTrigger {
 
-    val trigger = 18
+    val trigger = 19
 
 }

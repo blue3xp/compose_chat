@@ -27,7 +27,7 @@ Apk 下载：[releases](https://github.com/leavesCZY/compose_chat/releases)
 - Nice
 - Test
 
-![](https://github.com/leavesCZY/compose_chat/assets/30774063/574e4b26-550f-4888-9aa0-c9cc5121525a)
+![](https://github.com/leavesCZY/compose_chat/assets/30774063/fbb36fb3-52b8-4719-b783-ec7f0c5b2d92)
 
 compose_chat 也使用到了我另外的两个开源库
 

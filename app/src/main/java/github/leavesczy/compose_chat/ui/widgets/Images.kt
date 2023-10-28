@@ -75,7 +75,9 @@ fun ComponentImage(
         contentScale = contentScale,
         alpha = alpha,
         colorFilter = colorFilter
-    )
+    ) {
+        it.format(DecodeFormat.PREFER_RGB_565).encodeQuality(80)
+    }
 }
 
 @Composable
@@ -97,7 +99,7 @@ fun ZoomableComponentImage(
         alpha = alpha,
         colorFilter = colorFilter
     ) {
-        it.format(DecodeFormat.PREFER_RGB_565)
+        it.format(DecodeFormat.PREFER_RGB_565).encodeQuality(80)
     }
 }
 

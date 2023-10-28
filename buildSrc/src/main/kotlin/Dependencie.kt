@@ -15,13 +15,13 @@ object Dependencie {
         const val appcompat = "androidx.appcompat:appcompat:1.6.1"
         const val exifInterface = "androidx.exifinterface:exifinterface:1.3.6"
         const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
-        const val matisse = "io.github.leavesczy:matisse:1.1.1"
+        const val matisse = "io.github.leavesczy:matisse:1.1.2"
         const val glide = "com.github.bumptech.glide:compose:1.0.0-beta01"
         const val imSdk = "com.tencent.imsdk:imsdk-plus:7.5.4864"
     }
 
     object Compose {
-        const val compilerVersion = "1.5.3"
+        const val compiler = "1.5.3"
         const val bom = "androidx.compose:compose-bom:2023.10.01"
         const val ui = "androidx.compose.ui:ui"
         const val uiTooling = "androidx.compose.ui:ui-tooling"
