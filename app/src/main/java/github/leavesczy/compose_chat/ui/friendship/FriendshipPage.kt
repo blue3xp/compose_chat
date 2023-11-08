@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import github.leavesczy.compose_chat.base.model.GroupProfile
-import github.leavesczy.compose_chat.base.model.PersonProfile
+import github.leavesczy.compose_chat.base.models.GroupProfile
+import github.leavesczy.compose_chat.base.models.PersonProfile
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipPageViewState
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipViewModel
 import github.leavesczy.compose_chat.ui.widgets.ComponentImage

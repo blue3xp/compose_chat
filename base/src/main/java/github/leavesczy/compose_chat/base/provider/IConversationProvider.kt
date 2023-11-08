@@ -1,8 +1,8 @@
 package github.leavesczy.compose_chat.base.provider
 
-import github.leavesczy.compose_chat.base.model.ActionResult
-import github.leavesczy.compose_chat.base.model.Chat
-import github.leavesczy.compose_chat.base.model.Conversation
+import github.leavesczy.compose_chat.base.models.ActionResult
+import github.leavesczy.compose_chat.base.models.Chat
+import github.leavesczy.compose_chat.base.models.Conversation
 import kotlinx.coroutines.flow.StateFlow
 
 /**

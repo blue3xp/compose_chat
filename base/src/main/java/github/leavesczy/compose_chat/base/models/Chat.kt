@@ -1,4 +1,4 @@
-package github.leavesczy.compose_chat.base.model
+package github.leavesczy.compose_chat.base.models
 
 import android.os.Parcelable
 import androidx.compose.runtime.Stable

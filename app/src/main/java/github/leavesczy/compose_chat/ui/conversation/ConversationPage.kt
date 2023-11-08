@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import github.leavesczy.compose_chat.base.model.Conversation
+import github.leavesczy.compose_chat.base.models.Conversation
 import github.leavesczy.compose_chat.extend.scrim
 import github.leavesczy.compose_chat.ui.conversation.logic.ConversationPageViewState
 import github.leavesczy.compose_chat.ui.conversation.logic.ConversationViewModel

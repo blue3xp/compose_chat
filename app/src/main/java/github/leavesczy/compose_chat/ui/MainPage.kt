@@ -1,19 +1,20 @@
 package github.leavesczy.compose_chat.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import github.leavesczy.compose_chat.ui.conversation.ConversationPage
 import github.leavesczy.compose_chat.ui.friendship.FriendshipDialog
 import github.leavesczy.compose_chat.ui.friendship.FriendshipPage
 import github.leavesczy.compose_chat.ui.logic.MainPageTab
 import github.leavesczy.compose_chat.ui.logic.MainViewModel
 import github.leavesczy.compose_chat.ui.person.PersonProfilePage
-import github.leavesczy.compose_chat.ui.theme.WindowInsetsEmpty
 import github.leavesczy.compose_chat.ui.widgets.LoadingDialog
 
 /**
@@ -32,7 +33,12 @@ fun MainPage(mainViewModel: MainViewModel) {
         content = {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
-                contentWindowInsets = WindowInsetsEmpty,
+                contentWindowInsets = WindowInsets(
+                    left = 0.dp,
+                    top = 0.dp,
+                    right = 0.dp,
+                    bottom = 0.dp
+                ),
                 topBar = {
                     if (mainViewModel.bottomBarViewState.selectedTab != MainPageTab.Person) {
                         MainPageTopBar(viewState = mainViewModel.topBarViewState)

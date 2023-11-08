@@ -2,7 +2,7 @@ package github.leavesczy.compose_chat.ui.logic
 
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Stable
-import github.leavesczy.compose_chat.base.model.PersonProfile
+import github.leavesczy.compose_chat.base.models.PersonProfile
 
 /**
  * @Author: leavesCZY

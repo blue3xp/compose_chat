@@ -40,7 +40,7 @@ import github.leavesczy.compose_chat.ui.logic.MainPageTab
 fun MainPageBottomBar(viewState: MainPageBottomBarViewState) {
     Row(
         modifier = Modifier
-            .shadow(elevation = 18.dp)
+            .shadow(elevation = 22.dp)
             .background(color = MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .navigationBarsPadding()

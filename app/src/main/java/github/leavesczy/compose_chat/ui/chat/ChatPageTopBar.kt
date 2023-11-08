@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import github.leavesczy.compose_chat.base.model.Chat
+import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.ui.friend.FriendProfileActivity
 
 /**

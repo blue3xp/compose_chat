@@ -1,4 +1,4 @@
-package github.leavesczy.compose_chat.base.model
+package github.leavesczy.compose_chat.base.models
 
 import androidx.compose.runtime.Stable
 import github.leavesczy.compose_chat.base.utils.TimeUtil

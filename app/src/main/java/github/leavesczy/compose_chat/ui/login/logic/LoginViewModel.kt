@@ -3,7 +3,7 @@ package github.leavesczy.compose_chat.ui.login.logic
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import github.leavesczy.compose_chat.base.model.ActionResult
+import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.provider.AccountProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.logic.ComposeChat

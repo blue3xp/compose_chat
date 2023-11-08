@@ -15,6 +15,7 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "compose_chat"
 include(":app")
 include(":proxy")
 include(":base")

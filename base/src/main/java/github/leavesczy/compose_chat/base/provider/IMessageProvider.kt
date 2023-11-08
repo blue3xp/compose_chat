@@ -1,8 +1,8 @@
 package github.leavesczy.compose_chat.base.provider
 
-import github.leavesczy.compose_chat.base.model.Chat
-import github.leavesczy.compose_chat.base.model.LoadMessageResult
-import github.leavesczy.compose_chat.base.model.Message
+import github.leavesczy.compose_chat.base.models.Chat
+import github.leavesczy.compose_chat.base.models.LoadMessageResult
+import github.leavesczy.compose_chat.base.models.Message
 import kotlinx.coroutines.channels.Channel
 
 /**

@@ -43,7 +43,7 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
     }
     val coroutineScope = rememberCoroutineScope()
     CenterAlignedTopAppBar(
-        modifier = Modifier.shadow(elevation = 0.4.dp),
+        modifier = Modifier.shadow(elevation = 0.2.dp),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
         title = {
 

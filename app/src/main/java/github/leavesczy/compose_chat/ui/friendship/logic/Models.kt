@@ -2,8 +2,8 @@ package github.leavesczy.compose_chat.ui.friendship.logic
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Stable
-import github.leavesczy.compose_chat.base.model.GroupProfile
-import github.leavesczy.compose_chat.base.model.PersonProfile
+import github.leavesczy.compose_chat.base.models.GroupProfile
+import github.leavesczy.compose_chat.base.models.PersonProfile
 
 @Stable
 data class FriendshipPageViewState(

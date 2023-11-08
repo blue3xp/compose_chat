@@ -2,10 +2,10 @@ package github.leavesczy.compose_chat.ui.chat.logic
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Stable
-import github.leavesczy.compose_chat.base.model.Chat
-import github.leavesczy.compose_chat.base.model.GroupMemberProfile
-import github.leavesczy.compose_chat.base.model.GroupProfile
-import github.leavesczy.compose_chat.base.model.Message
+import github.leavesczy.compose_chat.base.models.Chat
+import github.leavesczy.compose_chat.base.models.GroupMemberProfile
+import github.leavesczy.compose_chat.base.models.GroupProfile
+import github.leavesczy.compose_chat.base.models.Message
 
 /**
  * @Author: leavesCZY
