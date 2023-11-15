@@ -17,7 +17,7 @@ import java.io.File
  */
 object CompressImageUtils {
 
-    private const val IMAGE_MAX_SIZE = (0.8 * 1024 * 1024).toInt()
+    private const val IMAGE_MAX_SIZE = (1.0 * 1024 * 1024).toInt()
 
     private const val jpegMime = "image/jpeg"
 

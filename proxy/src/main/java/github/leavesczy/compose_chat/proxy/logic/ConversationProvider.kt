@@ -14,7 +14,7 @@ import github.leavesczy.compose_chat.base.models.GroupConversation
 import github.leavesczy.compose_chat.base.provider.IConversationProvider
 import github.leavesczy.compose_chat.proxy.coroutine.ChatCoroutineScope
 import github.leavesczy.compose_chat.proxy.utils.Converters
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -26,9 +26,9 @@ import kotlin.coroutines.resume
  */
 class ConversationProvider : IConversationProvider {
 
-    override val conversationList = MutableStateFlow<List<Conversation>>(value = emptyList())
+    override val conversationList = MutableSharedFlow<List<Conversation>>()
 
-    override val totalUnreadMessageCount = MutableStateFlow<Long>(value = 0)
+    override val totalUnreadMessageCount = MutableSharedFlow<Long>()
 
     init {
         V2TIMManager.getConversationManager().addConversationListener(
@@ -112,11 +112,6 @@ class ConversationProvider : IConversationProvider {
 
     override suspend fun deleteGroupConversation(groupId: String): ActionResult {
         return Converters.deleteGroupConversation(groupId)
-    }
-
-    override suspend fun clear() {
-        conversationList.emit(value = emptyList())
-        totalUnreadMessageCount.emit(value = 0L)
     }
 
     private fun dispatchConversationList(conversationList: List<Conversation>) {

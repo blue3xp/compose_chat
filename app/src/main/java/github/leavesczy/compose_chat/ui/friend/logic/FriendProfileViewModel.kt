@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.ActionResult
+import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
+import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import kotlinx.coroutines.delay
@@ -16,6 +18,8 @@ import kotlinx.coroutines.launch
  * @Github：https://github.com/leavesCZY
  */
 class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
+
+    private val friendshipProvider: IFriendshipProvider = FriendshipProvider()
 
     var pageViewState by mutableStateOf<FriendProfilePageViewState?>(value = null)
         private set
@@ -33,7 +37,7 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
     private fun getFriendProfile() {
         viewModelScope.launch {
             loadingDialog(visible = true)
-            val profile = ComposeChat.friendshipProvider.getFriendProfile(friendId = friendId)
+            val profile = friendshipProvider.getFriendProfile(friendId = friendId)
             if (profile == null) {
                 pageViewState = null
             } else {
@@ -66,7 +70,7 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
 
     private fun addFriend() {
         viewModelScope.launch {
-            when (val result = ComposeChat.friendshipProvider.addFriend(friendId = friendId)) {
+            when (val result = friendshipProvider.addFriend(friendId = friendId)) {
                 is ActionResult.Success -> {
                     delay(timeMillis = 400)
                     getFriendProfile()
@@ -82,7 +86,7 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
 
     suspend fun deleteFriend(): Boolean {
         return when (val result =
-            ComposeChat.friendshipProvider.deleteFriend(friendId = friendId)) {
+            friendshipProvider.deleteFriend(friendId = friendId)) {
             is ActionResult.Success -> {
                 showToast(msg = "已删除好友")
                 true
@@ -111,15 +115,11 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
 
     private fun setFriendRemark(remark: String) {
         viewModelScope.launch {
-            when (val result = ComposeChat.friendshipProvider.setFriendRemark(
-                friendId = friendId,
-                remark = remark
-            )) {
+            when (val result =
+                friendshipProvider.setFriendRemark(friendId = friendId, remark = remark)) {
                 is ActionResult.Success -> {
                     delay(timeMillis = 300)
                     getFriendProfile()
-                    ComposeChat.friendshipProvider.refreshFriendList()
-                    ComposeChat.conversationProvider.refreshConversationList()
                     dismissSetFriendRemarkDialog()
                 }
 

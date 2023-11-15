@@ -5,8 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.ActionResult
+import github.leavesczy.compose_chat.base.provider.IGroupProvider
+import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
-import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -16,6 +17,8 @@ import kotlinx.coroutines.launch
  * @Github：https://github.com/leavesCZY
  */
 class GroupProfileViewModel(private val groupId: String) : BaseViewModel() {
+
+    private val groupProvider: IGroupProvider = GroupProvider()
 
     var pageViewState by mutableStateOf<GroupProfilePageViewState?>(
         value = null
@@ -29,10 +32,10 @@ class GroupProfileViewModel(private val groupId: String) : BaseViewModel() {
         viewModelScope.launch {
             loadingDialog(visible = true)
             val groupProfileAsync = async {
-                ComposeChat.groupProvider.getGroupInfo(groupId = groupId)
+                groupProvider.getGroupInfo(groupId = groupId)
             }
             val memberListAsync = async {
-                ComposeChat.groupProvider.getGroupMemberList(groupId = groupId)
+                groupProvider.getGroupMemberList(groupId = groupId)
             }
             val groupProfile = groupProfileAsync.await()
             if (groupProfile != null) {
@@ -47,20 +50,20 @@ class GroupProfileViewModel(private val groupId: String) : BaseViewModel() {
 
     private fun getGroupProfile() {
         viewModelScope.launch {
-            ComposeChat.groupProvider.getGroupInfo(groupId = groupId)?.let {
+            groupProvider.getGroupInfo(groupId = groupId)?.let {
                 pageViewState = pageViewState?.copy(groupProfile = it)
             }
         }
     }
 
     suspend fun quitGroup(): ActionResult {
-        return ComposeChat.groupProvider.quitGroup(groupId = groupId)
+        return groupProvider.quitGroup(groupId = groupId)
     }
 
     fun setAvatar(avatarUrl: String) {
         viewModelScope.launch {
             when (val result =
-                ComposeChat.groupProvider.setAvatar(groupId = groupId, avatarUrl = avatarUrl)) {
+                groupProvider.setAvatar(groupId = groupId, avatarUrl = avatarUrl)) {
                 ActionResult.Success -> {
                     getGroupProfile()
                     showToast(msg = "修改成功")

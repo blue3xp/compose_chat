@@ -1,7 +1,6 @@
 package github.leavesczy.compose_chat.ui.profile
 
 import android.os.Bundle
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -21,14 +20,8 @@ import github.leavesczy.compose_chat.ui.base.BaseActivity
 import github.leavesczy.compose_chat.ui.profile.logic.ProfileUpdateViewModel
 import github.leavesczy.compose_chat.ui.widgets.CommonButton
 import github.leavesczy.compose_chat.ui.widgets.CommonOutlinedTextField
-import github.leavesczy.compose_chat.ui.widgets.MatisseImageEngine
 import github.leavesczy.compose_chat.ui.widgets.ProfilePanel
 import github.leavesczy.compose_chat.utils.randomFaceUrl
-import github.leavesczy.matisse.DefaultMediaFilter
-import github.leavesczy.matisse.Matisse
-import github.leavesczy.matisse.MatisseContract
-import github.leavesczy.matisse.MediaStoreCaptureStrategy
-import github.leavesczy.matisse.MimeType
 
 /**
  * @Author: leavesCZY
@@ -52,12 +45,6 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
     val profileUpdatePageViewStata = profileUpdateViewModel.profileUpdatePageViewStata
     if (profileUpdatePageViewStata != null) {
         val personProfile = profileUpdatePageViewStata.personProfile
-        val matisseImagePickerLauncher =
-            rememberLauncherForActivityResult(contract = MatisseContract()) { result ->
-                if (!result.isNullOrEmpty()) {
-                    profileUpdateViewModel.onAvatarUrlChanged(imageUri = result[0].uri)
-                }
-            }
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             contentWindowInsets = WindowInsets.navigationBars
@@ -104,19 +91,8 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
                             },
                             label = "signature"
                         )
-                        CommonButton(text = "随机图片") {
+                        CommonButton(text = "随机头像") {
                             profileUpdateViewModel.onAvatarUrlChanged(imageUrl = randomFaceUrl())
-                        }
-                        CommonButton(text = "本地图片") {
-                            val matisse = Matisse(
-                                maxSelectable = 1,
-                                mediaFilter = DefaultMediaFilter(
-                                    supportedMimeTypes = MimeType.ofImage()
-                                ),
-                                imageEngine = MatisseImageEngine(),
-                                captureStrategy = MediaStoreCaptureStrategy()
-                            )
-                            matisseImagePickerLauncher.launch(matisse)
                         }
                         CommonButton(text = "确认修改") {
                             profileUpdateViewModel.confirmUpdate()

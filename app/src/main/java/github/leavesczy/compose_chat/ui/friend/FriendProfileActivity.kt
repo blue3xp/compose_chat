@@ -137,6 +137,12 @@ private fun FriendProfilePage(
                     avatarUrl = personProfile.faceUrl,
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (!pageViewState.itIsMe) {
+                            CommonButton(
+                                text = "去聊天吧",
+                                onClick = navToChatPage
+                            )
+                        }
                         if (pageViewState.isFriend) {
                             CommonButton(
                                 text = "设置备注",
@@ -149,12 +155,6 @@ private fun FriendProfilePage(
                             CommonButton(
                                 text = "加为好友",
                                 onClick = pageViewState.addFriend
-                            )
-                        }
-                        if (!pageViewState.itIsMe) {
-                            CommonButton(
-                                text = "去聊天吧",
-                                onClick = navToChatPage
                             )
                         }
                     }
@@ -180,9 +180,12 @@ private fun DeleteFriendDialog(
 ) {
     MessageDialog(
         visible = visible,
+        dismissOnBackPress = true,
+        dismissOnClickOutside = true,
         title = "确认删除好友吗？",
         leftButtonText = "删除",
         rightButtonText = "取消",
+        onDismissRequest = onDismissRequest,
         onClickLeftButton = {
             onDismissRequest()
             deleteFriend()

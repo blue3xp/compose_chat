@@ -70,7 +70,7 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
         focusRequester.requestFocus()
     }
 
-    val matisseImagePickerLauncher = rememberLauncherForActivityResult(
+    val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = MatisseContract()
     ) { result ->
         if (!result.isNullOrEmpty()) {
@@ -199,7 +199,7 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
                                             imageEngine = MatisseImageEngine(),
                                             captureStrategy = MediaStoreCaptureStrategy()
                                         )
-                                        matisseImagePickerLauncher.launch(matisse)
+                                        imagePickerLauncher.launch(matisse)
                                     },
                                     launchTakePicture = {
                                         chatViewModel.onInputSelectorChanged(

@@ -1,15 +1,12 @@
 package github.leavesczy.compose_chat.ui.profile.logic
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.ActionResult
-import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
-import github.leavesczy.compose_chat.utils.CompressImageUtils
 import kotlinx.coroutines.launch
 
 /**
@@ -61,44 +58,8 @@ class ProfileUpdateViewModel : BaseViewModel() {
         val mProfileUpdatePageViewStata = profileUpdatePageViewStata
         if (mProfileUpdatePageViewStata != null) {
             profileUpdatePageViewStata = mProfileUpdatePageViewStata.copy(
-                personProfile = mProfileUpdatePageViewStata.personProfile.copy(
-                    faceUrl = imageUrl
-                )
+                personProfile = mProfileUpdatePageViewStata.personProfile.copy(faceUrl = imageUrl)
             )
-        }
-    }
-
-    fun onAvatarUrlChanged(imageUri: Uri) {
-        viewModelScope.launch {
-            showToast(msg = "正在上传图片")
-            val imageFile = CompressImageUtils.compressImage(
-                context = context,
-                imageUri = imageUri
-            )
-            val imagePath = imageFile?.absolutePath
-            val result = if (imagePath.isNullOrBlank()) {
-                null
-            } else {
-                val groupId = ComposeChat.UploadAvatarGroupId
-                ComposeChat.groupProvider.joinGroup(groupId = groupId)
-                ComposeChat.messageProvider.uploadImage(
-                    chat = Chat.GroupChat(id = groupId),
-                    imagePath = imagePath
-                )
-            }
-            if (result.isNullOrBlank()) {
-                showToast(msg = "图片上传失败")
-            } else {
-                showToast(msg = "图片上传成功")
-                val mProfileUpdatePageViewStata = profileUpdatePageViewStata
-                if (mProfileUpdatePageViewStata != null) {
-                    profileUpdatePageViewStata = mProfileUpdatePageViewStata.copy(
-                        personProfile = mProfileUpdatePageViewStata.personProfile.copy(
-                            faceUrl = result
-                        )
-                    )
-                }
-            }
         }
     }
 

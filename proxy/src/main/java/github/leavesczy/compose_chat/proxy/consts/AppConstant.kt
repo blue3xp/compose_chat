@@ -5,7 +5,7 @@ package github.leavesczy.compose_chat.proxy.consts
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
-internal object AppConsts {
+internal object AppConstant {
 
     const val APP_ID = 1400592743
 

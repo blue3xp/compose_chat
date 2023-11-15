@@ -15,6 +15,7 @@ data class PersonProfile(
     val nickname: String,
     val remark: String,
     val signature: String,
+    val addTime: Long,
     val isFriend: Boolean = false
 ) {
 
@@ -26,6 +27,7 @@ data class PersonProfile(
             nickname = "",
             remark = "",
             signature = "",
+            addTime = 0,
             isFriend = false
         )
 

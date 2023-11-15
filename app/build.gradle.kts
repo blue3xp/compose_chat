@@ -11,14 +11,14 @@ plugins {
 
 android {
     namespace = "github.leavesczy.compose_chat"
-    compileSdk = libs.versions.app.compile.sdk.get().toInt()
-    buildToolsVersion = libs.versions.app.build.tools.version.get()
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
     defaultConfig {
-        applicationId = libs.versions.app.application.id.get()
-        minSdk = libs.versions.app.min.sdk.get().toInt()
-        targetSdk = libs.versions.app.target.sdk.get().toInt()
-        versionCode = libs.versions.app.version.code.get().toInt()
-        versionName = libs.versions.app.version.name.get()
+        applicationId = "github.leavesczy.compose_chat"
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.add("zh")
         vectorDrawables {
@@ -33,16 +33,16 @@ android {
                 }
             }
         }
-        buildConfigField("String", "VERSION_NAME", "\"${libs.versions.app.version.name.get()}\"")
+        buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildConfigTime()}\"")
     }
     signingConfigs {
         create("release") {
             storeFile =
                 File(rootDir.absolutePath + File.separator + "doc" + File.separator + "key.jks")
-            keyAlias = libs.versions.app.key.alias.get()
-            keyPassword = libs.versions.app.key.password.get()
-            storePassword = libs.versions.app.store.password.get()
+            keyAlias = "leavesCZY"
+            keyPassword = "123456"
+            storePassword = "123456"
             enableV1Signing = true
             enableV2Signing = true
             enableV3Signing = true

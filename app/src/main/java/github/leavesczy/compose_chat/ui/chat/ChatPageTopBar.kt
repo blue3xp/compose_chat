@@ -28,21 +28,23 @@ import github.leavesczy.compose_chat.ui.friend.FriendProfileActivity
 fun ChatPageTopBar(title: String, chat: Chat) {
     val context = LocalContext.current
     CenterAlignedTopAppBar(
-        modifier = Modifier.shadow(elevation = 0.8.dp),
+        modifier = Modifier
+            .shadow(elevation = 0.8.dp),
         title = {
             Text(
                 modifier = Modifier,
                 text = title,
                 fontSize = 19.sp,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = {
             IconButton(
                 content = {
                     Icon(
-                        modifier = Modifier.size(size = 26.dp),
+                        modifier = Modifier
+                            .size(size = 22.dp),
                         imageVector = Icons.Default.ArrowBackIosNew,
                         contentDescription = null
                     )
@@ -56,7 +58,8 @@ fun ChatPageTopBar(title: String, chat: Chat) {
             IconButton(
                 content = {
                     Icon(
-                        modifier = Modifier.size(size = 26.dp),
+                        modifier = Modifier
+                            .size(size = 24.dp),
                         imageVector = Icons.Filled.MoreVert,
                         contentDescription = null
                     )

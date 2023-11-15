@@ -61,6 +61,7 @@ internal object Converters {
                 nickname = profile.nickName ?: "",
                 remark = profile.nickName ?: "",
                 faceUrl = profile.faceUrl ?: "",
+                addTime = 0,
                 signature = profile.selfSignature ?: ""
             )
         }
@@ -73,6 +74,7 @@ internal object Converters {
             remark = friendInfo.friendRemark ?: "",
             faceUrl = friendInfo.userProfile.faceUrl ?: "",
             signature = friendInfo.userProfile.selfSignature ?: "",
+            addTime = friendInfo.friendAddTime,
             isFriend = true
         )
     }
@@ -84,6 +86,7 @@ internal object Converters {
             remark = friendInfo.friendInfo.friendRemark ?: "",
             faceUrl = friendInfo.friendInfo.userProfile.faceUrl ?: "",
             signature = friendInfo.friendInfo.userProfile.selfSignature ?: "",
+            addTime = friendInfo.friendInfo.friendAddTime,
             isFriend = friendInfo.relation == V2TIMFriendCheckResult.V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY || friendInfo.relation == V2TIMFriendCheckResult.V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST
         )
     }
@@ -96,6 +99,7 @@ internal object Converters {
             faceUrl = memberFullInfo.faceUrl ?: "",
             nickname = memberFullInfo.nickName ?: "",
             remark = memberFullInfo.friendRemark ?: "",
+            addTime = 0,
             signature = ""
         )
         return GroupMemberProfile(
@@ -136,6 +140,7 @@ internal object Converters {
             faceUrl = timMessage.faceUrl ?: "",
             nickname = timMessage.nickName ?: "",
             remark = timMessage.friendRemark ?: "",
+            addTime = 0,
             signature = ""
         )
         val messageDetail = MessageDetail(
@@ -212,6 +217,7 @@ internal object Converters {
                     faceUrl = "",
                     nickname = "",
                     remark = "",
+                    addTime = 0,
                     signature = ""
                 ),
                 isOwnMessage = false

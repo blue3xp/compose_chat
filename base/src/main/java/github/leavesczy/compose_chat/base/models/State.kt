@@ -24,7 +24,7 @@ sealed class ActionResult {
 enum class ServerState {
     Logout,
     Connecting,
-    ConnectSuccess,
+    Connected,
     ConnectFailed,
     UserSigExpired,
     KickedOffline

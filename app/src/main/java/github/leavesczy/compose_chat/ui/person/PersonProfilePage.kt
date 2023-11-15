@@ -27,11 +27,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import github.leavesczy.compose_chat.extend.clickableNoRipple
 import github.leavesczy.compose_chat.extend.scrim
 import github.leavesczy.compose_chat.ui.person.logic.PersonProfilePageViewState
-import github.leavesczy.compose_chat.ui.person.logic.PersonProfileViewModel
 import github.leavesczy.compose_chat.ui.widgets.BezierImage
 import github.leavesczy.compose_chat.ui.widgets.BouncyImage
 import kotlinx.coroutines.delay
@@ -43,13 +41,7 @@ import kotlin.random.Random
  * @Github：https://github.com/leavesCZY
  */
 @Composable
-fun PersonProfilePage() {
-    val personProfileViewModel = viewModel<PersonProfileViewModel>()
-    PersonProfileContentPage(pageViewState = personProfileViewModel.pageViewState)
-}
-
-@Composable
-private fun PersonProfileContentPage(pageViewState: PersonProfilePageViewState) {
+fun PersonProfilePage(pageViewState: PersonProfilePageViewState) {
     val personProfile = pageViewState.personProfile
     val faceUrl = personProfile.faceUrl
     val title = personProfile.showName

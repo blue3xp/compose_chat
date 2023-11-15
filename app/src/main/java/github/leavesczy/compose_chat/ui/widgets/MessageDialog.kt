@@ -42,16 +42,19 @@ import github.leavesczy.compose_chat.extend.clickableNoRipple
 @Composable
 fun MessageDialog(
     visible: Boolean,
+    dismissOnBackPress: Boolean = true,
+    dismissOnClickOutside: Boolean = true,
     title: String,
     leftButtonText: String,
     rightButtonText: String,
+    onDismissRequest: () -> Unit,
     onClickLeftButton: () -> Unit,
     onClickRightButton: () -> Unit
 ) {
     val onClickLeft by rememberUpdatedState(onClickLeftButton)
     val onClickRight by rememberUpdatedState(onClickRightButton)
-    BackHandler(enabled = visible) {
-
+    if (dismissOnBackPress) {
+        BackHandler(enabled = visible, onBack = onDismissRequest)
     }
     AnimatedVisibility(
         visible = visible,
@@ -71,7 +74,9 @@ fun MessageDialog(
         Box(
             modifier = Modifier
                 .clickableNoRipple {
-
+                    if (dismissOnClickOutside) {
+                        onDismissRequest()
+                    }
                 }
                 .fillMaxSize()
                 .background(color = Color(0x99000000))

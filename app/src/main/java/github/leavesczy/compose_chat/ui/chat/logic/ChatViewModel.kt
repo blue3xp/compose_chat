@@ -16,7 +16,12 @@ import github.leavesczy.compose_chat.base.models.MessageState
 import github.leavesczy.compose_chat.base.models.SystemMessage
 import github.leavesczy.compose_chat.base.models.TextMessage
 import github.leavesczy.compose_chat.base.models.TimeMessage
+import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
+import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.base.provider.IMessageProvider
+import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
+import github.leavesczy.compose_chat.proxy.logic.GroupProvider
+import github.leavesczy.compose_chat.proxy.logic.MessageProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.InputSelector
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
@@ -24,7 +29,6 @@ import github.leavesczy.compose_chat.utils.CompressImageUtils
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
 
 /**
  * @Author: leavesCZY
@@ -74,8 +78,10 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
     var currentInputSelector by mutableStateOf(value = InputSelector.NONE)
         private set
 
+    private val messageProvider: IMessageProvider = MessageProvider()
+
     init {
-        ComposeChat.messageProvider.startReceive(
+        messageProvider.startReceive(
             chat = chat,
             messageListener = messageListener
         )
@@ -83,11 +89,13 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
         viewModelScope.launch {
             val name = when (chat) {
                 is Chat.PrivateChat -> {
-                    ComposeChat.friendshipProvider.getFriendProfile(friendId = chat.id)?.showName
+                    val friendshipProvider: IFriendshipProvider = FriendshipProvider()
+                    friendshipProvider.getFriendProfile(friendId = chat.id)?.showName
                 }
 
                 is Chat.GroupChat -> {
-                    ComposeChat.groupProvider.getGroupInfo(groupId = chat.id)?.name
+                    val groupProvider: IGroupProvider = GroupProvider()
+                    groupProvider.getGroupInfo(groupId = chat.id)?.name
                 }
             } ?: ""
             chatPageViewState = chatPageViewState.copy(topBarTitle = name)
@@ -98,17 +106,10 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
     fun loadMoreMessage() {
         viewModelScope.launch {
             loadMessageViewState = loadMessageViewState.copy(refreshing = true)
-            val loadResult: LoadMessageResult
-            val loadDuration = measureTimeMillis {
-                loadResult = ComposeChat.messageProvider.getHistoryMessage(
-                    chat = chat,
-                    lastMessage = lastMessage
-                )
-            }
-            val delay = 500L - loadDuration
-            if (delay > 0) {
-                delay(timeMillis = delay)
-            }
+            val loadResult = messageProvider.getHistoryMessage(
+                chat = chat,
+                lastMessage = lastMessage
+            )
             val loadFinish = when (loadResult) {
                 is LoadMessageResult.Success -> {
                     addMessageToFooter(newMessageList = loadResult.messageList)
@@ -131,11 +132,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
             input
         } else {
             if (input.text.length > TEXT_MSG_MAX_LENGTH) {
-                textMessageInputted.copy(
-                    text = input.text.substring(
-                        0, TEXT_MSG_MAX_LENGTH
-                    )
-                )
+                textMessageInputted.copy(text = input.text.substring(0, TEXT_MSG_MAX_LENGTH))
             } else {
                 input
             }
@@ -155,9 +152,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
         val messageAppend = currentSelectedText + emoji
         val selectedAppend = messageAppend.length
         textMessageInputted = TextFieldValue(
-            text = messageAppend + currentText.substring(
-                currentSelection, currentText.length
-            ),
+            text = messageAppend + currentText.substring(currentSelection, currentText.length),
             selection = TextRange(index = selectedAppend)
         )
     }
@@ -173,7 +168,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
                 return@launch
             }
             textMessageInputted = TextFieldValue(text = "")
-            val messageChannel = ComposeChat.messageProvider.sendText(chat = chat, text = text)
+            val messageChannel = messageProvider.sendText(chat = chat, text = text)
             handleMessageChannel(messageChannel = messageChannel)
         }
     }
@@ -188,8 +183,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
             if (imagePath.isNullOrBlank()) {
                 showToast(msg = "图片获取失败")
             } else {
-                val messageChannel =
-                    ComposeChat.messageProvider.sendImage(chat = chat, imagePath = imagePath)
+                val messageChannel = messageProvider.sendImage(chat = chat, imagePath = imagePath)
                 handleMessageChannel(messageChannel = messageChannel)
             }
         }
@@ -291,12 +285,12 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
     }
 
     private fun markMessageAsRead() {
-        ComposeChat.conversationProvider.cleanConversationUnreadMessageCount(chat = chat)
+        messageProvider.cleanConversationUnreadMessageCount(chat = chat)
     }
 
     override fun onCleared() {
         super.onCleared()
-        ComposeChat.messageProvider.stopReceive(messageListener = messageListener)
+        messageProvider.stopReceive(messageListener = messageListener)
         markMessageAsRead()
     }
 

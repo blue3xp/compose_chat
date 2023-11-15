@@ -1,16 +1,5 @@
 [versions]
-app-application-id = "github.leavesczy.compose_chat"
-app-min-sdk = "21"
-app-target-sdk = "34"
-app-compile-sdk = "34"
-app-build-tools-version = "34.0.0"
-app-key-alias = "leavesCZY"
-app-key-password = "123456"
-app-store-password = "123456"
-app-version-code = "1"
-app-version-name = "1.0.0"
-
-android-plugin = "8.1.2"
+android-plugin = "8.1.3"
 kotlin-plugin = "1.9.20"
 trace-plugin = "0.0.5"
 

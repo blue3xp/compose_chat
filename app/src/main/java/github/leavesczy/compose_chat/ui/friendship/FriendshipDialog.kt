@@ -17,7 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import github.leavesczy.compose_chat.provider.ToastProvider
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipDialogViewState
-import github.leavesczy.compose_chat.ui.logic.ComposeChat
+import github.leavesczy.compose_chat.ui.logic.GroupIds
 import github.leavesczy.compose_chat.ui.widgets.CommonButton
 import github.leavesczy.compose_chat.ui.widgets.CommonOutlinedTextField
 import github.leavesczy.compose_chat.ui.widgets.ComposeBottomSheetDialog
@@ -66,22 +66,22 @@ fun FriendshipDialog(viewState: FriendshipDialogViewState) {
                 }
             }
             CommonButton(text = "加入交流群 0x01") {
-                viewState.joinGroup(ComposeChat.MeetingGroupId01)
+                viewState.joinGroup(GroupIds.MeetingGroupId01)
             }
             CommonButton(text = "加入交流群 0x02") {
-                viewState.joinGroup(ComposeChat.MeetingGroupId02)
+                viewState.joinGroup(GroupIds.MeetingGroupId02)
             }
             CommonButton(text = "加入交流群 0x03") {
-                viewState.joinGroup(ComposeChat.MeetingGroupId03)
+                viewState.joinGroup(GroupIds.MeetingGroupId03)
             }
             CommonButton(text = "加入交流群 0x04") {
-                viewState.joinGroup(ComposeChat.MeetingGroupId04)
+                viewState.joinGroup(GroupIds.MeetingGroupId04)
             }
             CommonButton(text = "加入交流群 0x05") {
-                viewState.joinGroup(ComposeChat.MeetingGroupId05)
+                viewState.joinGroup(GroupIds.MeetingGroupId05)
             }
             CommonButton(text = "加入交流群 0x06") {
-                viewState.joinGroup(ComposeChat.MeetingGroupId06)
+                viewState.joinGroup(GroupIds.MeetingGroupId06)
             }
         }
     }

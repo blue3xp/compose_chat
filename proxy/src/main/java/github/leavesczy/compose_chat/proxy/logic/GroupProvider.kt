@@ -16,7 +16,7 @@ import github.leavesczy.compose_chat.base.models.GroupProfile
 import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.proxy.coroutine.ChatCoroutineScope
 import github.leavesczy.compose_chat.proxy.utils.Converters
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -28,7 +28,7 @@ import kotlin.coroutines.resume
  */
 class GroupProvider : IGroupProvider {
 
-    override val joinedGroupList = MutableStateFlow<List<GroupProfile>>(value = emptyList())
+    override val joinedGroupList = MutableSharedFlow<List<GroupProfile>>()
 
     init {
         V2TIMManager.getInstance().addGroupListener(object : V2TIMGroupListener() {
@@ -250,10 +250,6 @@ class GroupProvider : IGroupProvider {
         return groupMemberList?.map {
             Converters.convertGroupMember(memberFullInfo = it)
         } ?: emptyList()
-    }
-
-    override suspend fun clear() {
-        joinedGroupList.emit(value = emptyList())
     }
 
 }

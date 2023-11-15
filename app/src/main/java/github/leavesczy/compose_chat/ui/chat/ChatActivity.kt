@@ -145,7 +145,8 @@ private fun ChatPage(chatViewModel: ChatViewModel, chatPageAction: ChatPageActio
             refreshing = loadMessageViewState.refreshing,
             onRefresh = {
                 chatViewModel.loadMoreMessage()
-            })
+            }
+        )
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -155,7 +156,10 @@ private fun ChatPage(chatViewModel: ChatViewModel, chatPageAction: ChatPageActio
                     enabled = !loadMessageViewState.loadFinish
                 )
         ) {
-            MessagePanel(pageViewState = chatPageViewState, pageAction = chatPageAction)
+            MessagePanel(
+                pageViewState = chatPageViewState,
+                pageAction = chatPageAction
+            )
             PullRefreshIndicator(
                 modifier = Modifier.align(alignment = Alignment.TopCenter),
                 refreshing = loadMessageViewState.refreshing,

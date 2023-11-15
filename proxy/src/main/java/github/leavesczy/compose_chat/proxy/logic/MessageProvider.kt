@@ -40,22 +40,22 @@ class MessageProvider : IMessageProvider {
         mutableMapOf<String, SoftReference<IMessageProvider.MessageListener>>()
 
     init {
-        V2TIMManager.getMessageManager()
-            .addAdvancedMsgListener(
-                object : V2TIMAdvancedMsgListener() {
-                    override fun onRecvNewMessage(msg: V2TIMMessage) {
-                        val partId = msg.groupID ?: msg.userID ?: ""
-                        val messageListener = messageListenerMap[partId]?.get()
-                        if (messageListener != null) {
-                            val message = Converters.convertMessage(msg)
-                            messageListener.onReceiveMessage(
-                                message = message
-                            )
-                        } else {
-                            messageListenerMap.remove(partId)
-                        }
+        V2TIMManager.getMessageManager().addAdvancedMsgListener(
+            object : V2TIMAdvancedMsgListener() {
+                override fun onRecvNewMessage(msg: V2TIMMessage) {
+                    val partId = msg.groupID ?: msg.userID ?: ""
+                    val messageListener = messageListenerMap[partId]?.get()
+                    if (messageListener != null) {
+                        val message = Converters.convertMessage(msg)
+                        messageListener.onReceiveMessage(
+                            message = message
+                        )
+                    } else {
+                        messageListenerMap.remove(partId)
                     }
-                })
+                }
+            }
+        )
     }
 
     override suspend fun getHistoryMessage(chat: Chat, lastMessage: Message?): LoadMessageResult {
@@ -66,7 +66,8 @@ class MessageProvider : IMessageProvider {
                 override fun onSuccess(t: List<V2TIMMessage>) {
                     continuation.resume(
                         value = LoadMessageResult.Success(
-                            messageList = Converters.convertMessage(t), loadFinish = t.size < count
+                            messageList = Converters.convertMessage(t),
+                            loadFinish = t.size < count
                         )
                     )
                 }
@@ -197,32 +198,6 @@ class MessageProvider : IMessageProvider {
         }
     }
 
-    override suspend fun uploadImage(chat: Chat, imagePath: String): String {
-        return suspendCancellableCoroutine { continuation ->
-            val imageMessage = V2TIMManager.getMessageManager().createImageMessage(imagePath)
-            V2TIMManager.getMessageManager().sendMessage(imageMessage,
-                "",
-                chat.id,
-                V2TIMMessage.V2TIM_PRIORITY_HIGH,
-                false,
-                null,
-                object : V2TIMSendCallback<V2TIMMessage> {
-                    override fun onSuccess(message: V2TIMMessage) {
-                        val res = Converters.convertMessage(message)
-                        continuation.resume((res as? ImageMessage)?.previewImageUrl ?: "")
-                    }
-
-                    override fun onError(code: Int, desc: String?) {
-                        continuation.resume("")
-                    }
-
-                    override fun onProgress(progress: Int) {
-
-                    }
-                })
-        }
-    }
-
     override fun startReceive(chat: Chat, messageListener: IMessageProvider.MessageListener) {
         val id = chat.id
         messageListenerMap.remove(id)
@@ -232,6 +207,15 @@ class MessageProvider : IMessageProvider {
 
     override fun stopReceive(messageListener: IMessageProvider.MessageListener) {
         removeReduceListener(listener = messageListener, listenerMap = messageListenerMap)
+    }
+
+    override fun cleanConversationUnreadMessageCount(chat: Chat) {
+        V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount(
+            Converters.getConversationKey(chat = chat),
+            0,
+            0,
+            null
+        )
     }
 
     private fun checkListener() {

@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
@@ -277,6 +278,7 @@ private fun PageTopBar(
     var menuExpanded by remember {
         mutableStateOf(false)
     }
+    val context = LocalContext.current
     Box(
         modifier = Modifier
     ) {
@@ -293,21 +295,37 @@ private fun PageTopBar(
                     .align(alignment = Alignment.Center),
                 text = title,
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 19.sp,
+                fontSize = 20.sp,
+            )
+        }
+        IconButton(
+            modifier = Modifier
+                .align(alignment = Alignment.CenterStart)
+                .statusBarsPadding()
+                .padding(start = 8.dp),
+            onClick = {
+                (context as Activity).finish()
+            }
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(size = 22.dp),
+                imageVector = Icons.Default.ArrowBackIosNew,
+                contentDescription = null
             )
         }
         IconButton(
             modifier = Modifier
                 .align(alignment = Alignment.CenterEnd)
                 .statusBarsPadding()
-                .padding(end = 12.dp),
+                .padding(end = 8.dp),
             onClick = {
                 menuExpanded = true
             }
         ) {
             Icon(
                 modifier = Modifier
-                    .size(size = 28.dp),
+                    .size(size = 24.dp),
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = null
             )
@@ -396,7 +414,7 @@ private fun GroupMemberItem(
                         ""
                     }
                 }）",
-                fontSize = 18.sp,
+                fontSize = 17.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )

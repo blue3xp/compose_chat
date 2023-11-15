@@ -89,10 +89,6 @@ class LoginActivity : BaseActivity() {
 
 @Composable
 private fun LoginPage(viewState: LoginPageViewState, onClickLoginButton: (String) -> Unit) {
-    val localSoftwareKeyboardController = LocalSoftwareKeyboardController.current
-    BackHandler(enabled = viewState.loading) {
-
-    }
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -101,6 +97,10 @@ private fun LoginPage(viewState: LoginPageViewState, onClickLoginButton: (String
                 .fillMaxSize()
                 .padding(paddingValues = innerPadding),
         ) {
+            val localSoftwareKeyboardController = LocalSoftwareKeyboardController.current
+            BackHandler(enabled = viewState.loading) {
+
+            }
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally

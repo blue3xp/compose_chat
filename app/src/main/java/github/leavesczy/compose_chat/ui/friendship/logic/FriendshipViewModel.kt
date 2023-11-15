@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.GroupProfile
 import github.leavesczy.compose_chat.base.models.PersonProfile
+import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
+import github.leavesczy.compose_chat.base.provider.IGroupProvider
+import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
+import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.ChatActivity
 import github.leavesczy.compose_chat.ui.friend.FriendProfileActivity
-import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import kotlinx.coroutines.launch
 
 /**
@@ -20,6 +23,10 @@ import kotlinx.coroutines.launch
  * @Github：https://github.com/leavesCZY
  */
 class FriendshipViewModel : BaseViewModel() {
+
+    private val friendshipProvider: IFriendshipProvider = FriendshipProvider()
+
+    private val groupProvider: IGroupProvider = GroupProvider()
 
     var pageViewState by mutableStateOf(
         value = FriendshipPageViewState(
@@ -35,18 +42,18 @@ class FriendshipViewModel : BaseViewModel() {
     init {
         viewModelScope.launch {
             launch {
-                ComposeChat.groupProvider.joinedGroupList.collect {
+                groupProvider.joinedGroupList.collect {
                     pageViewState = pageViewState.copy(joinedGroupList = it)
                 }
             }
             launch {
-                ComposeChat.friendshipProvider.friendList.collect {
+                friendshipProvider.friendList.collect {
                     pageViewState = pageViewState.copy(friendList = it)
                 }
             }
         }
-        ComposeChat.groupProvider.refreshJoinedGroupList()
-        ComposeChat.friendshipProvider.refreshFriendList()
+        groupProvider.refreshJoinedGroupList()
+        friendshipProvider.refreshFriendList()
     }
 
     private fun onClickGroupItem(groupProfile: GroupProfile) {

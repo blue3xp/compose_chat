@@ -53,7 +53,8 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
                 modifier = Modifier,
                 content = {
                     Icon(
-                        modifier = Modifier.size(size = 26.dp),
+                        modifier = Modifier
+                            .size(size = 26.dp),
                         imageVector = Icons.Filled.Menu,
                         contentDescription = null
                     )
@@ -71,7 +72,8 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
                     modifier = Modifier,
                     content = {
                         Icon(
-                            modifier = Modifier.size(size = 26.dp),
+                            modifier = Modifier
+                                .size(size = 26.dp),
                             imageVector = Icons.Filled.MoreVert,
                             contentDescription = null
                         )
@@ -86,7 +88,8 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
                         .padding(end = 10.dp)
                 ) {
                     DropdownMenu(
-                        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+                        modifier = Modifier
+                            .background(color = MaterialTheme.colorScheme.background),
                         expanded = menuExpanded,
                         onDismissRequest = {
                             menuExpanded = false
@@ -95,6 +98,7 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
                         DropdownMenuItem(
                             text = {
                                 Text(
+                                    modifier = Modifier,
                                     text = "添加好友",
                                     style = TextStyle(fontSize = 18.sp)
                                 )
@@ -107,6 +111,7 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
                         DropdownMenuItem(
                             text = {
                                 Text(
+                                    modifier = Modifier,
                                     text = "加入群聊",
                                     style = TextStyle(fontSize = 18.sp)
                                 )

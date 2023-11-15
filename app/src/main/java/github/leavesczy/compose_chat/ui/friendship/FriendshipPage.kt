@@ -32,11 +32,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import github.leavesczy.compose_chat.base.models.GroupProfile
 import github.leavesczy.compose_chat.base.models.PersonProfile
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipPageViewState
-import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipViewModel
 import github.leavesczy.compose_chat.ui.widgets.ComponentImage
 
 /**
@@ -45,16 +43,7 @@ import github.leavesczy.compose_chat.ui.widgets.ComponentImage
  * @Github：https://github.com/leavesCZY
  */
 @Composable
-fun FriendshipPage(showFriendshipDialog: () -> Unit) {
-    val friendshipViewModel = viewModel<FriendshipViewModel>()
-    FriendshipContentPage(
-        pageViewState = friendshipViewModel.pageViewState,
-        showFriendshipDialog = showFriendshipDialog
-    )
-}
-
-@Composable
-private fun FriendshipContentPage(
+fun FriendshipPage(
     pageViewState: FriendshipPageViewState,
     showFriendshipDialog: () -> Unit
 ) {

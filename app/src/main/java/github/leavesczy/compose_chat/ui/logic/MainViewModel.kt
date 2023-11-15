@@ -10,8 +10,14 @@ import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.ServerState
+import github.leavesczy.compose_chat.base.provider.IConversationProvider
+import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
+import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.provider.AccountProvider
 import github.leavesczy.compose_chat.provider.AppThemeProvider
+import github.leavesczy.compose_chat.proxy.logic.ConversationProvider
+import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
+import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.ChatActivity
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipDialogViewState
@@ -28,6 +34,8 @@ import kotlinx.coroutines.launch
  * @Github：https://github.com/leavesCZY
  */
 class MainViewModel : BaseViewModel() {
+
+    private val conversationProvider: IConversationProvider = ConversationProvider()
 
     var loadingDialogVisible by mutableStateOf(value = false)
         private set
@@ -71,14 +79,14 @@ class MainViewModel : BaseViewModel() {
     )
         private set
 
-    private val _serverConnectState = MutableStateFlow(value = ServerState.ConnectSuccess)
+    private val _serverConnectState = MutableStateFlow(value = ServerState.Connected)
 
     val serverConnectState: SharedFlow<ServerState> = _serverConnectState
 
     init {
         viewModelScope.launch {
             launch {
-                ComposeChat.conversationProvider.totalUnreadMessageCount.collect {
+                conversationProvider.totalUnreadMessageCount.collect {
                     bottomBarViewState = bottomBarViewState.copy(unreadMessageCount = it)
                 }
             }
@@ -90,7 +98,7 @@ class MainViewModel : BaseViewModel() {
             launch {
                 ComposeChat.accountProvider.serverConnectState.collect {
                     _serverConnectState.emit(value = it)
-                    if (it == ServerState.ConnectSuccess) {
+                    if (it == ServerState.Connected) {
                         requestData()
                     }
                 }
@@ -102,10 +110,7 @@ class MainViewModel : BaseViewModel() {
     }
 
     private fun requestData() {
-        ComposeChat.conversationProvider.refreshConversationList()
-        ComposeChat.conversationProvider.refreshTotalUnreadMessageCount()
-        ComposeChat.friendshipProvider.refreshFriendList()
-        ComposeChat.groupProvider.refreshJoinedGroupList()
+        conversationProvider.refreshTotalUnreadMessageCount()
         ComposeChat.accountProvider.refreshPersonProfile()
     }
 
@@ -118,7 +123,8 @@ class MainViewModel : BaseViewModel() {
     private fun addFriend(userId: String) {
         viewModelScope.launch {
             val formatUserId = userId.lowercase()
-            when (val result = ComposeChat.friendshipProvider.addFriend(friendId = formatUserId)) {
+            val friendshipProvider: IFriendshipProvider = FriendshipProvider()
+            when (val result = friendshipProvider.addFriend(friendId = formatUserId)) {
                 is ActionResult.Success -> {
                     delay(timeMillis = 400)
                     showToast(msg = "添加成功")
@@ -138,11 +144,11 @@ class MainViewModel : BaseViewModel() {
 
     private fun joinGroup(groupId: String) {
         viewModelScope.launch {
-            when (val result = ComposeChat.groupProvider.joinGroup(groupId)) {
+            val groupProvider: IGroupProvider = GroupProvider()
+            when (val result = groupProvider.joinGroup(groupId)) {
                 is ActionResult.Success -> {
                     delay(timeMillis = 400)
                     showToast(msg = "加入成功")
-                    ComposeChat.groupProvider.refreshJoinedGroupList()
                     onFriendshipDialogDismissRequest()
                 }
 
@@ -158,9 +164,6 @@ class MainViewModel : BaseViewModel() {
             loadingDialog(visible = true)
             when (val result = ComposeChat.accountProvider.logout()) {
                 is ActionResult.Success -> {
-                    ComposeChat.conversationProvider.clear()
-                    ComposeChat.groupProvider.clear()
-                    ComposeChat.friendshipProvider.clear()
                     AccountProvider.onUserLogout()
                 }
 

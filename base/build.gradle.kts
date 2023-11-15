@@ -6,8 +6,8 @@ plugins {
 
 android {
     namespace = "github.leavesczy.compose_chat.base"
-    compileSdk = libs.versions.app.compile.sdk.get().toInt()
-    buildToolsVersion = libs.versions.app.build.tools.version.get()
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
     defaultConfig {
         consumerProguardFiles.add(File("consumer-rules.pro"))
     }
