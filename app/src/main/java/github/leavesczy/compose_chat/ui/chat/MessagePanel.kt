@@ -63,7 +63,7 @@ fun MessagePanel(pageViewState: ChatPageViewState, pageAction: ChatPageAction) {
         items(
             items = pageViewState.messageList,
             key = {
-                it.messageDetail.msgId
+                it.detail.msgId
             },
             contentType = {
                 when (it) {
@@ -76,7 +76,7 @@ fun MessagePanel(pageViewState: ChatPageViewState, pageAction: ChatPageAction) {
                     }
 
                     is TextMessage -> {
-                        val isOwnMessage = it.messageDetail.isOwnMessage
+                        val isOwnMessage = it.detail.isOwnMessage
                         if (isOwnMessage) {
                             "ownTextMessage"
                         } else {
@@ -85,7 +85,7 @@ fun MessagePanel(pageViewState: ChatPageViewState, pageAction: ChatPageAction) {
                     }
 
                     is ImageMessage -> {
-                        val isOwnMessage = it.messageDetail.isOwnMessage
+                        val isOwnMessage = it.detail.isOwnMessage
                         if (isOwnMessage) {
                             "ownImageMessage"
                         } else {
@@ -127,7 +127,7 @@ fun MessagePanel(pageViewState: ChatPageViewState, pageAction: ChatPageAction) {
                             }
                         }
                     }
-                    if (message.messageDetail.isOwnMessage) {
+                    if (message.detail.isOwnMessage) {
                         OwnMessageContainer(
                             message = message,
                             messageContent = messageContent
@@ -157,7 +157,7 @@ private fun OwnMessageContainer(
             .padding(start = 14.dp, end = 14.dp, top = 10.dp, bottom = 10.dp),
         horizontalArrangement = Arrangement.End
     ) {
-        StateMessage(messageState = message.messageDetail.state)
+        StateMessage(messageState = message.detail.state)
         Box(
             modifier = Modifier
                 .align(alignment = Alignment.Top)
@@ -198,7 +198,7 @@ private fun FriendMessageContainer(
                             onClickAvatar(message)
                         }
                     ),
-                model = message.messageDetail.sender.faceUrl
+                model = message.detail.sender.faceUrl
             )
         }
         Column(
@@ -207,7 +207,7 @@ private fun FriendMessageContainer(
             if (showPartDetail) {
                 Text(
                     modifier = Modifier.padding(end = 30.dp),
-                    text = message.messageDetail.sender.showName,
+                    text = message.detail.sender.showName,
                     fontSize = 13.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -236,7 +236,7 @@ private fun TextMessage(
     Text(
         modifier = Modifier
             .clip(
-                shape = if (message.messageDetail.isOwnMessage) {
+                shape = if (message.detail.isOwnMessage) {
                     RoundedCornerShape(
                         topStart = 20.dp,
                         topEnd = 6.dp,
@@ -253,7 +253,7 @@ private fun TextMessage(
                 }
             )
             .background(
-                color = if (message.messageDetail.isOwnMessage) {
+                color = if (message.detail.isOwnMessage) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     MaterialTheme.colorScheme.inverseSurface
@@ -270,7 +270,7 @@ private fun TextMessage(
             .padding(horizontal = 14.dp, vertical = 8.dp),
         text = message.formatMessage,
         fontSize = 16.sp,
-        color = if (message.messageDetail.isOwnMessage) {
+        color = if (message.detail.isOwnMessage) {
             Color.White
         } else {
             MaterialTheme.colorScheme.inverseOnSurface

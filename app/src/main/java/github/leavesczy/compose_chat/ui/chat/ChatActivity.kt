@@ -61,7 +61,7 @@ class ChatActivity : BaseActivity() {
 
     private val chatPageAction = ChatPageAction(
         onClickAvatar = {
-            val messageSenderId = it.messageDetail.sender.id
+            val messageSenderId = it.detail.sender.id
             if (messageSenderId.isNotBlank()) {
                 FriendProfileActivity.navTo(context = this, friendId = messageSenderId)
             }

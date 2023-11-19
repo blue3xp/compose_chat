@@ -192,7 +192,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
     private suspend fun handleMessageChannel(messageChannel: Channel<Message>) {
         lateinit var sendingMessage: Message
         for (message in messageChannel) {
-            when (val state = message.messageDetail.state) {
+            when (val state = message.detail.state) {
                 MessageState.Sending -> {
                     sendingMessage = message
                     attachNewMessage(newMessage = message)
@@ -200,13 +200,13 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
 
                 MessageState.Completed -> {
                     resetMessageState(
-                        msgId = sendingMessage.messageDetail.msgId, messageState = state
+                        msgId = sendingMessage.detail.msgId, messageState = state
                     )
                 }
 
                 is MessageState.SendFailed -> {
                     resetMessageState(
-                        msgId = sendingMessage.messageDetail.msgId, messageState = state
+                        msgId = sendingMessage.detail.msgId, messageState = state
                     )
                     val failReason = state.reason
                     if (failReason.isNotBlank()) {
@@ -220,17 +220,17 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
     private fun resetMessageState(
         msgId: String, messageState: MessageState
     ) {
-        val index = allMessage.indexOfFirst { it.messageDetail.msgId == msgId }
+        val index = allMessage.indexOfFirst { it.detail.msgId == msgId }
         if (index >= 0) {
             val targetMessage = allMessage[index]
-            val messageDetail = targetMessage.messageDetail
+            val messageDetail = targetMessage.detail
             val newMessage = when (targetMessage) {
                 is ImageMessage -> {
-                    targetMessage.copy(detail = messageDetail.copy(state = messageState))
+                    targetMessage.copy(messageDetail = messageDetail.copy(state = messageState))
                 }
 
                 is TextMessage -> {
-                    targetMessage.copy(detail = messageDetail.copy(state = messageState))
+                    targetMessage.copy(messageDetail = messageDetail.copy(state = messageState))
                 }
 
                 is SystemMessage, is TimeMessage -> {
@@ -244,7 +244,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
 
     private fun attachNewMessage(newMessage: Message) {
         val firstMessage = allMessage.getOrNull(0)
-        if (firstMessage == null || newMessage.messageDetail.timestamp - firstMessage.messageDetail.timestamp > 60) {
+        if (firstMessage == null || newMessage.detail.timestamp - firstMessage.detail.timestamp > 60) {
             allMessage.add(0, TimeMessage(targetMessage = newMessage))
         }
         allMessage.add(0, newMessage)
@@ -258,7 +258,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
     private fun addMessageToFooter(newMessageList: List<Message>) {
         if (newMessageList.isNotEmpty()) {
             if (allMessage.isNotEmpty()) {
-                if (allMessage[allMessage.size - 1].messageDetail.timestamp - newMessageList[0].messageDetail.timestamp > 60) {
+                if (allMessage[allMessage.size - 1].detail.timestamp - newMessageList[0].detail.timestamp > 60) {
                     allMessage.add(TimeMessage(targetMessage = allMessage[allMessage.size - 1]))
                 }
             }
@@ -267,7 +267,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
                 val currentMsg = newMessageList[index]
                 val preMsg = newMessageList.getOrNull(index + 1)
                 allMessage.add(currentMsg)
-                if (preMsg == null || currentMsg.messageDetail.timestamp - preMsg.messageDetail.timestamp > 60 || filteredMsg >= 10) {
+                if (preMsg == null || currentMsg.detail.timestamp - preMsg.detail.timestamp > 60 || filteredMsg >= 10) {
                     allMessage.add(TimeMessage(targetMessage = currentMsg))
                     filteredMsg = 1
                 } else {

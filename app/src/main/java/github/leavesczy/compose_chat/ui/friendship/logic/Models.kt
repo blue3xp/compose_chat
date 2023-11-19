@@ -11,7 +11,8 @@ data class FriendshipPageViewState(
     val joinedGroupList: List<GroupProfile>,
     val friendList: List<PersonProfile>,
     val onClickGroupItem: (GroupProfile) -> Unit,
-    val onClickFriendItem: (PersonProfile) -> Unit
+    val onClickFriendItem: (PersonProfile) -> Unit,
+    val showFriendshipDialog: () -> Unit
 )
 
 @Stable

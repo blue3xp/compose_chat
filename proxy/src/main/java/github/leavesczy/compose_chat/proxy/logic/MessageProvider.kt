@@ -99,7 +99,7 @@ class MessageProvider : IMessageProvider {
     }
 
     override suspend fun sendText(chat: Chat, text: String): Channel<Message> {
-        val localTempMessage = TextMessage(detail = generatePreSendMessageDetail(), text = text)
+        val localTempMessage = TextMessage(messageDetail = generatePreSendMessageDetail(), text = text)
         val createdMessage = V2TIMManager.getMessageManager().createTextMessage(text)
         return sendMessage(
             chat = chat,
@@ -114,7 +114,7 @@ class MessageProvider : IMessageProvider {
             options.inJustDecodeBounds = true
             BitmapFactory.decodeFile(imagePath, options)
             val localTempMessage = ImageMessage(
-                detail = generatePreSendMessageDetail(),
+                messageDetail = generatePreSendMessageDetail(),
                 original = ImageElement(options.outWidth, options.outHeight, imagePath),
                 large = null,
                 thumb = null
@@ -181,11 +181,11 @@ class MessageProvider : IMessageProvider {
         val failedState = MessageState.SendFailed(reason = failReason)
         return when (this) {
             is TextMessage -> {
-                this.copy(detail = this.messageDetail.copy(state = failedState))
+                this.copy(messageDetail = this.detail.copy(state = failedState))
             }
 
             is ImageMessage -> {
-                this.copy(detail = this.messageDetail.copy(state = failedState))
+                this.copy(messageDetail = this.detail.copy(state = failedState))
             }
 
             is TimeMessage -> {

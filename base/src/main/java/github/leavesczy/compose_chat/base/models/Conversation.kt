@@ -18,7 +18,7 @@ sealed class Conversation(
 ) {
 
     val formatMsg by lazy(mode = LazyThreadSafetyMode.NONE) {
-        val messageDetail = lastMessage.messageDetail
+        val messageDetail = lastMessage.detail
         val prefix =
             if (this is GroupConversation && lastMessage !is SystemMessage && !messageDetail.isOwnMessage) {
                 messageDetail.sender.showName + "："

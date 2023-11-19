@@ -37,7 +37,10 @@ import kotlinx.coroutines.launch
  * @Github：https://github.com/leavesCZY
  */
 @Composable
-fun MainPageTopBar(viewState: MainPageTopBarViewState) {
+fun MainPageTopBar(
+    viewState: MainPageTopBarViewState,
+    showFriendshipDialog: () -> Unit
+) {
     var menuExpanded by remember {
         mutableStateOf(value = false)
     }
@@ -105,7 +108,7 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
                             },
                             onClick = {
                                 menuExpanded = false
-                                viewState.showFriendshipDialog()
+                                showFriendshipDialog()
                             }
                         )
                         DropdownMenuItem(
@@ -118,7 +121,7 @@ fun MainPageTopBar(viewState: MainPageTopBarViewState) {
                             },
                             onClick = {
                                 menuExpanded = false
-                                viewState.showFriendshipDialog()
+                                showFriendshipDialog()
                             }
                         )
                     }

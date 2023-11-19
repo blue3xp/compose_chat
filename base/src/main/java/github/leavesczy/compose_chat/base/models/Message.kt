@@ -39,7 +39,7 @@ data class MessageDetail(
 }
 
 @Stable
-sealed class Message(val messageDetail: MessageDetail) {
+sealed class Message(val detail: MessageDetail) {
 
     abstract val formatMessage: String
 
@@ -49,9 +49,9 @@ sealed class Message(val messageDetail: MessageDetail) {
 
 @Stable
 data class TextMessage(
-    private val detail: MessageDetail,
+    private val messageDetail: MessageDetail,
     private val text: String
-) : Message(messageDetail = detail) {
+) : Message(detail = messageDetail) {
 
     override val formatMessage: String
         get() = text
@@ -60,9 +60,9 @@ data class TextMessage(
 
 @Stable
 data class SystemMessage(
-    private val detail: MessageDetail,
+    private val messageDetail: MessageDetail,
     private val tips: String
-) : Message(messageDetail = detail) {
+) : Message(detail = messageDetail) {
 
     override val formatMessage: String
         get() = tips
@@ -71,14 +71,13 @@ data class SystemMessage(
 
 @Stable
 data class ImageMessage(
-    private val detail: MessageDetail,
+    private val messageDetail: MessageDetail,
     private val original: ImageElement,
     private val large: ImageElement?,
     private val thumb: ImageElement?,
-) : Message(messageDetail = detail) {
+) : Message(detail = messageDetail) {
 
-    override val formatMessage: String
-        get() = "[图片]"
+    override val formatMessage = "[图片]"
 
     val previewImage: ImageElement
         get() = large ?: original
@@ -105,9 +104,9 @@ class ImageElement(
 
 @Stable
 class TimeMessage(targetMessage: Message) : Message(
-    messageDetail = MessageDetail(
-        msgId = (targetMessage.messageDetail.timestamp + targetMessage.messageDetail.msgId.hashCode()).toString(),
-        timestamp = targetMessage.messageDetail.timestamp,
+    detail = MessageDetail(
+        msgId = (targetMessage.detail.timestamp + targetMessage.detail.msgId.hashCode()).toString(),
+        timestamp = targetMessage.detail.timestamp,
         state = MessageState.Completed,
         sender = PersonProfile.Empty,
         isOwnMessage = false
@@ -115,7 +114,7 @@ class TimeMessage(targetMessage: Message) : Message(
 ) {
 
     override val formatMessage: String
-        get() = messageDetail.chatTime
+        get() = detail.chatTime
 
 }
 

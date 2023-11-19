@@ -153,7 +153,7 @@ internal object Converters {
         val message = when (timMessage.elemType) {
             V2TIMMessage.V2TIM_ELEM_TYPE_TEXT -> {
                 TextMessage(
-                    detail = messageDetail,
+                    messageDetail = messageDetail,
                     text = timMessage.textElem?.text ?: ""
                 )
             }
@@ -165,7 +165,7 @@ internal object Converters {
                     val large = imageList.getOrNull(1).toImageElement()
                     val thumb = imageList.getOrNull(2).toImageElement()
                     ImageMessage(
-                        detail = messageDetail,
+                        messageDetail = messageDetail,
                         original = origin!!,
                         large = large,
                         thumb = thumb
@@ -183,7 +183,7 @@ internal object Converters {
                 null
             }
         } ?: TextMessage(
-            detail = messageDetail,
+            messageDetail = messageDetail,
             text = "[不支持的消息类型] - ${timMessage.elemType}"
         )
         message.tag = timMessage
@@ -271,7 +271,7 @@ internal object Converters {
                 }
             }
             return SystemMessage(
-                detail = messageDetail, tips = tips
+                messageDetail = messageDetail, tips = tips
             )
         }
         return null

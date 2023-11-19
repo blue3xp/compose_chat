@@ -28,8 +28,7 @@ data class MainPageDrawerViewState(
 
 @Stable
 data class MainPageTopBarViewState(
-    val openDrawer: suspend () -> Unit,
-    val showFriendshipDialog: () -> Unit
+    val openDrawer: suspend () -> Unit
 )
 
 @Stable

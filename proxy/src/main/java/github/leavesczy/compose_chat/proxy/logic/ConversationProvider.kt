@@ -43,9 +43,7 @@ class ConversationProvider : IConversationProvider {
 
                 override fun onTotalUnreadMessageCountChanged(totalUnreadCount: Long) {
                     ChatCoroutineScope.launch {
-                        this@ConversationProvider.totalUnreadMessageCount.emit(
-                            value = totalUnreadCount
-                        )
+                        totalUnreadMessageCount.emit(value = totalUnreadCount)
                     }
                 }
             }
@@ -102,7 +100,8 @@ class ConversationProvider : IConversationProvider {
                             )
                         )
                     }
-                })
+                }
+            )
         }
     }
 
@@ -165,9 +164,9 @@ class ConversationProvider : IConversationProvider {
             convertConversation(conversation = it)
         }?.sortedByDescending {
             if (it.isPinned) {
-                it.lastMessage.messageDetail.timestamp.toDouble() + Long.MAX_VALUE
+                it.lastMessage.detail.timestamp.toDouble() + Long.MAX_VALUE
             } else {
-                it.lastMessage.messageDetail.timestamp.toDouble()
+                it.lastMessage.detail.timestamp.toDouble()
             }
         } ?: emptyList()
     }

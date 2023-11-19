@@ -172,28 +172,28 @@ private fun LazyItemScope.ConversationItem(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 1.dp),
+                        .padding(bottom = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         modifier = Modifier
                             .weight(weight = 1f),
                         text = conversation.name,
-                        fontSize = 17.sp,
+                        fontSize = 18.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         modifier = Modifier,
-                        text = conversation.lastMessage.messageDetail.conversationTime,
+                        text = conversation.lastMessage.detail.conversationTime,
                         fontSize = 12.sp
                     )
                 }
                 Text(
                     modifier = Modifier
-                        .padding(top = 1.dp),
+                        .padding(top = 2.dp),
                     text = conversation.formatMsg,
-                    fontSize = 14.sp,
+                    fontSize = 15.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

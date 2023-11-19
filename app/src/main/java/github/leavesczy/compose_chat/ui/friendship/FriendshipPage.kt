@@ -43,10 +43,7 @@ import github.leavesczy.compose_chat.ui.widgets.ComponentImage
  * @Github：https://github.com/leavesCZY
  */
 @Composable
-fun FriendshipPage(
-    pageViewState: FriendshipPageViewState,
-    showFriendshipDialog: () -> Unit
-) {
+fun FriendshipPage(pageViewState: FriendshipPageViewState) {
     Box(modifier = Modifier.fillMaxSize()) {
         val joinedGroupList = pageViewState.joinedGroupList
         val friendList = pageViewState.friendList
@@ -113,7 +110,7 @@ fun FriendshipPage(
                     contentDescription = null,
                 )
             },
-            onClick = showFriendshipDialog
+            onClick = pageViewState.showFriendshipDialog
         )
     }
 }
@@ -149,7 +146,7 @@ private fun LazyItemScope.GroupItem(
                     .weight(weight = 1f)
                     .padding(start = 10.dp),
                 text = groupProfile.name,
-                fontSize = 17.sp,
+                fontSize = 18.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -196,14 +193,14 @@ private fun LazyItemScope.FriendItem(
                 Text(
                     modifier = Modifier,
                     text = personProfile.showName,
-                    fontSize = 17.sp,
+                    fontSize = 18.sp,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
                 Text(
                     modifier = Modifier,
                     text = personProfile.signature,
-                    fontSize = 14.sp,
+                    fontSize = 15.sp,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )

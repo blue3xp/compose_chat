@@ -8,22 +8,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.ActionResult
-import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.ServerState
 import github.leavesczy.compose_chat.base.provider.IConversationProvider
-import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
-import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.provider.AccountProvider
 import github.leavesczy.compose_chat.provider.AppThemeProvider
 import github.leavesczy.compose_chat.proxy.logic.ConversationProvider
-import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
-import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
-import github.leavesczy.compose_chat.ui.chat.ChatActivity
-import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipDialogViewState
 import github.leavesczy.compose_chat.ui.preview.PreviewImageActivity
 import github.leavesczy.compose_chat.ui.profile.ProfileUpdateActivity
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -42,8 +34,7 @@ class MainViewModel : BaseViewModel() {
 
     var topBarViewState by mutableStateOf(
         value = MainPageTopBarViewState(
-            openDrawer = ::openDrawer,
-            showFriendshipDialog = ::showFriendshipDialog
+            openDrawer = ::openDrawer
         )
     )
         private set
@@ -65,16 +56,6 @@ class MainViewModel : BaseViewModel() {
             switchTheme = ::switchTheme,
             logout = ::logout,
             updateProfile = ::updateProfile
-        )
-    )
-        private set
-
-    var friendshipDialogViewState by mutableStateOf(
-        FriendshipDialogViewState(
-            visible = false,
-            onDismissRequest = ::onFriendshipDialogDismissRequest,
-            joinGroup = ::joinGroup,
-            addFriend = ::addFriend
         )
     )
         private set
@@ -120,45 +101,6 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
-    private fun addFriend(userId: String) {
-        viewModelScope.launch {
-            val formatUserId = userId.lowercase()
-            val friendshipProvider: IFriendshipProvider = FriendshipProvider()
-            when (val result = friendshipProvider.addFriend(friendId = formatUserId)) {
-                is ActionResult.Success -> {
-                    delay(timeMillis = 400)
-                    showToast(msg = "添加成功")
-                    ChatActivity.navTo(
-                        context = context,
-                        chat = Chat.PrivateChat(id = formatUserId)
-                    )
-                    onFriendshipDialogDismissRequest()
-                }
-
-                is ActionResult.Failed -> {
-                    showToast(msg = result.reason)
-                }
-            }
-        }
-    }
-
-    private fun joinGroup(groupId: String) {
-        viewModelScope.launch {
-            val groupProvider: IGroupProvider = GroupProvider()
-            when (val result = groupProvider.joinGroup(groupId)) {
-                is ActionResult.Success -> {
-                    delay(timeMillis = 400)
-                    showToast(msg = "加入成功")
-                    onFriendshipDialogDismissRequest()
-                }
-
-                is ActionResult.Failed -> {
-                    showToast(msg = result.reason)
-                }
-            }
-        }
-    }
-
     private fun logout() {
         viewModelScope.launch {
             loadingDialog(visible = true)
@@ -177,14 +119,6 @@ class MainViewModel : BaseViewModel() {
 
     private suspend fun openDrawer() {
         drawerViewState.drawerState.open()
-    }
-
-    private fun showFriendshipDialog() {
-        friendshipDialogViewState = friendshipDialogViewState.copy(visible = true)
-    }
-
-    private fun onFriendshipDialogDismissRequest() {
-        friendshipDialogViewState = friendshipDialogViewState.copy(visible = false)
     }
 
     private fun updateProfile() {

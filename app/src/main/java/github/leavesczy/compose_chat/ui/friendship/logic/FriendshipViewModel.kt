@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.GroupProfile
 import github.leavesczy.compose_chat.base.models.PersonProfile
@@ -15,6 +16,7 @@ import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.ChatActivity
 import github.leavesczy.compose_chat.ui.friend.FriendProfileActivity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -34,7 +36,18 @@ class FriendshipViewModel : BaseViewModel() {
             joinedGroupList = emptyList(),
             friendList = emptyList(),
             onClickGroupItem = ::onClickGroupItem,
-            onClickFriendItem = ::onClickFriendItem
+            onClickFriendItem = ::onClickFriendItem,
+            showFriendshipDialog = ::showFriendshipDialog
+        )
+    )
+        private set
+
+    var friendshipDialogViewState by mutableStateOf(
+        FriendshipDialogViewState(
+            visible = false,
+            onDismissRequest = ::dismissFriendshipDialog,
+            joinGroup = ::joinGroup,
+            addFriend = ::addFriend
         )
     )
         private set
@@ -68,6 +81,52 @@ class FriendshipViewModel : BaseViewModel() {
             context = context,
             friendId = personProfile.id
         )
+    }
+
+    fun showFriendshipDialog() {
+        friendshipDialogViewState = friendshipDialogViewState.copy(visible = true)
+    }
+
+    private fun dismissFriendshipDialog() {
+        friendshipDialogViewState = friendshipDialogViewState.copy(visible = false)
+    }
+
+    private fun addFriend(userId: String) {
+        viewModelScope.launch {
+            val formatUserId = userId.lowercase()
+            when (val result = friendshipProvider.addFriend(friendId = formatUserId)) {
+                is ActionResult.Success -> {
+                    delay(timeMillis = 400)
+                    showToast(msg = "添加成功")
+                    ChatActivity.navTo(
+                        context = context,
+                        chat = Chat.PrivateChat(id = formatUserId)
+                    )
+                    dismissFriendshipDialog()
+                }
+
+                is ActionResult.Failed -> {
+                    showToast(msg = result.reason)
+                }
+            }
+        }
+    }
+
+    private fun joinGroup(groupId: String) {
+        viewModelScope.launch {
+            when (val result = groupProvider.joinGroup(groupId = groupId)) {
+                is ActionResult.Success -> {
+                    delay(timeMillis = 800)
+                    showToast(msg = "加入成功")
+                    groupProvider.refreshJoinedGroupList()
+                    dismissFriendshipDialog()
+                }
+
+                is ActionResult.Failed -> {
+                    showToast(msg = result.reason)
+                }
+            }
+        }
     }
 
 }

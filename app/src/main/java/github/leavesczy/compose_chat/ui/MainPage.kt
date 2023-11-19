@@ -49,7 +49,12 @@ fun MainPage(
                 ),
                 topBar = {
                     if (mainViewModel.bottomBarViewState.selectedTab != MainPageTab.Person) {
-                        MainPageTopBar(viewState = mainViewModel.topBarViewState)
+                        MainPageTopBar(
+                            viewState = mainViewModel.topBarViewState,
+                            showFriendshipDialog = {
+                                friendshipViewModel.showFriendshipDialog()
+                            }
+                        )
                     }
                 },
                 bottomBar = {
@@ -67,10 +72,7 @@ fun MainPage(
                         }
 
                         MainPageTab.Friendship -> {
-                            FriendshipPage(
-                                showFriendshipDialog = mainViewModel.topBarViewState.showFriendshipDialog,
-                                pageViewState = friendshipViewModel.pageViewState
-                            )
+                            FriendshipPage(pageViewState = friendshipViewModel.pageViewState)
                         }
 
                         MainPageTab.Person -> {
@@ -79,7 +81,7 @@ fun MainPage(
                     }
                 }
             }
-            FriendshipDialog(viewState = mainViewModel.friendshipDialogViewState)
+            FriendshipDialog(viewState = friendshipViewModel.friendshipDialogViewState)
         }
     )
     LoadingDialog(visible = mainViewModel.loadingDialogVisible)
