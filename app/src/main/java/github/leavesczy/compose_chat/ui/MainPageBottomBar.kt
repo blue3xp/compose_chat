@@ -47,7 +47,7 @@ fun MainPageBottomBar(viewState: MainPageBottomBarViewState) {
             .height(height = 54.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        for (tab in MainPageTab.values()) {
+        for (tab in MainPageTab.entries) {
             val selected = viewState.selectedTab == tab
             val icon: ImageVector
             val unreadMessageCount: Long

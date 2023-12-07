@@ -186,7 +186,7 @@ private fun FriendMessageContainer(
             ComponentImage(
                 modifier = Modifier
                     .padding(end = 10.dp)
-                    .size(size = 38.dp)
+                    .size(size = 42.dp)
                     .clip(shape = CircleShape)
                     .border(
                         width = 2.dp,
