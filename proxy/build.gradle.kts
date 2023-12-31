@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.compose.android.library)
+    alias(libs.plugins.chat.android.library)
 }
 
 android {

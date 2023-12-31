@@ -20,29 +20,29 @@ tasks.withType<KotlinCompile>().configureEach {
 dependencies {
     compileOnly(libs.android.gradle)
     compileOnly(libs.kotlin.gradle)
-    compileOnly(libs.leavesczy.trace)
+    compileOnly(libs.leavesczy.trace.gradle)
 }
 
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "compose.android.application"
+            id = "chat.android.application"
             implementationClass = "ApplicationConventionPlugin"
         }
         register("androidLibrary") {
-            id = "compose.android.library"
+            id = "chat.android.library"
             implementationClass = "LibraryConventionPlugin"
         }
         register("androidCompose") {
-            id = "compose.android.compose"
+            id = "chat.android.compose"
             implementationClass = "ComposeConventionPlugin"
         }
         register("kotlinParcelize") {
-            id = "compose.kotlin.parcelize"
+            id = "chat.kotlin.parcelize"
             implementationClass = "ParcelizeConventionPlugin"
         }
         register("leavesczyTrace") {
-            id = "compose.leavesczy.trace"
+            id = "chat.leavesczy.trace"
             implementationClass = "ParcelizeConventionPlugin"
         }
     }
