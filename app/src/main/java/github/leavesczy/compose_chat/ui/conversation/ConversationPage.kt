@@ -15,13 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,7 +50,7 @@ import github.leavesczy.compose_chat.ui.widgets.ComponentImage
  */
 @Composable
 fun ConversationPage(pageViewState: ConversationPageViewState) {
-    val conversationList = pageViewState.conversationList
+    val conversationList by pageViewState.conversationList
     if (conversationList.isEmpty()) {
         Text(
             modifier = Modifier
@@ -66,8 +65,8 @@ fun ConversationPage(pageViewState: ConversationPageViewState) {
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = pageViewState.listState,
-            contentPadding = PaddingValues(bottom = 60.dp),
+            state = pageViewState.listState.value,
+            contentPadding = PaddingValues(bottom = 30.dp),
         ) {
             items(
                 items = conversationList,
@@ -80,7 +79,9 @@ fun ConversationPage(pageViewState: ConversationPageViewState) {
             ) {
                 ConversationItem(
                     conversation = it,
-                    pageViewState = pageViewState
+                    onClickConversation = pageViewState.onClickConversation,
+                    deleteConversation = pageViewState.deleteConversation,
+                    pinConversation = pageViewState.pinConversation
                 )
             }
         }
@@ -88,16 +89,17 @@ fun ConversationPage(pageViewState: ConversationPageViewState) {
 }
 
 @Composable
-private fun LazyItemScope.ConversationItem(
+private fun ConversationItem(
     conversation: Conversation,
-    pageViewState: ConversationPageViewState
+    onClickConversation: (Conversation) -> Unit,
+    deleteConversation: (Conversation) -> Unit,
+    pinConversation: (Conversation, Boolean) -> Unit
 ) {
     var menuExpanded by remember {
         mutableStateOf(value = false)
     }
     Box(
         modifier = Modifier
-            .animateItemPlacement()
             .then(
                 other = if (conversation.isPinned) {
                     Modifier.scrim(color = Color(0x26CCCCCC))
@@ -109,7 +111,7 @@ private fun LazyItemScope.ConversationItem(
             .height(height = 70.dp)
             .combinedClickable(
                 onClick = {
-                    pageViewState.onClickConversation(conversation)
+                    onClickConversation(conversation)
                 },
                 onLongClick = {
                     menuExpanded = true
@@ -202,7 +204,7 @@ private fun LazyItemScope.ConversationItem(
                         .fillMaxWidth()
                         .weight(weight = 1f)
                 )
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier,
                     thickness = 0.2.dp
                 )
@@ -214,8 +216,8 @@ private fun LazyItemScope.ConversationItem(
             onDismissRequest = {
                 menuExpanded = false
             },
-            deleteConversation = pageViewState.deleteConversation,
-            pinConversation = pageViewState.pinConversation
+            deleteConversation = deleteConversation,
+            pinConversation = pinConversation
         )
     }
 }

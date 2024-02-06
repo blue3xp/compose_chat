@@ -8,6 +8,7 @@ import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -20,10 +21,12 @@ class GroupProfileViewModel(private val groupId: String) : BaseViewModel() {
 
     private val groupProvider: IGroupProvider = GroupProvider()
 
-    var pageViewState by mutableStateOf<GroupProfilePageViewState?>(
-        value = null
+    val pageViewState by mutableStateOf(
+        value = GroupProfilePageViewState(
+            groupProfile = mutableStateOf(value = null),
+            memberList = mutableStateOf(value = persistentListOf())
+        )
     )
-        private set
 
     var loadingDialogVisible by mutableStateOf(value = false)
         private set
@@ -38,11 +41,10 @@ class GroupProfileViewModel(private val groupId: String) : BaseViewModel() {
                 groupProvider.getGroupMemberList(groupId = groupId)
             }
             val groupProfile = groupProfileAsync.await()
+            val memberList = memberListAsync.await()
             if (groupProfile != null) {
-                pageViewState = GroupProfilePageViewState(
-                    groupProfile = groupProfile,
-                    memberList = memberListAsync.await()
-                )
+                pageViewState.groupProfile.value = groupProfile
+                pageViewState.memberList.value = memberList
             }
             loadingDialog(visible = false)
         }
@@ -51,7 +53,7 @@ class GroupProfileViewModel(private val groupId: String) : BaseViewModel() {
     private fun getGroupProfile() {
         viewModelScope.launch {
             groupProvider.getGroupInfo(groupId = groupId)?.let {
-                pageViewState = pageViewState?.copy(groupProfile = it)
+                pageViewState.groupProfile.value = it
             }
         }
     }

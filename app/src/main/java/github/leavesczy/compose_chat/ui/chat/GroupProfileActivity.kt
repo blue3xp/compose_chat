@@ -27,9 +27,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -132,13 +132,10 @@ class GroupProfileActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewState = groupProfileViewModel.pageViewState
-            if (viewState != null) {
-                GroupProfilePage(
-                    viewState = viewState,
-                    action = groupProfilePageAction
-                )
-            }
+            GroupProfilePage(
+                viewState = groupProfileViewModel.pageViewState,
+                action = groupProfilePageAction
+            )
             LoadingDialog(visible = groupProfileViewModel.loadingDialogVisible)
         }
     }
@@ -154,69 +151,72 @@ private fun GroupProfilePage(
     viewState: GroupProfilePageViewState,
     action: GroupProfilePageAction
 ) {
-    val listState = rememberLazyListState()
-    val maxOffsetHeightPx = with(LocalDensity.current) {
-        (groupHeaderHeight - groupTopBarHeight - 30.dp).roundToPx()
-    }
-    val topBarAlpha by remember {
-        derivedStateOf {
-            val visibleItemsInfo = listState.layoutInfo.visibleItemsInfo
-            if (visibleItemsInfo.isEmpty()) {
-                0f
-            } else {
-                val first = visibleItemsInfo.first()
-                if (first.index == 0) {
-                    val offset = abs(first.offset).coerceIn(0, maxOffsetHeightPx)
-                    1.0f * offset / maxOffsetHeightPx
+    val groupProfile = viewState.groupProfile.value
+    if (groupProfile != null) {
+        val listState = rememberLazyListState()
+        val maxOffsetHeightPx = with(LocalDensity.current) {
+            (groupHeaderHeight - groupTopBarHeight - 30.dp).roundToPx()
+        }
+        val topBarAlpha by remember {
+            derivedStateOf {
+                val visibleItemsInfo = listState.layoutInfo.visibleItemsInfo
+                if (visibleItemsInfo.isEmpty()) {
+                    0f
                 } else {
-                    1.0f
+                    val first = visibleItemsInfo.first()
+                    if (first.index == 0) {
+                        val offset = abs(first.offset).coerceIn(0, maxOffsetHeightPx)
+                        1.0f * offset / maxOffsetHeightPx
+                    } else {
+                        1.0f
+                    }
                 }
             }
         }
-    }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets.navigationBars
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues = innerPadding)
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = listState,
-                contentPadding = PaddingValues(bottom = 60.dp),
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            contentWindowInsets = WindowInsets.navigationBars
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues = innerPadding)
             ) {
-                item(
-                    key = "header",
-                    contentType = {
-                        "header"
-                    }
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState,
+                    contentPadding = PaddingValues(bottom = 60.dp),
                 ) {
-                    GroupHeader(groupProfile = viewState.groupProfile)
-                }
-                items(
-                    items = viewState.memberList,
-                    key = {
-                        it.detail.id
-                    },
-                    contentType = {
-                        "GroupMemberItem"
-                    },
-                    itemContent = {
-                        GroupMemberItem(
-                            groupMemberProfile = it,
-                            groupProfilePageAction = action
-                        )
+                    item(
+                        key = "header",
+                        contentType = {
+                            "header"
+                        }
+                    ) {
+                        GroupHeader(groupProfile = groupProfile)
                     }
+                    items(
+                        items = viewState.memberList.value,
+                        key = {
+                            it.detail.id
+                        },
+                        contentType = {
+                            "GroupMemberItem"
+                        },
+                        itemContent = {
+                            GroupMemberItem(
+                                groupMemberProfile = it,
+                                groupProfilePageAction = action
+                            )
+                        }
+                    )
+                }
+                PageTopBar(
+                    title = groupProfile.name,
+                    alpha = topBarAlpha,
+                    action = action
                 )
             }
-            PageTopBar(
-                title = viewState.groupProfile.name,
-                alpha = topBarAlpha,
-                action = action
-            )
         }
     }
 }
@@ -430,7 +430,7 @@ private fun GroupMemberItem(
                     .fillMaxWidth()
                     .weight(weight = 1f)
             )
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier,
                 thickness = 0.2.dp
             )

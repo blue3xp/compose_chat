@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
@@ -32,33 +33,30 @@ class MainViewModel : BaseViewModel() {
     var loadingDialogVisible by mutableStateOf(value = false)
         private set
 
-    var topBarViewState by mutableStateOf(
+    val topBarViewState by mutableStateOf(
         value = MainPageTopBarViewState(
             openDrawer = ::openDrawer
         )
     )
-        private set
 
-    var bottomBarViewState by mutableStateOf(
+    val bottomBarViewState by mutableStateOf(
         value = MainPageBottomBarViewState(
-            selectedTab = MainPageTab.Conversation,
-            unreadMessageCount = 0,
+            selectedTab = mutableStateOf(value = MainPageTab.Conversation),
+            unreadMessageCount = mutableLongStateOf(value = 0),
             onClickTab = ::onClickTab
         )
     )
-        private set
 
-    var drawerViewState by mutableStateOf(
+    val drawerViewState by mutableStateOf(
         value = MainPageDrawerViewState(
             drawerState = DrawerState(initialValue = DrawerValue.Closed),
-            personProfile = ComposeChat.accountProvider.personProfile.value,
+            personProfile = mutableStateOf(value = ComposeChat.accountProvider.personProfile.value),
             previewImage = ::previewImage,
             switchTheme = ::switchTheme,
             logout = ::logout,
             updateProfile = ::updateProfile
         )
     )
-        private set
 
     private val _serverConnectState = MutableStateFlow(value = ServerState.Connected)
 
@@ -68,12 +66,12 @@ class MainViewModel : BaseViewModel() {
         viewModelScope.launch {
             launch {
                 conversationProvider.totalUnreadMessageCount.collect {
-                    bottomBarViewState = bottomBarViewState.copy(unreadMessageCount = it)
+                    bottomBarViewState.unreadMessageCount.value = it
                 }
             }
             launch {
                 ComposeChat.accountProvider.personProfile.collect {
-                    drawerViewState = drawerViewState.copy(personProfile = it)
+                    drawerViewState.personProfile.value = it
                 }
             }
             launch {
@@ -96,9 +94,7 @@ class MainViewModel : BaseViewModel() {
     }
 
     private fun onClickTab(mainPageTab: MainPageTab) {
-        if (bottomBarViewState.selectedTab != mainPageTab) {
-            bottomBarViewState = bottomBarViewState.copy(selectedTab = mainPageTab)
-        }
+        bottomBarViewState.selectedTab.value = mainPageTab
     }
 
     private fun logout() {
@@ -139,7 +135,7 @@ class MainViewModel : BaseViewModel() {
     }
 
     private fun AppTheme.nextTheme(): AppTheme {
-        val values = AppTheme.values()
+        val values = AppTheme.entries
         return values.getOrElse(ordinal + 1) {
             values[0]
         }

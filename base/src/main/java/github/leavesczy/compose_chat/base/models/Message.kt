@@ -13,7 +13,7 @@ sealed class MessageState {
 
     data object Sending : MessageState()
 
-    class SendFailed(val reason: String) : MessageState()
+    data class SendFailed(val reason: String) : MessageState()
 
     data object Completed : MessageState()
 

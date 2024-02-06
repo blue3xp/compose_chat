@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import github.leavesczy.compose_chat.ui.base.BaseActivity
+import github.leavesczy.compose_chat.ui.profile.logic.ProfileUpdatePageViewStata
 import github.leavesczy.compose_chat.ui.profile.logic.ProfileUpdateViewModel
 import github.leavesczy.compose_chat.ui.widgets.CommonButton
 import github.leavesczy.compose_chat.ui.widgets.CommonOutlinedTextField
@@ -34,27 +35,26 @@ class ProfileUpdateActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val profileUpdateViewModel = viewModel<ProfileUpdateViewModel>()
-            ProfileUpdatePage(profileUpdateViewModel = profileUpdateViewModel)
+            ProfileUpdatePage(pageViewStata = profileUpdateViewModel.profileUpdatePageViewStata)
         }
     }
 
 }
 
 @Composable
-private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
-    val profileUpdatePageViewStata = profileUpdateViewModel.profileUpdatePageViewStata
-    if (profileUpdatePageViewStata != null) {
-        val personProfile = profileUpdatePageViewStata.personProfile
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            contentWindowInsets = WindowInsets.navigationBars
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues = innerPadding)
-                    .verticalScroll(state = rememberScrollState())
-            ) {
+private fun ProfileUpdatePage(pageViewStata: ProfileUpdatePageViewStata) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets.navigationBars
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = innerPadding)
+                .verticalScroll(state = rememberScrollState())
+        ) {
+            val personProfile = pageViewStata.personProfile.value
+            if (personProfile != null) {
                 ProfilePanel(
                     title = personProfile.nickname,
                     subtitle = personProfile.signature,
@@ -74,7 +74,7 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
                                 if (it.length > 16) {
                                     return@CommonOutlinedTextField
                                 }
-                                profileUpdateViewModel.onNicknameChanged(nickname = it)
+                                pageViewStata.onNicknameChanged(it)
                             },
                             label = "nickname"
                         )
@@ -87,15 +87,15 @@ private fun ProfileUpdatePage(profileUpdateViewModel: ProfileUpdateViewModel) {
                                 if (it.length > 40) {
                                     return@CommonOutlinedTextField
                                 }
-                                profileUpdateViewModel.onSignatureChanged(signature = it)
+                                pageViewStata.onSignatureChanged(it)
                             },
                             label = "signature"
                         )
                         CommonButton(text = "随机头像") {
-                            profileUpdateViewModel.onAvatarUrlChanged(imageUrl = randomFaceUrl())
+                            pageViewStata.onAvatarUrlChanged(randomFaceUrl())
                         }
                         CommonButton(text = "确认修改") {
-                            profileUpdateViewModel.confirmUpdate()
+                            pageViewStata.confirmUpdate()
                         }
                     }
                 }

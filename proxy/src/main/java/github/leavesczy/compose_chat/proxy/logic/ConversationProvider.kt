@@ -7,13 +7,14 @@ import com.tencent.imsdk.v2.V2TIMConversationResult
 import com.tencent.imsdk.v2.V2TIMManager
 import com.tencent.imsdk.v2.V2TIMValueCallback
 import github.leavesczy.compose_chat.base.models.ActionResult
-import github.leavesczy.compose_chat.base.models.C2CConversation
 import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.Conversation
-import github.leavesczy.compose_chat.base.models.GroupConversation
+import github.leavesczy.compose_chat.base.models.ConversationType
 import github.leavesczy.compose_chat.base.provider.IConversationProvider
 import github.leavesczy.compose_chat.proxy.coroutine.ChatCoroutineScope
 import github.leavesczy.compose_chat.proxy.utils.Converters
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -26,7 +27,7 @@ import kotlin.coroutines.resume
  */
 class ConversationProvider : IConversationProvider {
 
-    override val conversationList = MutableSharedFlow<List<Conversation>>()
+    override val conversationList = MutableSharedFlow<ImmutableList<Conversation>>()
 
     override val totalUnreadMessageCount = MutableSharedFlow<Long>()
 
@@ -113,10 +114,8 @@ class ConversationProvider : IConversationProvider {
         return Converters.deleteGroupConversation(groupId)
     }
 
-    private fun dispatchConversationList(conversationList: List<Conversation>) {
-        ChatCoroutineScope.launch {
-            this@ConversationProvider.conversationList.emit(value = conversationList)
-        }
+    private suspend fun dispatchConversationList(conversationList: List<Conversation>) {
+        this@ConversationProvider.conversationList.emit(value = conversationList.toImmutableList())
     }
 
     private suspend fun getConversationListOrigin(): List<Conversation> {
@@ -173,28 +172,33 @@ class ConversationProvider : IConversationProvider {
 
     private fun convertConversation(conversation: V2TIMConversation): Conversation? {
         val lastConversationMessage = conversation.lastMessage ?: return null
+        val name = conversation.showName ?: ""
+        val faceUrl = conversation.faceUrl ?: ""
+        val unreadMessageCount = conversation.unreadCount
+        val lastMessage = Converters.convertMessage(timMessage = lastConversationMessage)
+        val isPinned = conversation.isPinned
         return when (conversation.type) {
             V2TIMConversation.V2TIM_C2C -> {
-                val lastMessage = Converters.convertMessage(timMessage = lastConversationMessage)
-                return C2CConversation(
+                return Conversation(
                     id = conversation.userID ?: "",
-                    name = conversation.showName ?: "",
-                    faceUrl = conversation.faceUrl ?: "",
-                    unreadMessageCount = conversation.unreadCount,
+                    name = name,
+                    faceUrl = faceUrl,
+                    unreadMessageCount = unreadMessageCount,
                     lastMessage = lastMessage,
-                    isPinned = conversation.isPinned
+                    isPinned = isPinned,
+                    type = ConversationType.C2C
                 )
             }
 
             V2TIMConversation.V2TIM_GROUP -> {
-                val lastMessage = Converters.convertMessage(timMessage = lastConversationMessage)
-                return GroupConversation(
+                return Conversation(
                     id = conversation.groupID ?: "",
-                    name = conversation.showName ?: "",
-                    faceUrl = conversation.faceUrl ?: "",
-                    unreadMessageCount = conversation.unreadCount,
+                    name = name,
+                    faceUrl = faceUrl,
+                    unreadMessageCount = unreadMessageCount,
                     lastMessage = lastMessage,
-                    isPinned = conversation.isPinned
+                    isPinned = isPinned,
+                    type = ConversationType.Group
                 )
             }
 

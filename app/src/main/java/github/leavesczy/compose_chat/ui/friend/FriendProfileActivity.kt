@@ -75,14 +75,12 @@ class FriendProfileActivity : BaseActivity() {
         setContent {
             val pageViewState = friendProfileViewModel.pageViewState
             val friendRemarkDialogViewState = friendProfileViewModel.setFriendRemarkDialogViewState
-            if (pageViewState != null && friendRemarkDialogViewState != null) {
-                FriendProfilePage(
-                    pageViewState = pageViewState,
-                    friendRemarkDialogViewState = friendRemarkDialogViewState,
-                    navToChatPage = ::navToChatPage,
-                    deleteFriend = ::deleteFriend
-                )
-            }
+            FriendProfilePage(
+                pageViewState = pageViewState,
+                friendRemarkDialogViewState = friendRemarkDialogViewState,
+                navToChatPage = ::navToChatPage,
+                deleteFriend = ::deleteFriend
+            )
             LoadingDialog(visible = friendProfileViewModel.loadingDialogVisible)
         }
     }
@@ -112,20 +110,20 @@ private fun FriendProfilePage(
     navToChatPage: () -> Unit,
     deleteFriend: () -> Unit
 ) {
-    val personProfile = pageViewState.personProfile
-    var openDeleteFriendDialog by remember {
-        mutableStateOf(value = false)
-    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.navigationBars
     ) { innerPadding ->
-        Box {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues = innerPadding)
-            ) {
+        var openDeleteFriendDialog by remember {
+            mutableStateOf(value = false)
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = innerPadding)
+        ) {
+            val personProfile = pageViewState.personProfile.value
+            if (personProfile != null) {
                 ProfilePanel(
                     title = personProfile.nickname,
                     subtitle = personProfile.signature,
@@ -137,13 +135,13 @@ private fun FriendProfilePage(
                     avatarUrl = personProfile.faceUrl,
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (!pageViewState.itIsMe) {
+                        if (!pageViewState.itIsMe.value) {
                             CommonButton(
                                 text = "去聊天吧",
                                 onClick = navToChatPage
                             )
                         }
-                        if (pageViewState.isFriend) {
+                        if (pageViewState.isFriend.value) {
                             CommonButton(
                                 text = "设置备注",
                                 onClick = pageViewState.showSetFriendRemarkPanel
@@ -151,7 +149,7 @@ private fun FriendProfilePage(
                             CommonButton(text = "删除好友") {
                                 openDeleteFriendDialog = true
                             }
-                        } else if (!pageViewState.itIsMe) {
+                        } else if (!pageViewState.itIsMe.value) {
                             CommonButton(
                                 text = "加为好友",
                                 onClick = pageViewState.addFriend
@@ -161,14 +159,14 @@ private fun FriendProfilePage(
                 }
                 SetFriendRemarkDialog(viewState = friendRemarkDialogViewState)
             }
-            DeleteFriendDialog(
-                visible = openDeleteFriendDialog,
-                deleteFriend = deleteFriend,
-                onDismissRequest = {
-                    openDeleteFriendDialog = false
-                }
-            )
         }
+        DeleteFriendDialog(
+            visible = openDeleteFriendDialog,
+            deleteFriend = deleteFriend,
+            onDismissRequest = {
+                openDeleteFriendDialog = false
+            }
+        )
     }
 }
 
@@ -197,11 +195,11 @@ private fun DeleteFriendDialog(
 @Composable
 private fun SetFriendRemarkDialog(viewState: SetFriendRemarkDialogViewState) {
     ComposeBottomSheetDialog(
-        visible = viewState.visible,
-        onDismissRequest = viewState.dismissSetFriendRemarkDialog
+        visible = viewState.visible.value,
+        onDismissRequest = viewState.dismissDialog
     ) {
-        var remark by remember(key1 = viewState.visible) {
-            mutableStateOf(value = viewState.personProfile.remark)
+        var remark by remember(key1 = viewState.visible.value) {
+            mutableStateOf(value = viewState.remark.value)
         }
         Column(
             modifier = Modifier

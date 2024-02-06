@@ -48,7 +48,7 @@ fun MainPage(
                     bottom = 0.dp
                 ),
                 topBar = {
-                    if (mainViewModel.bottomBarViewState.selectedTab != MainPageTab.Person) {
+                    if (mainViewModel.bottomBarViewState.selectedTab.value != MainPageTab.Person) {
                         MainPageTopBar(
                             viewState = mainViewModel.topBarViewState,
                             showFriendshipDialog = {
@@ -66,7 +66,7 @@ fun MainPage(
                         .fillMaxSize()
                         .padding(paddingValues = innerPadding)
                 ) {
-                    when (mainViewModel.bottomBarViewState.selectedTab) {
+                    when (mainViewModel.bottomBarViewState.selectedTab.value) {
                         MainPageTab.Conversation -> {
                             ConversationPage(pageViewState = conversationViewModel.pageViewState)
                         }

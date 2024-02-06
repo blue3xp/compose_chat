@@ -99,7 +99,8 @@ class MessageProvider : IMessageProvider {
     }
 
     override suspend fun sendText(chat: Chat, text: String): Channel<Message> {
-        val localTempMessage = TextMessage(messageDetail = generatePreSendMessageDetail(), text = text)
+        val localTempMessage =
+            TextMessage(messageDetail = generatePreSendMessageDetail(), text = text)
         val createdMessage = V2TIMManager.getMessageManager().createTextMessage(text)
         return sendMessage(
             chat = chat,

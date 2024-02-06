@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,7 +67,7 @@ fun MainPageDrawer(viewState: MainPageDrawerViewState) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            val personProfile = viewState.personProfile
+            val personProfile by viewState.personProfile
             val padding = 20.dp
             ComponentImage(
                 modifier = Modifier

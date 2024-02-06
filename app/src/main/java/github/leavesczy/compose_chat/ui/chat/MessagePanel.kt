@@ -61,7 +61,7 @@ fun MessagePanel(pageViewState: ChatPageViewState, pageAction: ChatPageAction) {
         verticalArrangement = Arrangement.Top,
     ) {
         items(
-            items = pageViewState.messageList,
+            items = pageViewState.messageList.value,
             key = {
                 it.detail.msgId
             },

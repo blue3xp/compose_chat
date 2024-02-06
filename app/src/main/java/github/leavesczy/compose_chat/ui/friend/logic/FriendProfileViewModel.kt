@@ -21,11 +21,24 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
 
     private val friendshipProvider: IFriendshipProvider = FriendshipProvider()
 
-    var pageViewState by mutableStateOf<FriendProfilePageViewState?>(value = null)
-        private set
+    val pageViewState by mutableStateOf(
+        value = FriendProfilePageViewState(
+            personProfile = mutableStateOf(value = null),
+            itIsMe = mutableStateOf(value = false),
+            isFriend = mutableStateOf(value = false),
+            showSetFriendRemarkPanel = ::showSetFriendRemarkPanel,
+            addFriend = ::addFriend
+        )
+    )
 
-    var setFriendRemarkDialogViewState by mutableStateOf<SetFriendRemarkDialogViewState?>(value = null)
-        private set
+    val setFriendRemarkDialogViewState by mutableStateOf(
+        value = SetFriendRemarkDialogViewState(
+            visible = mutableStateOf(value = false),
+            remark = mutableStateOf(value = ""),
+            dismissDialog = ::dismissSetFriendRemarkDialog,
+            setFriendRemark = ::setFriendRemark
+        )
+    )
 
     var loadingDialogVisible by mutableStateOf(value = false)
         private set
@@ -39,7 +52,7 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
             loadingDialog(visible = true)
             val profile = friendshipProvider.getFriendProfile(friendId = friendId)
             if (profile == null) {
-                pageViewState = null
+                pageViewState.personProfile.value = null
             } else {
                 val itIsMe = kotlin.run {
                     val selfId = ComposeChat.accountProvider.personProfile.value.id
@@ -50,19 +63,12 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
                 } else {
                     profile.isFriend
                 }
-                pageViewState = FriendProfilePageViewState(
-                    personProfile = profile,
-                    itIsMe = itIsMe,
-                    isFriend = isFriend,
-                    showSetFriendRemarkPanel = ::showSetFriendRemarkPanel,
-                    addFriend = ::addFriend
-                )
-                setFriendRemarkDialogViewState = SetFriendRemarkDialogViewState(
-                    visible = false,
-                    personProfile = profile,
-                    dismissSetFriendRemarkDialog = ::dismissSetFriendRemarkDialog,
-                    setFriendRemark = ::setFriendRemark
-                )
+                pageViewState.personProfile.value = profile
+                pageViewState.itIsMe.value = itIsMe
+                pageViewState.isFriend.value = isFriend
+
+                setFriendRemarkDialogViewState.visible.value = false
+                setFriendRemarkDialogViewState.remark.value = profile.remark
             }
             loadingDialog(visible = false)
         }
@@ -100,17 +106,11 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
     }
 
     private fun showSetFriendRemarkPanel() {
-        val mSetFriendRemarkDialogViewState = setFriendRemarkDialogViewState
-        if (mSetFriendRemarkDialogViewState != null) {
-            setFriendRemarkDialogViewState = mSetFriendRemarkDialogViewState.copy(visible = true)
-        }
+        setFriendRemarkDialogViewState.visible.value = true
     }
 
     private fun dismissSetFriendRemarkDialog() {
-        val mSetFriendRemarkDialogViewState = setFriendRemarkDialogViewState
-        if (mSetFriendRemarkDialogViewState != null) {
-            setFriendRemarkDialogViewState = mSetFriendRemarkDialogViewState.copy(visible = false)
-        }
+        setFriendRemarkDialogViewState.visible.value = false
     }
 
     private fun setFriendRemark(remark: String) {
@@ -118,6 +118,7 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
             when (val result =
                 friendshipProvider.setFriendRemark(friendId = friendId, remark = remark)) {
                 is ActionResult.Success -> {
+                    setFriendRemarkDialogViewState.remark.value = remark
                     delay(timeMillis = 300)
                     getFriendProfile()
                     dismissSetFriendRemarkDialog()

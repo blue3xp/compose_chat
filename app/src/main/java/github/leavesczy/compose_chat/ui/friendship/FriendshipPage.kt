@@ -17,12 +17,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,8 +46,8 @@ import github.leavesczy.compose_chat.ui.widgets.ComponentImage
 @Composable
 fun FriendshipPage(pageViewState: FriendshipPageViewState) {
     Box(modifier = Modifier.fillMaxSize()) {
-        val joinedGroupList = pageViewState.joinedGroupList
-        val friendList = pageViewState.friendList
+        val joinedGroupList by pageViewState.joinedGroupList
+        val friendList by pageViewState.friendList
         if (joinedGroupList.isEmpty() && friendList.isEmpty()) {
             Text(
                 modifier = Modifier
@@ -61,7 +62,7 @@ fun FriendshipPage(pageViewState: FriendshipPageViewState) {
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                state = pageViewState.listState,
+                state = pageViewState.listState.value,
                 contentPadding = PaddingValues(bottom = 100.dp)
             ) {
                 items(
@@ -151,7 +152,7 @@ private fun LazyItemScope.GroupItem(
                 maxLines = 1
             )
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .padding(start = 60.dp, top = 8.dp),
             thickness = 0.2.dp
@@ -206,7 +207,7 @@ private fun LazyItemScope.FriendItem(
                 )
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .padding(start = 60.dp, top = 8.dp),
             thickness = 0.2.dp

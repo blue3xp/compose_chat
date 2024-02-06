@@ -42,7 +42,7 @@ import kotlin.random.Random
  */
 @Composable
 fun PersonProfilePage(pageViewState: PersonProfilePageViewState) {
-    val personProfile = pageViewState.personProfile
+    val personProfile by pageViewState.personProfile
     val faceUrl = personProfile.faceUrl
     val title = personProfile.showName
     val subtitle = personProfile.signature

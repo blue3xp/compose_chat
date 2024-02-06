@@ -30,8 +30,8 @@ import github.leavesczy.compose_chat.ui.widgets.ComposeBottomSheetDialog
 @Composable
 fun FriendshipDialog(viewState: FriendshipDialogViewState) {
     ComposeBottomSheetDialog(
-        visible = viewState.visible,
-        onDismissRequest = viewState.onDismissRequest
+        visible = viewState.visible.value,
+        onDismissRequest = viewState.dismissDialog
     ) {
         var userId by remember {
             mutableStateOf(value = "")

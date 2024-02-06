@@ -8,19 +8,20 @@ import androidx.compose.runtime.Stable
  * @Github：https://github.com/leavesCZY
  */
 @Stable
-sealed class Conversation(
+data class Conversation(
     val id: String,
     val name: String,
     val faceUrl: String,
     val unreadMessageCount: Int,
     val lastMessage: Message,
-    val isPinned: Boolean
+    val isPinned: Boolean,
+    val type: ConversationType
 ) {
 
     val formatMsg by lazy(mode = LazyThreadSafetyMode.NONE) {
         val messageDetail = lastMessage.detail
         val prefix =
-            if (this is GroupConversation && lastMessage !is SystemMessage && !messageDetail.isOwnMessage) {
+            if (type == ConversationType.Group && lastMessage !is SystemMessage && !messageDetail.isOwnMessage) {
                 messageDetail.sender.showName + "："
             } else {
                 ""
@@ -43,35 +44,7 @@ sealed class Conversation(
 }
 
 @Stable
-class C2CConversation(
-    id: String,
-    name: String,
-    faceUrl: String,
-    unreadMessageCount: Int,
-    lastMessage: Message,
-    isPinned: Boolean
-) : Conversation(
-    id = id,
-    name = name,
-    faceUrl = faceUrl,
-    unreadMessageCount = unreadMessageCount,
-    lastMessage = lastMessage,
-    isPinned = isPinned
-)
-
-@Stable
-class GroupConversation(
-    id: String,
-    name: String,
-    faceUrl: String,
-    unreadMessageCount: Int,
-    lastMessage: Message,
-    isPinned: Boolean
-) : Conversation(
-    id = id,
-    name = name,
-    faceUrl = faceUrl,
-    unreadMessageCount = unreadMessageCount,
-    lastMessage = lastMessage,
-    isPinned = isPinned
-)
+enum class ConversationType {
+    C2C,
+    Group
+}

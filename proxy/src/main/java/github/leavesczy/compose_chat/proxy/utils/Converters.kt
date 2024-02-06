@@ -13,10 +13,9 @@ import com.tencent.imsdk.v2.V2TIMMessage
 import com.tencent.imsdk.v2.V2TIMUserFullInfo
 import com.tencent.imsdk.v2.V2TIMValueCallback
 import github.leavesczy.compose_chat.base.models.ActionResult
-import github.leavesczy.compose_chat.base.models.C2CConversation
 import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.Conversation
-import github.leavesczy.compose_chat.base.models.GroupConversation
+import github.leavesczy.compose_chat.base.models.ConversationType
 import github.leavesczy.compose_chat.base.models.GroupMemberProfile
 import github.leavesczy.compose_chat.base.models.ImageElement
 import github.leavesczy.compose_chat.base.models.ImageMessage
@@ -295,7 +294,7 @@ internal object Converters {
             }
 
             V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL -> {
-                MessageState.SendFailed("unknown")
+                MessageState.SendFailed(reason = "unknown")
             }
 
             else -> {
@@ -327,12 +326,12 @@ internal object Converters {
     }
 
     fun getConversationKey(conversation: Conversation): String {
-        return when (conversation) {
-            is C2CConversation -> {
+        return when (conversation.type) {
+            ConversationType.C2C -> {
                 getC2CConversationKey(userId = conversation.id)
             }
 
-            is GroupConversation -> {
+            ConversationType.Group -> {
                 getGroupConversationKey(groupId = conversation.id)
             }
         }

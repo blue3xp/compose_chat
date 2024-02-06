@@ -13,6 +13,9 @@ import github.leavesczy.compose_chat.base.models.PersonProfile
 import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
 import github.leavesczy.compose_chat.proxy.coroutine.ChatCoroutineScope
 import github.leavesczy.compose_chat.proxy.utils.Converters
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -25,7 +28,7 @@ import kotlin.coroutines.resume
  */
 class FriendshipProvider : IFriendshipProvider {
 
-    override val friendList = MutableSharedFlow<List<PersonProfile>>()
+    override val friendList = MutableSharedFlow<ImmutableList<PersonProfile>>()
 
     init {
         V2TIMManager.getFriendshipManager().addFriendListener(object : V2TIMFriendshipListener() {
@@ -52,7 +55,7 @@ class FriendshipProvider : IFriendshipProvider {
         ChatCoroutineScope.launch {
             friendList.emit(value = getFriendListOrigin()?.sortedByDescending {
                 it.addTime
-            } ?: emptyList())
+            }?.toImmutableList() ?: persistentListOf())
         }
     }
 

@@ -2,7 +2,6 @@ package github.leavesczy.compose_chat.ui.profile.logic
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
@@ -16,62 +15,53 @@ import kotlinx.coroutines.launch
  */
 class ProfileUpdateViewModel : BaseViewModel() {
 
-    var profileUpdatePageViewStata by mutableStateOf<ProfileUpdatePageViewStata?>(
-        value = null
+    val profileUpdatePageViewStata by mutableStateOf(
+        value = ProfileUpdatePageViewStata(
+            personProfile = mutableStateOf(value = null),
+            onNicknameChanged = ::onNicknameChanged,
+            onSignatureChanged = ::onSignatureChanged,
+            onAvatarUrlChanged = ::onAvatarUrlChanged,
+            confirmUpdate = ::confirmUpdate
+        )
     )
-        private set
 
     init {
         viewModelScope.launch {
             val profile = ComposeChat.accountProvider.getPersonProfile()
-            profileUpdatePageViewStata = if (profile == null) {
-                null
-            } else {
-                ProfileUpdatePageViewStata(personProfile = profile)
-            }
+            profileUpdatePageViewStata.personProfile.value = profile
         }
     }
 
     fun onNicknameChanged(nickname: String) {
-        val mProfileUpdatePageViewStata = profileUpdatePageViewStata
-        if (mProfileUpdatePageViewStata != null) {
-            profileUpdatePageViewStata = mProfileUpdatePageViewStata.copy(
-                personProfile = mProfileUpdatePageViewStata.personProfile.copy(
-                    nickname = nickname
-                )
-            )
+        val personProfile = profileUpdatePageViewStata.personProfile.value
+        if (personProfile != null) {
+            profileUpdatePageViewStata.personProfile.value = personProfile.copy(nickname = nickname)
         }
     }
 
     fun onSignatureChanged(signature: String) {
-        val mProfileUpdatePageViewStata = profileUpdatePageViewStata
-        if (mProfileUpdatePageViewStata != null) {
-            profileUpdatePageViewStata = mProfileUpdatePageViewStata.copy(
-                personProfile = mProfileUpdatePageViewStata.personProfile.copy(
-                    signature = signature
-                )
-            )
+        val personProfile = profileUpdatePageViewStata.personProfile.value
+        if (personProfile != null) {
+            profileUpdatePageViewStata.personProfile.value =
+                personProfile.copy(signature = signature)
         }
     }
 
     fun onAvatarUrlChanged(imageUrl: String) {
-        val mProfileUpdatePageViewStata = profileUpdatePageViewStata
-        if (mProfileUpdatePageViewStata != null) {
-            profileUpdatePageViewStata = mProfileUpdatePageViewStata.copy(
-                personProfile = mProfileUpdatePageViewStata.personProfile.copy(faceUrl = imageUrl)
-            )
+        val personProfile = profileUpdatePageViewStata.personProfile.value
+        if (personProfile != null) {
+            profileUpdatePageViewStata.personProfile.value = personProfile.copy(faceUrl = imageUrl)
         }
     }
 
     fun confirmUpdate() {
         viewModelScope.launch {
-            val mProfileUpdatePageViewStata = profileUpdatePageViewStata
-            if (mProfileUpdatePageViewStata != null) {
-                val profile = mProfileUpdatePageViewStata.personProfile
+            val personProfile = profileUpdatePageViewStata.personProfile.value
+            if (personProfile != null) {
                 val result = ComposeChat.accountProvider.updatePersonProfile(
-                    faceUrl = profile.faceUrl,
-                    nickname = profile.nickname,
-                    signature = profile.signature
+                    faceUrl = personProfile.faceUrl,
+                    nickname = personProfile.nickname,
+                    signature = personProfile.signature
                 )
                 when (result) {
                     is ActionResult.Success -> {
