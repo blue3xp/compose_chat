@@ -157,15 +157,27 @@ private fun OwnMessageContainer(
             .padding(start = 14.dp, end = 14.dp, top = 10.dp, bottom = 10.dp),
         horizontalArrangement = Arrangement.End
     ) {
-        StateMessage(messageState = message.detail.state)
-        Box(
+        Row(
             modifier = Modifier
                 .align(alignment = Alignment.Top)
-                .weight(weight = 1f, fill = false),
-            contentAlignment = Alignment.TopEnd
+                .weight(weight = 1f, fill = false)
+                .padding(end = 6.dp, top = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            StateMessage(messageState = message.detail.state)
             messageContent()
         }
+        ComponentImage(
+            modifier = Modifier
+                .size(size = 42.dp)
+                .clip(shape = CircleShape)
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    shape = CircleShape
+                ),
+            model = message.detail.sender.faceUrl
+        )
     }
 }
 
@@ -182,27 +194,26 @@ private fun FriendMessageContainer(
             .padding(start = 10.dp, end = 0.dp, top = 10.dp, bottom = 10.dp),
         horizontalArrangement = Arrangement.Start
     ) {
-        if (showPartDetail) {
-            ComponentImage(
-                modifier = Modifier
-                    .padding(end = 10.dp)
-                    .size(size = 42.dp)
-                    .clip(shape = CircleShape)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                        shape = CircleShape
-                    )
-                    .clickable(
-                        onClick = {
-                            onClickAvatar(message)
-                        }
-                    ),
-                model = message.detail.sender.faceUrl
-            )
-        }
+        ComponentImage(
+            modifier = Modifier
+                .padding(end = 6.dp)
+                .size(size = 42.dp)
+                .clip(shape = CircleShape)
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    shape = CircleShape
+                )
+                .clickable(
+                    onClick = {
+                        onClickAvatar(message)
+                    }
+                ),
+            model = message.detail.sender.faceUrl
+        )
         Column(
             modifier = Modifier
+                .padding(top = 8.dp)
         ) {
             if (showPartDetail) {
                 Text(

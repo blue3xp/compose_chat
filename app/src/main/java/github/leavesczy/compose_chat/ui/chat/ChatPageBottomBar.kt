@@ -36,13 +36,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import github.leavesczy.compose_chat.ui.chat.logic.ChatViewModel
 import github.leavesczy.compose_chat.ui.widgets.MatisseImageEngine
-import github.leavesczy.matisse.DefaultMediaFilter
 import github.leavesczy.matisse.Matisse
 import github.leavesczy.matisse.MatisseCapture
 import github.leavesczy.matisse.MatisseCaptureContract
 import github.leavesczy.matisse.MatisseContract
 import github.leavesczy.matisse.MediaStoreCaptureStrategy
-import github.leavesczy.matisse.MimeType
+import github.leavesczy.matisse.MediaType
 
 /**
  * @Author: leavesCZY
@@ -193,9 +192,7 @@ fun ChatPageBottomBar(chatViewModel: ChatViewModel) {
                                         chatViewModel.onInputSelectorChanged(newSelector = InputSelector.NONE)
                                         val matisse = Matisse(
                                             maxSelectable = 1,
-                                            mediaFilter = DefaultMediaFilter(
-                                                supportedMimeTypes = MimeType.ofImage()
-                                            ),
+                                            mediaType = MediaType.ImageOnly,
                                             imageEngine = MatisseImageEngine(),
                                             captureStrategy = MediaStoreCaptureStrategy()
                                         )

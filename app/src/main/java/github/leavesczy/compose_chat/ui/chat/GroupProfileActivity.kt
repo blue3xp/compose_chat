@@ -407,13 +407,7 @@ private fun GroupMemberItem(
             )
             Text(
                 modifier = Modifier.padding(bottom = 1.dp),
-                text = groupMemberProfile.detail.showName + "（${
-                    groupMemberProfile.detail.id + if (groupMemberProfile.isOwner) {
-                        " - 群主"
-                    } else {
-                        ""
-                    }
-                }）",
+                text = groupMemberProfile.detail.showName + "（${groupMemberProfile.detail.id}）",
                 fontSize = 17.sp,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1

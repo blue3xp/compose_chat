@@ -13,13 +13,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material3.Icon
@@ -200,15 +197,15 @@ private fun PreviewImagePage(
 @Composable
 private fun PreviewPage(imageUrl: String) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         ZoomableComponentImage(
             modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(state = rememberScrollState()),
+                .fillMaxSize(),
             model = imageUrl,
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.Fit
         )
     }
 }

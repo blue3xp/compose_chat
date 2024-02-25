@@ -2,8 +2,6 @@ package github.leavesczy.compose_chat.ui.widgets
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -30,14 +28,21 @@ class MatisseImageEngine : ImageEngine {
 
     @Composable
     override fun Image(mediaResource: MediaResource) {
-        ZoomableComponentImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(state = rememberScrollState()),
-            model = mediaResource.uri,
-            contentScale = ContentScale.FillWidth,
-            contentDescription = mediaResource.name
-        )
+        if (mediaResource.isVideo) {
+            ComponentImage(
+                modifier = Modifier.fillMaxWidth(),
+                model = mediaResource.uri,
+                contentScale = ContentScale.Fit,
+                contentDescription = mediaResource.name
+            )
+        } else {
+            ZoomableComponentImage(
+                modifier = Modifier.fillMaxSize(),
+                model = mediaResource.uri,
+                contentScale = ContentScale.Fit,
+                contentDescription = mediaResource.name
+            )
+        }
     }
 
 }

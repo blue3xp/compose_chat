@@ -20,4 +20,5 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.leavesczy.matisse)
     implementation(libs.glide.compose)
+    implementation(libs.zoomable.image.glide)
 }

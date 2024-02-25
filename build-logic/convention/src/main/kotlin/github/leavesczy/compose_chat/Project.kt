@@ -19,7 +19,7 @@ internal fun Project.configureAndroidProject(commonExtension: CommonExtension<*,
         compileSdk = 34
         buildToolsVersion = "34.0.0"
         defaultConfig {
-            minSdk = 21
+            minSdk = 23
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             vectorDrawables {
                 useSupportLibrary = true

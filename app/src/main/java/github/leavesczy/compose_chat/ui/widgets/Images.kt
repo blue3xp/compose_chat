@@ -1,6 +1,4 @@
-@file:OptIn(
-    com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi::class
-)
+@file:OptIn(ExperimentalGlideComposeApi::class)
 
 package github.leavesczy.compose_chat.ui.widgets
 
@@ -45,9 +43,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.load.DecodeFormat
 import kotlinx.coroutines.launch
+import me.saket.telephoto.zoomable.glide.ZoomableGlideImage
 import kotlin.math.roundToInt
 
 /**
@@ -59,48 +58,44 @@ import kotlin.math.roundToInt
 fun ComponentImage(
     modifier: Modifier = Modifier,
     model: Any?,
-    contentDescription: String? = null,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Crop,
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
+    contentDescription: String? = null,
     backgroundColor: Color = Color(0x66888888)
 ) {
     GlideImage(
         modifier = modifier
             .background(color = backgroundColor),
         model = model,
-        contentDescription = contentDescription,
         alignment = alignment,
         contentScale = contentScale,
         alpha = alpha,
-        colorFilter = colorFilter
-    ) {
-        it.format(DecodeFormat.PREFER_RGB_565).encodeQuality(80)
-    }
+        colorFilter = colorFilter,
+        contentDescription = contentDescription
+    )
 }
 
 @Composable
 fun ZoomableComponentImage(
     modifier: Modifier = Modifier,
     model: Any?,
-    contentDescription: String? = null,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,
     alpha: Float = DefaultAlpha,
-    colorFilter: ColorFilter? = null
+    colorFilter: ColorFilter? = null,
+    contentDescription: String? = null
 ) {
-    GlideImage(
+    ZoomableGlideImage(
         modifier = modifier,
         model = model,
-        contentDescription = contentDescription,
         alignment = alignment,
         contentScale = contentScale,
         alpha = alpha,
-        colorFilter = colorFilter
-    ) {
-        it.format(DecodeFormat.PREFER_RGB_565).encodeQuality(80)
-    }
+        colorFilter = colorFilter,
+        contentDescription = contentDescription
+    )
 }
 
 @Composable
