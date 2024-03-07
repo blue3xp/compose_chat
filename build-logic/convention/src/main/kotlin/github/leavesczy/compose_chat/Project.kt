@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  * @Date: 2023/11/29 16:10
  * @Desc:
  */
-internal fun Project.configureAndroidProject(commonExtension: CommonExtension<*, *, *, *, *>) {
+internal fun Project.configureAndroidProject(commonExtension: CommonExtension<*, *, *, *, *, *>) {
     commonExtension.apply {
         compileSdk = 34
         buildToolsVersion = "34.0.0"
