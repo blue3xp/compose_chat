@@ -32,14 +32,14 @@ class ProfileUpdateViewModel : BaseViewModel() {
         }
     }
 
-    fun onNicknameChanged(nickname: String) {
+    private fun onNicknameChanged(nickname: String) {
         val personProfile = profileUpdatePageViewStata.personProfile.value
         if (personProfile != null) {
             profileUpdatePageViewStata.personProfile.value = personProfile.copy(nickname = nickname)
         }
     }
 
-    fun onSignatureChanged(signature: String) {
+    private fun onSignatureChanged(signature: String) {
         val personProfile = profileUpdatePageViewStata.personProfile.value
         if (personProfile != null) {
             profileUpdatePageViewStata.personProfile.value =
@@ -47,14 +47,14 @@ class ProfileUpdateViewModel : BaseViewModel() {
         }
     }
 
-    fun onAvatarUrlChanged(imageUrl: String) {
+    private fun onAvatarUrlChanged(imageUrl: String) {
         val personProfile = profileUpdatePageViewStata.personProfile.value
         if (personProfile != null) {
             profileUpdatePageViewStata.personProfile.value = personProfile.copy(faceUrl = imageUrl)
         }
     }
 
-    fun confirmUpdate() {
+    private fun confirmUpdate() {
         viewModelScope.launch {
             val personProfile = profileUpdatePageViewStata.personProfile.value
             if (personProfile != null) {

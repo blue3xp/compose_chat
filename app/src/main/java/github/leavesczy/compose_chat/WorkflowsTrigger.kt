@@ -7,6 +7,6 @@ package github.leavesczy.compose_chat
  */
 object WorkflowsTrigger {
 
-    val trigger = 28
+    val trigger = 29
 
 }

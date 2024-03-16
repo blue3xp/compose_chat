@@ -7,16 +7,16 @@ package github.leavesczy.compose_chat.ui.logic
  */
 object GroupIds {
 
-    const val MeetingGroupId01 = "@TGS#3SSMB3WHI"
+    const val meetingGroupId01 = "@TGS#3SSMB3WHI"
 
-    const val MeetingGroupId02 = "@TGS#3VOZA3WHT"
+    const val meetingGroupId02 = "@TGS#3VOZA3WHT"
 
-    const val MeetingGroupId03 = "@TGS#3W42A3WHP"
+    const val meetingGroupId03 = "@TGS#3W42A3WHP"
 
-    const val MeetingGroupId04 = "@TGS#3DMJIK6MS"
+    const val meetingGroupId04 = "@TGS#3DMJIK6MS"
 
-    const val MeetingGroupId05 = "@TGS#3YCNIK6MC"
+    const val meetingGroupId05 = "@TGS#3YCNIK6MC"
 
-    const val MeetingGroupId06 = "@TGS#33PPIK6MK"
+    const val meetingGroupId06 = "@TGS#33PPIK6MK"
 
 }
