@@ -10,5 +10,4 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines)
-    implementation(libs.kotlinx.collections.immutable)
 }

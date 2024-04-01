@@ -7,7 +7,6 @@ import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.GroupMemberProfile
 import github.leavesczy.compose_chat.base.models.GroupProfile
 import github.leavesczy.compose_chat.base.models.Message
-import kotlinx.collections.immutable.ImmutableList
 
 /**
  * @Author: leavesCZY
@@ -19,7 +18,7 @@ data class ChatPageViewState(
     val chat: Chat,
     val listState: LazyListState,
     val topBarTitle: MutableState<String>,
-    val messageList: MutableState<ImmutableList<Message>>
+    val messageList: MutableState<List<Message>>
 )
 
 @Stable
@@ -38,7 +37,7 @@ data class ChatPageAction(
 @Stable
 data class GroupProfilePageViewState(
     val groupProfile: MutableState<GroupProfile?>,
-    val memberList: MutableState<ImmutableList<GroupMemberProfile>>
+    val memberList: MutableState<List<GroupMemberProfile>>
 )
 
 @Stable

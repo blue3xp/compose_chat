@@ -10,5 +10,4 @@ dependencies {
     implementation(project(":base"))
     implementation(libs.kotlinx.coroutines)
     implementation(libs.tencent.imsdk)
-    implementation(libs.kotlinx.collections.immutable)
 }

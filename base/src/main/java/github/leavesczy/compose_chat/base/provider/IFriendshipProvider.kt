@@ -2,7 +2,6 @@ package github.leavesczy.compose_chat.base.provider
 
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.models.PersonProfile
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.SharedFlow
 
 /**
@@ -12,7 +11,7 @@ import kotlinx.coroutines.flow.SharedFlow
  */
 interface IFriendshipProvider {
 
-    val friendList: SharedFlow<ImmutableList<PersonProfile>>
+    val friendList: SharedFlow<List<PersonProfile>>
 
     fun refreshFriendList()
 

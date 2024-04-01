@@ -3,7 +3,6 @@ package github.leavesczy.compose_chat.base.provider
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.models.GroupMemberProfile
 import github.leavesczy.compose_chat.base.models.GroupProfile
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.SharedFlow
 
 /**
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.SharedFlow
  */
 interface IGroupProvider {
 
-    val joinedGroupList: SharedFlow<ImmutableList<GroupProfile>>
+    val joinedGroupList: SharedFlow<List<GroupProfile>>
 
     fun refreshJoinedGroupList()
 
@@ -23,7 +22,7 @@ interface IGroupProvider {
 
     suspend fun getGroupInfo(groupId: String): GroupProfile?
 
-    suspend fun getGroupMemberList(groupId: String): ImmutableList<GroupMemberProfile>
+    suspend fun getGroupMemberList(groupId: String): List<GroupMemberProfile>
 
     suspend fun setAvatar(groupId: String, avatarUrl: String): ActionResult
 

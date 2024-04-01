@@ -13,8 +13,6 @@ import github.leavesczy.compose_chat.base.models.ConversationType
 import github.leavesczy.compose_chat.base.provider.IConversationProvider
 import github.leavesczy.compose_chat.proxy.coroutine.ChatCoroutineScope
 import github.leavesczy.compose_chat.proxy.utils.Converters
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -27,7 +25,7 @@ import kotlin.coroutines.resume
  */
 class ConversationProvider : IConversationProvider {
 
-    override val conversationList = MutableSharedFlow<ImmutableList<Conversation>>()
+    override val conversationList = MutableSharedFlow<List<Conversation>>()
 
     override val totalUnreadMessageCount = MutableSharedFlow<Long>()
 
@@ -115,7 +113,7 @@ class ConversationProvider : IConversationProvider {
     }
 
     private suspend fun dispatchConversationList(conversationList: List<Conversation>) {
-        this@ConversationProvider.conversationList.emit(value = conversationList.toImmutableList())
+        this@ConversationProvider.conversationList.emit(value = conversationList)
     }
 
     private suspend fun getConversationListOrigin(): List<Conversation> {

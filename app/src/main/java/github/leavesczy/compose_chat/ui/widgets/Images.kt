@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalGlideComposeApi::class)
-
 package github.leavesczy.compose_chat.ui.widgets
 
 import androidx.compose.animation.core.Animatable
@@ -43,10 +41,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
-import me.saket.telephoto.zoomable.glide.ZoomableGlideImage
 import kotlin.math.roundToInt
 
 /**
@@ -65,7 +61,7 @@ fun ComponentImage(
     contentDescription: String? = null,
     backgroundColor: Color = Color(0x66888888)
 ) {
-    GlideImage(
+    AsyncImage(
         modifier = modifier
             .background(color = backgroundColor),
         model = model,
@@ -87,7 +83,7 @@ fun ZoomableComponentImage(
     colorFilter: ColorFilter? = null,
     contentDescription: String? = null
 ) {
-    ZoomableGlideImage(
+    AsyncImage(
         modifier = modifier,
         model = model,
         alignment = alignment,

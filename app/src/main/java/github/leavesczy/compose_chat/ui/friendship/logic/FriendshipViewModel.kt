@@ -16,7 +16,6 @@ import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.ChatActivity
 import github.leavesczy.compose_chat.ui.friend.FriendProfileActivity
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -39,8 +38,8 @@ class FriendshipViewModel : BaseViewModel() {
                     firstVisibleItemScrollOffset = 0
                 )
             ),
-            joinedGroupList = mutableStateOf(value = persistentListOf()),
-            friendList = mutableStateOf(value = persistentListOf()),
+            joinedGroupList = mutableStateOf(value = emptyList()),
+            friendList = mutableStateOf(value = emptyList()),
             onClickGroupItem = ::onClickGroupItem,
             onClickFriendItem = ::onClickFriendItem,
             showFriendshipDialog = ::showFriendshipDialog

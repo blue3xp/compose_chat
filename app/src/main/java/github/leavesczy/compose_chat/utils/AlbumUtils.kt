@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -30,7 +29,10 @@ object AlbumUtils {
             try {
                 val isHttpUrl = imageUri.startsWith(prefix = "http")
                 val imageFile = if (isHttpUrl) {
-                    Glide.with(context).download(imageUri).submit().get()
+                    CoilUtils.getCachedFileOrDownload(
+                        context = context,
+                        imageUrl = imageUri
+                    )
                 } else {
                     File(imageUri)
                 }

@@ -16,8 +16,6 @@ import github.leavesczy.compose_chat.base.models.GroupProfile
 import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.proxy.coroutine.ChatCoroutineScope
 import github.leavesczy.compose_chat.proxy.utils.Converters
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -30,7 +28,7 @@ import kotlin.coroutines.resume
  */
 class GroupProvider : IGroupProvider {
 
-    override val joinedGroupList = MutableSharedFlow<ImmutableList<GroupProfile>>()
+    override val joinedGroupList = MutableSharedFlow<List<GroupProfile>>()
 
     init {
         V2TIMManager.getInstance().addGroupListener(object : V2TIMGroupListener() {
@@ -160,8 +158,7 @@ class GroupProvider : IGroupProvider {
 
     override fun refreshJoinedGroupList() {
         ChatCoroutineScope.launch {
-            joinedGroupList.emit(value = getJoinedGroupListOrigin().sortedBy { it.name }
-                .toImmutableList())
+            joinedGroupList.emit(value = getJoinedGroupListOrigin().sortedBy { it.name })
         }
     }
 
@@ -200,7 +197,7 @@ class GroupProvider : IGroupProvider {
         return groupProfileList?.mapNotNull { convertGroup(groupProfile = it) } ?: emptyList()
     }
 
-    override suspend fun getGroupMemberList(groupId: String): ImmutableList<GroupMemberProfile> {
+    override suspend fun getGroupMemberList(groupId: String): List<GroupMemberProfile> {
         var nextStep = 0L
         val memberList = mutableListOf<GroupMemberProfile>()
         while (true) {
@@ -221,7 +218,7 @@ class GroupProvider : IGroupProvider {
                 0, owner
             )
         }
-        return memberList.toImmutableList()
+        return memberList
     }
 
     private suspend fun getGroupMemberList(

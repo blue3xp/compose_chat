@@ -12,7 +12,6 @@ import github.leavesczy.compose_chat.base.provider.IConversationProvider
 import github.leavesczy.compose_chat.proxy.logic.ConversationProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.ChatActivity
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 /**
@@ -32,7 +31,7 @@ class ConversationViewModel : BaseViewModel() {
                     firstVisibleItemScrollOffset = 0
                 )
             ),
-            conversationList = mutableStateOf(value = persistentListOf()),
+            conversationList = mutableStateOf(value = emptyList()),
             onClickConversation = ::onClickConversation,
             deleteConversation = ::deleteConversation,
             pinConversation = ::pinConversation

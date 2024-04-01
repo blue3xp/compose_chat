@@ -17,8 +17,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.exifinterface)
     implementation(libs.kotlinx.coroutines)
-    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.leavesczy.matisse)
-    implementation(libs.glide.compose)
-    implementation(libs.zoomable.image.glide)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
 }

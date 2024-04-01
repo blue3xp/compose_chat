@@ -3,7 +3,6 @@ package github.leavesczy.compose_chat.base.provider
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.Conversation
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.SharedFlow
 
 /**
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.SharedFlow
  */
 interface IConversationProvider {
 
-    val conversationList: SharedFlow<ImmutableList<Conversation>>
+    val conversationList: SharedFlow<List<Conversation>>
 
     val totalUnreadMessageCount: SharedFlow<Long>
 

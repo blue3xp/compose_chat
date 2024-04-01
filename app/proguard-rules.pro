@@ -20,9 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-optimizationpasses 10
 -packageobfuscationdictionary dictionary.txt
 -classobfuscationdictionary dictionary.txt
 -obfuscationdictionary dictionary.txt
--optimizationpasses 10
 
 -keep class com.tencent.imsdk.** { *; }

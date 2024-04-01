@@ -8,7 +8,6 @@ import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -24,7 +23,7 @@ class GroupProfileViewModel(private val groupId: String) : BaseViewModel() {
     val pageViewState by mutableStateOf(
         value = GroupProfilePageViewState(
             groupProfile = mutableStateOf(value = null),
-            memberList = mutableStateOf(value = persistentListOf())
+            memberList = mutableStateOf(value = emptyList())
         )
     )
 

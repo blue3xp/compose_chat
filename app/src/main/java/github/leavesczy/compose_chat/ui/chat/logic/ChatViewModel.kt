@@ -26,8 +26,6 @@ import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.InputSelector
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import github.leavesczy.compose_chat.utils.CompressImageUtils
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,7 +62,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
             chat = chat,
             topBarTitle = mutableStateOf(value = ""),
             listState = LazyListState(firstVisibleItemIndex = 0, firstVisibleItemScrollOffset = 0),
-            messageList = mutableStateOf(value = persistentListOf())
+            messageList = mutableStateOf(value = emptyList())
         )
     )
 
@@ -242,7 +240,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
                 }
             }
             allMessage[index] = newMessage
-            chatPageViewState.messageList.value = allMessage.toImmutableList()
+            chatPageViewState.messageList.value = allMessage.toList()
         }
     }
 
@@ -252,7 +250,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
             allMessage.add(0, TimeMessage(targetMessage = newMessage))
         }
         allMessage.add(0, newMessage)
-        chatPageViewState.messageList.value = allMessage.toImmutableList()
+        chatPageViewState.messageList.value = allMessage.toList()
         viewModelScope.launch {
             delay(timeMillis = 80)
             chatPageViewState.listState.scrollToItem(index = 0)
@@ -278,7 +276,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
                     filteredMsg++
                 }
             }
-            chatPageViewState.messageList.value = allMessage.toImmutableList()
+            chatPageViewState.messageList.value = allMessage.toList()
         }
     }
 
