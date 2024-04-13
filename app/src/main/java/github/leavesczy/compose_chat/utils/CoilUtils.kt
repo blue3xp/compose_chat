@@ -1,17 +1,14 @@
 package github.leavesczy.compose_chat.utils
 
-import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
-import android.os.Build
-import coil.Coil
-import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.request.SuccessResult
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.annotation.DelicateCoilApi
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.request.allowHardware
+import coil3.request.crossfade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -23,21 +20,14 @@ import java.io.File
  */
 object CoilUtils {
 
-    fun init(application: Application) {
+    @OptIn(DelicateCoilApi::class)
+    fun init(application: Context) {
         val imageLoader = ImageLoader
             .Builder(context = application)
             .crossfade(enable = false)
             .allowHardware(enable = true)
-            .bitmapConfig(bitmapConfig = Bitmap.Config.RGB_565)
-            .components {
-                if (Build.VERSION.SDK_INT >= 28) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(GifDecoder.Factory())
-                }
-            }
             .build()
-        Coil.setImageLoader(imageLoader)
+        SingletonImageLoader.setUnsafe(imageLoader = imageLoader)
     }
 
     suspend fun getCachedFileOrDownload(context: Context, imageUrl: String): File? {
@@ -55,7 +45,6 @@ object CoilUtils {
         }
     }
 
-    @OptIn(ExperimentalCoilApi::class)
     private suspend fun getCachedFile(context: Context, imageUrl: String): File? {
         return withContext(context = Dispatchers.IO) {
             val snapshot = context.imageLoader.diskCache?.openSnapshot(imageUrl)

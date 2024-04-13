@@ -20,4 +20,5 @@ dependencies {
     implementation(libs.leavesczy.matisse)
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+    implementation(libs.coil.network.okhttp)
 }
