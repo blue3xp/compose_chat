@@ -29,7 +29,7 @@ internal fun Project.configureAndroidApplication(commonExtension: BaseAppModuleE
                 outputs.all {
                     if (this is ApkVariantOutputImpl) {
                         this.outputFileName =
-                            "compose_chat_${variant.name}_versionCode_${variant.versionCode}_versionName_${variant.versionName}_${getApkBuildTime()}.apk"
+                            "compose_chat_${variant.name}_${variant.versionCode}_${variant.versionName}_${getApkBuildTime()}.apk"
                     }
                 }
             }
