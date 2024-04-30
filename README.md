@@ -1,5 +1,7 @@
 # compose_chat
 
+这个folk工程主要是通过redux思想来重写业务逻辑，仅限学习使用
+
 Jetpack Compose 最佳实践，用 Jetpack Compose 写一个 IM APP
 
 相关联的文章：

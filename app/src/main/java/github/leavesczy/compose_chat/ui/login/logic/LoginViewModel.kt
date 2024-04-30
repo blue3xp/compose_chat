@@ -3,6 +3,8 @@ package github.leavesczy.compose_chat.ui.login.logic
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import github.leavesczy.compose_chat.base.models.ActionResult
+import github.leavesczy.compose_chat.base.store.account.LoginSuccess
+import github.leavesczy.compose_chat.base.store.account.store
 import github.leavesczy.compose_chat.provider.AccountProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
@@ -24,8 +26,10 @@ class LoginViewModel : BaseViewModel() {
     )
 
     suspend fun tryLogin(): Boolean {
-        val lastLoginUserId = AccountProvider.lastLoginUserId
-        return if (lastLoginUserId.isBlank() || !AccountProvider.canAutoLogin) {
+//        val lastLoginUserId = AccountProvider.lastLoginUserId
+        val lastLoginUserId = store.state.accountState.lastLoginUserId;
+//            return if (lastLoginUserId.isBlank() || !AccountProvider.canAutoLogin) {
+        return if (lastLoginUserId.isBlank() || !store.state.accountState.autoLogin) {
             loginPageViewState.lastLoginUserId.value = lastLoginUserId
             loginPageViewState.showPanel.value = true
             loginPageViewState.loading.value = false
@@ -48,7 +52,8 @@ class LoginViewModel : BaseViewModel() {
         val formatUserId = userId.lowercase()
         return when (val loginResult = ComposeChat.accountProvider.login(userId = formatUserId)) {
             is ActionResult.Success -> {
-                AccountProvider.onUserLogin(userId = formatUserId)
+//                AccountProvider.onUserLogin(userId = formatUserId)
+                store.dispatch(LoginSuccess(formatUserId))
                 delay(timeMillis = 250)
                 true
             }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
+import github.leavesczy.compose_chat.base.store.account.store
 import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
@@ -55,7 +56,8 @@ class FriendProfileViewModel(private val friendId: String) : BaseViewModel() {
                 pageViewState.personProfile.value = null
             } else {
                 val itIsMe = kotlin.run {
-                    val selfId = ComposeChat.accountProvider.personProfile.value.id
+//                    val selfId = ComposeChat.accountProvider.personProfile.value.id
+                    val selfId = store.state.accountState.personProfile.id
                     selfId.isBlank() || selfId == friendId
                 }
                 val isFriend = if (itIsMe) {

@@ -8,9 +8,16 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.example.reduxforandroid.redux.StoreSubscription
+import com.example.reduxforandroid.redux.select.select
+import com.example.reduxforandroid.redux.select.selectors
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.models.ServerState
 import github.leavesczy.compose_chat.base.provider.IConversationProvider
+import github.leavesczy.compose_chat.base.store.account.UserLogout
+import github.leavesczy.compose_chat.base.store.account.getPersonProfile
+import github.leavesczy.compose_chat.base.store.account.refreshPersonProfile
+import github.leavesczy.compose_chat.base.store.account.store
 import github.leavesczy.compose_chat.provider.AccountProvider
 import github.leavesczy.compose_chat.provider.AppThemeProvider
 import github.leavesczy.compose_chat.proxy.logic.ConversationProvider
@@ -50,7 +57,8 @@ class MainViewModel : BaseViewModel() {
     val drawerViewState by mutableStateOf(
         value = MainPageDrawerViewState(
             drawerState = DrawerState(initialValue = DrawerValue.Closed),
-            personProfile = mutableStateOf(value = ComposeChat.accountProvider.personProfile.value),
+//            personProfile = mutableStateOf(value = ComposeChat.accountProvider.personProfile.value),
+            personProfile = mutableStateOf(value = store.state.accountState.personProfile),
             previewImage = ::previewImage,
             switchTheme = ::switchTheme,
             logout = ::logout,
@@ -62,18 +70,30 @@ class MainViewModel : BaseViewModel() {
 
     val serverConnectState: SharedFlow<ServerState> = _serverConnectState
 
+    private lateinit var subscription: StoreSubscription
+
+    override fun onCleared() {
+        subscription()
+        super.onCleared()
+    }
+
     init {
+        subscription = store.selectors{
+            select({ it.accountState.personProfile }) {
+                drawerViewState.personProfile.value = store.state.accountState.personProfile
+            }
+        }
         viewModelScope.launch {
             launch {
                 conversationProvider.totalUnreadMessageCount.collect {
                     bottomBarViewState.unreadMessageCount.value = it
                 }
             }
-            launch {
-                ComposeChat.accountProvider.personProfile.collect {
-                    drawerViewState.personProfile.value = it
-                }
-            }
+//            launch {
+//                ComposeChat.accountProvider.personProfile.collect {
+//                    drawerViewState.personProfile.value = it
+//                }
+//            }
             launch {
                 ComposeChat.accountProvider.serverConnectState.collect {
                     _serverConnectState.emit(value = it)
@@ -90,7 +110,8 @@ class MainViewModel : BaseViewModel() {
 
     private fun requestData() {
         conversationProvider.refreshTotalUnreadMessageCount()
-        ComposeChat.accountProvider.refreshPersonProfile()
+//        ComposeChat.accountProvider.refreshPersonProfile()
+        store.dispatch(refreshPersonProfile())
     }
 
     private fun onClickTab(mainPageTab: MainPageTab) {
@@ -102,7 +123,8 @@ class MainViewModel : BaseViewModel() {
             loadingDialog(visible = true)
             when (val result = ComposeChat.accountProvider.logout()) {
                 is ActionResult.Success -> {
-                    AccountProvider.onUserLogout()
+//                    AccountProvider.onUserLogout()
+                    store.dispatch(UserLogout())
                 }
 
                 is ActionResult.Failed -> {

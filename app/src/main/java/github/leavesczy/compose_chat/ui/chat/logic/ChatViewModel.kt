@@ -19,6 +19,8 @@ import github.leavesczy.compose_chat.base.models.TimeMessage
 import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
 import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.base.provider.IMessageProvider
+import github.leavesczy.compose_chat.base.store.account.refreshPersonProfile
+import github.leavesczy.compose_chat.base.store.account.store
 import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
 import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.proxy.logic.MessageProvider
@@ -86,7 +88,8 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
             chat = chat,
             messageListener = messageListener
         )
-        ComposeChat.accountProvider.refreshPersonProfile()
+//        ComposeChat.accountProvider.refreshPersonProfile()
+        store.dispatch(refreshPersonProfile())
         viewModelScope.launch {
             val name = when (chat) {
                 is Chat.PrivateChat -> {
