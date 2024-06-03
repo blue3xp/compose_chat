@@ -44,7 +44,7 @@ class ProfileUpdateViewModel : BaseViewModel() {
 //            val profile = ComposeChat.accountProvider.getPersonProfile()
 //            profileUpdatePageViewStata.personProfile.value = profile
 //        }
-        store.dispatch(getPersonProfile())
+        store.dispatch(getPersonProfile(viewModelScope))
         subscription = store.selectors {
             select({ it.accountState.personProfile }) {
                 profileUpdatePageViewStata.personProfile.value = store.state.accountState.personProfile
@@ -96,7 +96,7 @@ class ProfileUpdateViewModel : BaseViewModel() {
 //        }
         val personProfile = profileUpdatePageViewStata.personProfile.value
         if (personProfile != null) {
-            store.dispatch(updatePersonProfile(personProfile))
+            store.dispatch(updatePersonProfile(personProfile,viewModelScope))
         }
     }
 

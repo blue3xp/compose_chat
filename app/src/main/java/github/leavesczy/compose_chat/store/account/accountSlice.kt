@@ -8,6 +8,7 @@ import github.leavesczy.compose_chat.base.models.PersonProfile
 import github.leavesczy.compose_chat.base.models.ServerState
 import github.leavesczy.compose_chat.provider.ToastProvider
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -44,8 +45,8 @@ val loginReducer: Reducer<AccountState> = { state, action ->
 }
 
 
-fun getPersonProfile(): Thunk<AccountState> = { dispatch, getState, extraArg ->
-    GlobalScope.launch {
+fun getPersonProfile(viewModelScope: CoroutineScope): Thunk<AccountState> = { dispatch, getState, extraArg ->
+    viewModelScope.launch {
         val profile = ComposeChat.accountProvider.getPersonProfile() ?: PersonProfile.Empty
         withContext(Dispatchers.Main) {
             dispatch(UpdatePersonProfile(profile))
@@ -53,8 +54,8 @@ fun getPersonProfile(): Thunk<AccountState> = { dispatch, getState, extraArg ->
     }
 }
 
-fun updatePersonProfile(personProfile:PersonProfile): Thunk<AccountState> = { dispatch, getState, extraArg ->
-    GlobalScope.launch {
+fun updatePersonProfile(personProfile:PersonProfile,viewModelScope: CoroutineScope): Thunk<AccountState> = { dispatch, getState, extraArg ->
+    viewModelScope.launch {
         val result = ComposeChat.accountProvider.updatePersonProfile(
             faceUrl = personProfile.faceUrl,
             nickname = personProfile.nickname,

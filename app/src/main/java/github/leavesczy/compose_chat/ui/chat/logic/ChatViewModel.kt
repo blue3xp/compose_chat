@@ -89,7 +89,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
             messageListener = messageListener
         )
 //        ComposeChat.accountProvider.refreshPersonProfile()
-        store.dispatch(refreshPersonProfile())
+        store.dispatch(refreshPersonProfile(viewModelScope))
         viewModelScope.launch {
             val name = when (chat) {
                 is Chat.PrivateChat -> {

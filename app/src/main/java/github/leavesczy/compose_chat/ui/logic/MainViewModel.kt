@@ -111,7 +111,7 @@ class MainViewModel : BaseViewModel() {
     private fun requestData() {
         conversationProvider.refreshTotalUnreadMessageCount()
 //        ComposeChat.accountProvider.refreshPersonProfile()
-        store.dispatch(refreshPersonProfile())
+        store.dispatch(refreshPersonProfile(viewModelScope))
     }
 
     private fun onClickTab(mainPageTab: MainPageTab) {
