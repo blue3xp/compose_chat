@@ -4,8 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.store.account.LoginSuccess
-import github.leavesczy.compose_chat.base.store.account.store
-import github.leavesczy.compose_chat.provider.AccountProvider
+import github.leavesczy.compose_chat.store.store
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import kotlinx.coroutines.delay

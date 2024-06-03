@@ -1,6 +1,7 @@
 package github.leavesczy.compose_chat.ui.chat.logic
 
 import android.net.Uri
+import android.view.View
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +9,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
+import com.example.reduxforandroid.redux.StoreSubscription
+import com.example.reduxforandroid.redux.select.select
+import com.example.reduxforandroid.redux.select.selectors
 import github.leavesczy.compose_chat.base.models.Chat
 import github.leavesczy.compose_chat.base.models.ImageMessage
 import github.leavesczy.compose_chat.base.models.LoadMessageResult
@@ -20,13 +24,17 @@ import github.leavesczy.compose_chat.base.provider.IFriendshipProvider
 import github.leavesczy.compose_chat.base.provider.IGroupProvider
 import github.leavesczy.compose_chat.base.provider.IMessageProvider
 import github.leavesczy.compose_chat.base.store.account.refreshPersonProfile
-import github.leavesczy.compose_chat.base.store.account.store
+import github.leavesczy.compose_chat.store.store
 import github.leavesczy.compose_chat.proxy.logic.FriendshipProvider
 import github.leavesczy.compose_chat.proxy.logic.GroupProvider
 import github.leavesczy.compose_chat.proxy.logic.MessageProvider
+import github.leavesczy.compose_chat.store.chat.AttachNewMessage
+import github.leavesczy.compose_chat.store.chat.ResetData
+import github.leavesczy.compose_chat.store.chat.ResetMessageState
+import github.leavesczy.compose_chat.store.chat.getTopBarTitle
+import github.leavesczy.compose_chat.store.chat.loadMoreMessage
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
 import github.leavesczy.compose_chat.ui.chat.InputSelector
-import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import github.leavesczy.compose_chat.utils.CompressImageUtils
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -45,12 +53,13 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
 
     }
 
-    private val allMessage = mutableListOf<Message>()
+//    private val allMessage = mutableListOf<Message>()
 
     private val lastMessage: Message?
         get() {
-            return allMessage.lastOrNull { it !is TimeMessage }
+            return _lastMessage
         }
+    private var _lastMessage: Message? = null
 
     private val messageListener = object : IMessageProvider.MessageListener {
         override fun onReceiveMessage(message: Message) {
@@ -83,51 +92,75 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
 
     private val messageProvider: IMessageProvider = MessageProvider()
 
+    private lateinit var multiSubscription: StoreSubscription
+
     init {
+        store.dispatch(ResetData())
         messageProvider.startReceive(
             chat = chat,
             messageListener = messageListener
         )
 //        ComposeChat.accountProvider.refreshPersonProfile()
         store.dispatch(refreshPersonProfile(viewModelScope))
-        viewModelScope.launch {
-            val name = when (chat) {
-                is Chat.PrivateChat -> {
-                    val friendshipProvider: IFriendshipProvider = FriendshipProvider()
-                    friendshipProvider.getFriendProfile(friendId = chat.id)?.showName
-                }
-
-                is Chat.GroupChat -> {
-                    val groupProvider: IGroupProvider = GroupProvider()
-                    groupProvider.getGroupInfo(groupId = chat.id)?.name
-                }
-            } ?: ""
-            chatPageViewState.topBarTitle.value = name
+//        viewModelScope.launch {
+//            val name = when (chat) {
+//                is Chat.PrivateChat -> {
+//                    val friendshipProvider: IFriendshipProvider = FriendshipProvider()
+//                    friendshipProvider.getFriendProfile(friendId = chat.id)?.showName
+//                }
+//
+//                is Chat.GroupChat -> {
+//                    val groupProvider: IGroupProvider = GroupProvider()
+//                    groupProvider.getGroupInfo(groupId = chat.id)?.name
+//                }
+//            } ?: ""
+//            chatPageViewState.topBarTitle.value = name
+//        }
+        store.dispatch(getTopBarTitle(viewModelScope, chat))
+        multiSubscription = store.selectors {
+            select({ it.chatState.topBarTitle }) {
+                chatPageViewState.topBarTitle.value = store.state.chatState.topBarTitle
+            }
+            select({ it.chatState.allMessage }) {
+                chatPageViewState.messageList.value = store.state.chatState.allMessage.toList()
+                _lastMessage = store.state.chatState.allMessage.lastOrNull { it !is TimeMessage }
+            }
+            select({ it.chatState.loadFinish }) {
+                loadMessageViewState.loadFinish.value = store.state.chatState.loadFinish
+            }
         }
+
         loadMoreMessage()
+
     }
 
     fun loadMoreMessage() {
-        viewModelScope.launch {
-            loadMessageViewState.refreshing.value = true
-            val loadResult = messageProvider.getHistoryMessage(
-                chat = chat,
-                lastMessage = lastMessage
-            )
-            val loadFinish = when (loadResult) {
-                is LoadMessageResult.Success -> {
-                    addMessageToFooter(newMessageList = loadResult.messageList)
-                    loadResult.loadFinish
-                }
-
-                is LoadMessageResult.Failed -> {
-                    false
-                }
-            }
-            loadMessageViewState.refreshing.value = false
-            loadMessageViewState.loadFinish.value = loadFinish
-        }
+        loadMessageViewState.refreshing.value = true
+        store.dispatch(loadMoreMessage(viewModelScope, messageProvider, lastMessage, chat))
+        loadMessageViewState.refreshing.value = false
     }
+
+//    fun loadMoreMessage() {
+//        viewModelScope.launch {
+//            loadMessageViewState.refreshing.value = true
+//            val loadResult = messageProvider.getHistoryMessage(
+//                chat = chat,
+//                lastMessage = lastMessage
+//            )
+//            val loadFinish = when (loadResult) {
+//                is LoadMessageResult.Success -> {
+//                    addMessageToFooter(newMessageList = loadResult.messageList)
+//                    loadResult.loadFinish
+//                }
+//
+//                is LoadMessageResult.Failed -> {
+//                    false
+//                }
+//            }
+//            loadMessageViewState.refreshing.value = false
+//            loadMessageViewState.loadFinish.value = loadFinish
+//        }
+//    }
 
     fun onUserInputChanged(input: TextFieldValue) {
         val newMessage = if (textMessageInputted.text.length >= TEXT_MSG_MAX_LENGTH) {
@@ -225,66 +258,73 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
     private fun resetMessageState(
         msgId: String, messageState: MessageState
     ) {
-        val index = allMessage.indexOfFirst { it.detail.msgId == msgId }
-        if (index >= 0) {
-            val targetMessage = allMessage[index]
-            val messageDetail = targetMessage.detail
-            val newMessage = when (targetMessage) {
-                is ImageMessage -> {
-                    targetMessage.copy(messageDetail = messageDetail.copy(state = messageState))
-                }
-
-                is TextMessage -> {
-                    targetMessage.copy(messageDetail = messageDetail.copy(state = messageState))
-                }
-
-                is SystemMessage, is TimeMessage -> {
-                    throw IllegalArgumentException()
-                }
-            }
-            allMessage[index] = newMessage
-            chatPageViewState.messageList.value = allMessage.toList()
-        }
+//        val index = allMessage.indexOfFirst { it.detail.msgId == msgId }
+//        if (index >= 0) {
+//            val targetMessage = allMessage[index]
+//            val messageDetail = targetMessage.detail
+//            val newMessage = when (targetMessage) {
+//                is ImageMessage -> {
+//                    targetMessage.copy(messageDetail = messageDetail.copy(state = messageState))
+//                }
+//
+//                is TextMessage -> {
+//                    targetMessage.copy(messageDetail = messageDetail.copy(state = messageState))
+//                }
+//
+//                is SystemMessage, is TimeMessage -> {
+//                    throw IllegalArgumentException()
+//                }
+//            }
+//            allMessage[index] = newMessage
+//            chatPageViewState.messageList.value = allMessage.toList()
+//        }
+        store.dispatch(ResetMessageState(msgId, messageState))
     }
 
     private fun attachNewMessage(newMessage: Message) {
-        val firstMessage = allMessage.getOrNull(0)
-        if (firstMessage == null || newMessage.detail.timestamp - firstMessage.detail.timestamp > 60) {
-            allMessage.add(0, TimeMessage(targetMessage = newMessage))
-        }
-        allMessage.add(0, newMessage)
-        chatPageViewState.messageList.value = allMessage.toList()
+//        val firstMessage = allMessage.getOrNull(0)
+//        if (firstMessage == null || newMessage.detail.timestamp - firstMessage.detail.timestamp > 60) {
+//            allMessage.add(0, TimeMessage(targetMessage = newMessage))
+//        }
+//        allMessage.add(0, newMessage)
+//        chatPageViewState.messageList.value = allMessage.toList()
+//        viewModelScope.launch {
+//            delay(timeMillis = 80)
+//            chatPageViewState.listState.scrollToItem(index = 0)
+//        }
+        store.dispatch(AttachNewMessage(newMessage))
         viewModelScope.launch {
             delay(timeMillis = 80)
             chatPageViewState.listState.scrollToItem(index = 0)
         }
+
     }
 
-    private fun addMessageToFooter(newMessageList: List<Message>) {
-        if (newMessageList.isNotEmpty()) {
-            if (allMessage.isNotEmpty()) {
-                if (allMessage[allMessage.size - 1].detail.timestamp - newMessageList[0].detail.timestamp > 60) {
-                    allMessage.add(TimeMessage(targetMessage = allMessage[allMessage.size - 1]))
-                }
-            }
-            var filteredMsg = 1
-            for (index in newMessageList.indices) {
-                val currentMsg = newMessageList[index]
-                val preMsg = newMessageList.getOrNull(index + 1)
-                allMessage.add(currentMsg)
-                if (preMsg == null || currentMsg.detail.timestamp - preMsg.detail.timestamp > 60 || filteredMsg >= 10) {
-                    allMessage.add(TimeMessage(targetMessage = currentMsg))
-                    filteredMsg = 1
-                } else {
-                    filteredMsg++
-                }
-            }
-            chatPageViewState.messageList.value = allMessage.toList()
-        }
-    }
+//    private fun addMessageToFooter(newMessageList: List<Message>) {
+//        if (newMessageList.isNotEmpty()) {
+//            if (allMessage.isNotEmpty()) {
+//                if (allMessage[allMessage.size - 1].detail.timestamp - newMessageList[0].detail.timestamp > 60) {
+//                    allMessage.add(TimeMessage(targetMessage = allMessage[allMessage.size - 1]))
+//                }
+//            }
+//            var filteredMsg = 1
+//            for (index in newMessageList.indices) {
+//                val currentMsg = newMessageList[index]
+//                val preMsg = newMessageList.getOrNull(index + 1)
+//                allMessage.add(currentMsg)
+//                if (preMsg == null || currentMsg.detail.timestamp - preMsg.detail.timestamp > 60 || filteredMsg >= 10) {
+//                    allMessage.add(TimeMessage(targetMessage = currentMsg))
+//                    filteredMsg = 1
+//                } else {
+//                    filteredMsg++
+//                }
+//            }
+//            chatPageViewState.messageList.value = allMessage.toList()
+//        }
+//    }
 
     fun filterAllImageMessageUrl(): List<String> {
-        return allMessage.mapNotNull {
+        return store.state.chatState.allMessage.mapNotNull {
             (it as? ImageMessage)?.previewImageUrl
         }.reversed()
     }
@@ -297,6 +337,7 @@ class ChatViewModel(private val chat: Chat) : BaseViewModel() {
         super.onCleared()
         messageProvider.stopReceive(messageListener = messageListener)
         markMessageAsRead()
+        multiSubscription()
     }
 
 }

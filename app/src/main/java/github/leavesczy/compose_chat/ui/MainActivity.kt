@@ -6,8 +6,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import github.leavesczy.compose_chat.base.models.ServerState
 import github.leavesczy.compose_chat.base.store.account.UserLogout
-import github.leavesczy.compose_chat.base.store.account.store
-import github.leavesczy.compose_chat.provider.AccountProvider
+import github.leavesczy.compose_chat.store.store
 import github.leavesczy.compose_chat.ui.base.BaseActivity
 import github.leavesczy.compose_chat.ui.conversation.logic.ConversationViewModel
 import github.leavesczy.compose_chat.ui.friendship.logic.FriendshipViewModel

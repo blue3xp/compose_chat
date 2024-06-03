@@ -2,16 +2,12 @@ package github.leavesczy.compose_chat.ui.person.logic
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
 import com.example.reduxforandroid.redux.StoreSubscription
-import com.example.reduxforandroid.redux.select.select
 import com.example.reduxforandroid.redux.select.selectors
 import github.leavesczy.compose_chat.base.models.PersonProfile
-import github.leavesczy.compose_chat.base.store.account.store
+import github.leavesczy.compose_chat.store.store
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
-import github.leavesczy.compose_chat.ui.logic.ComposeChat
 import github.leavesczy.compose_chat.ui.preview.PreviewImageActivity
-import kotlinx.coroutines.launch
 
 /**
  * @Author: leavesCZY

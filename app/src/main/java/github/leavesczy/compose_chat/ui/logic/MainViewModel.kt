@@ -9,16 +9,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.reduxforandroid.redux.StoreSubscription
-import com.example.reduxforandroid.redux.select.select
 import com.example.reduxforandroid.redux.select.selectors
 import github.leavesczy.compose_chat.base.models.ActionResult
 import github.leavesczy.compose_chat.base.models.ServerState
 import github.leavesczy.compose_chat.base.provider.IConversationProvider
 import github.leavesczy.compose_chat.base.store.account.UserLogout
-import github.leavesczy.compose_chat.base.store.account.getPersonProfile
 import github.leavesczy.compose_chat.base.store.account.refreshPersonProfile
-import github.leavesczy.compose_chat.base.store.account.store
-import github.leavesczy.compose_chat.provider.AccountProvider
+import github.leavesczy.compose_chat.store.store
 import github.leavesczy.compose_chat.provider.AppThemeProvider
 import github.leavesczy.compose_chat.proxy.logic.ConversationProvider
 import github.leavesczy.compose_chat.ui.base.BaseViewModel
